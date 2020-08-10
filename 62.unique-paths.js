@@ -49,7 +49,7 @@ function split(amount, splitGroupAmount)
 }
 
 /**
- * @description 计算组合数 C(m,n)，利用对数性质
+ * @description 计算组合数 C(m,n)
  * @param {number} m
  * @param {number} n
  * @return {number}
@@ -57,23 +57,30 @@ function split(amount, splitGroupAmount)
 function comb(m, n)
 {
     n = Math.min(n, m - n);
-    if (n === 1)
-    {
-        return m;
-    }
     if (n === 0)
     {
         return 1;
     }
-    let temp = 0;
-    for (let i = n + 1; i <= m; i++)
+    if (n === 1)
     {
-        temp += Math.log2(i);
+        return m;
     }
-    for (let i = 1; i <= m - n; i++)
+    return times(m - n + 1, m) / times(2, n);
+}
+
+/**
+ * 
+ * @param {number} start 
+ * @param {number} end 
+ * @return {number}
+ */
+function times(start, end)
+{
+    let result = 1;
+    for (let i = start; i <= end; i++)
     {
-        temp -= Math.log2(i);
+        result *= i;
     }
-    return Math.round(Math.pow(2,temp));
+    return result;
 }
 // @lc code=end
