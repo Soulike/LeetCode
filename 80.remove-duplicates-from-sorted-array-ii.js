@@ -17,37 +17,18 @@ const removeDuplicates = function (nums)
         return LENGTH;
     }
 
-    // 查找多于两个的数字，多出的数字填写成 NaN
-    for (let i = 2; i < LENGTH; i++)
+    let putIndex = 0;   // 这一轮循环要放的位置
+    let checkIndex = 0; // 查找下一个合适数字的位置
+    for (; checkIndex < LENGTH; ++checkIndex)
     {
-        if (nums[i-2] === nums[i])
+        if (putIndex < 2    // 前两个数字直接复制
+            || nums[putIndex - 2] < nums[checkIndex]    // 只要 checkIndex 位置的数字比 putIndex-2 位置的大，那就是合适的数字
+        )
         {
-            for (let j = i; j < LENGTH; j++)
-            {
-                if (nums[j] !== nums[i-2])
-                {
-                    i = j;
-                    break;
-                }
-                nums[j] = NaN;
-            }
+            nums[putIndex] = nums[checkIndex];
+            ++putIndex;
         }
     }
-
-    // 把 NaN 删除掉，每删除一个减少一个实际长度
-    let actualLength = LENGTH;
-    for (let i = 0; i < actualLength; i++)
-    {
-        if (Number.isNaN(nums[i]))
-        {
-            for (let j = i + 1; j < actualLength; j++)
-            {
-                nums[j - 1] = nums[j];
-            }
-            actualLength--;
-            i--;
-        }
-    }
-    return actualLength;
+    return putIndex;
 };
 // @lc code=end
