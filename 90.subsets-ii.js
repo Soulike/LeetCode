@@ -12,64 +12,49 @@
 const subsetsWithDup = function (nums) 
 {
     nums.sort();
-    return toUnique(helper(nums, 0));
-};
+    /**@type {number[][]} */
+    const results = []; // 总的结果
+    /**@type {number[][]} */
+    let lastResults = [[]];       // 上一轮的结果
+    /**@type {number[][]} */
+    let currentResults = [[]];    // 当前轮的结果
+    let lastAddedNum = NaN;     // 上一轮添加进集合的数字
 
-/**
- * @param {number[]} nums
- * @param {number} firstIndex
- * @return {number[][]}
- */
-function helper(nums, firstIndex)
-{
     const NUMS_LEN = nums.length;
-    if (NUMS_LEN-firstIndex === 0)
+    for (let i = 0; i < NUMS_LEN; i++)
     {
-        return [[]];
-    }
-
-    /**@type number[][] */
-    const results = [];
-    const recursiveResults = helper(nums, firstIndex+1);
-
-    results.push(...recursiveResults);
-
-    for (const recursiveResult of recursiveResults)
-    {
-        results.push([nums[firstIndex], ...recursiveResult]);
-    }
-
-    return results;
-}
-
-/**
- * @param {number[][]} nums 
- * @return {number[][]}
- */
-function toUnique(nums)
-{
-    const numsCopy = [...nums];
-    numsCopy.sort();
-    /**@type number[][] */
-    const uniques = [numsCopy[0]];
-    for (let i = 1; i < numsCopy.length; i++)
-    {
-        if (!isSame(numsCopy[i], numsCopy[i - 1]))
+        // 不重复地添加单个数字
+        if (i === 0 || nums[i] !== nums[i-1])
         {
-            uniques.push(numsCopy[i])
+            currentResults.push([nums[i]]);
         }
-    }
-    return uniques;
-}
 
-/**
- * 
- * @param {Array<any>} arr1
- * @param {Array<any>} arr2
- * @return {boolean}
- */
-function isSame(arr1, arr2)
-{
-    return arr1.toString() === arr2.toString();
-}
+        // 如果当前数字和上一个数字相同，只在上一轮末尾与当前相同的序列后添加当前数字
+        if (nums[i] === lastAddedNum)
+        {
+            lastResults.forEach(lastResult =>
+            {
+                if (lastResult[lastResult.length - 1] === nums[i])
+                {
+                    currentResults.push([...lastResult, nums[i]]);
+                }
+            });
+        }
+        else    // 不相同，正常的排列组合
+        {
+            results.forEach(result =>
+            {
+                if (result.length !== 0)
+                {
+                    currentResults.push([...result, nums[i]]);
+                }
+            });
+            lastAddedNum = nums[i];
+        }
+        results.push(...currentResults);
+        lastResults = currentResults;
+        currentResults = [];
+    }
+    return results;
+};
 // @lc code=end
