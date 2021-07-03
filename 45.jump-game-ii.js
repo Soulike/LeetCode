@@ -12,20 +12,41 @@
 const jump = function (nums)
 {
     const LENGTH = nums.length;
-    const minJump = new Array(nums.length); // 到达第 i 个为止最少需要跳几次
-    minJump.fill(Number.MAX_SAFE_INTEGER);
-    minJump[0] = 0;
-    let maxIndex = 0;
-    for (let i = 0; i < LENGTH; i++)
+    if (LENGTH === 1)
     {
-        maxIndex = Math.min(nums[i] + i, nums.length - 1);
-        for (let j = i + 1; j <= maxIndex; j++)
+        return 0;
+    }
+    let currentStartIndex = 0;
+    let currentMaxJumpIndex = nums[0] + 0;
+
+    if (currentMaxJumpIndex >= LENGTH - 1)
+    {
+        return 1;
+    }
+
+    let nextStartIndex = 0;
+    let nextMaxJumpIndex = 0;
+    let step = 0;
+
+    while (true)
+    {
+        for (let i = currentStartIndex + 1; i <= currentMaxJumpIndex; i++)
         {
-            minJump[j] = Math.min(minJump[i] + 1, minJump[j]);
+            if (nums[i] + i > nextMaxJumpIndex)
+            {
+                nextMaxJumpIndex = nums[i] + i;
+                nextStartIndex = i;
+            }
+        }
+        currentStartIndex = nextStartIndex;
+        currentMaxJumpIndex = nextMaxJumpIndex;
+        step++;
+        if (currentMaxJumpIndex >= LENGTH - 1)
+        {
+            return step + 1;
         }
     }
-    return minJump[minJump.length - 1];
 };
 // @lc code=end
 
-console.log(jump([2, 3, 0, 1, 4]));
+console.log(jump([2,3,0,1,4]));
