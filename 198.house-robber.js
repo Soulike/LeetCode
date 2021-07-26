@@ -12,23 +12,28 @@
  */
 const rob = function (nums) 
 {
-    if (nums.length === 1)
+    // 抢当前房子能得到的最大值
+    let robMax = nums[0];
+    // 不抢当前房子能得到的最大值
+    let notRobMax = 0;
+
+    // 抢前一个房子能得到的最大值
+    let preRobMax = robMax;
+    // 不抢前一个房子能得到的最大值
+    let preNotRobMax = notRobMax;
+
+    for (let i = 1; i < nums.length; i++)
     {
-        return nums[0];
+        preRobMax = robMax;
+        preNotRobMax = notRobMax;
+
+        // 要抢当前的房子，那前一个房子就不能抢
+        robMax = preNotRobMax + nums[i];
+
+        // 不抢当前房子，那前一个房子可抢可不抢
+        notRobMax = Math.max(preNotRobMax, preRobMax);
     }
-    let evenMax = nums[0];
-    let oddMax = Math.max(nums[0], nums[1]);
-    for (let i = 2; i < nums.length; i++)
-    {
-        if (i % 2 === 0)
-        {
-            evenMax = Math.max(oddMax, evenMax + nums[i]);
-        }
-        else
-        {
-            oddMax = Math.max(evenMax, oddMax + nums[i]);
-        }
-    }
-    return Math.max(oddMax, evenMax);
+
+    return Math.max(robMax, notRobMax);
 };
 // @lc code=end
