@@ -20,36 +20,63 @@ function TreeNode(val, left, right)
  */
 const buildTree = function (preorder, inorder) 
 {
-    if (preorder.length === 0 || inorder.length === 0)
+    return buildTreeHelper(preorder, inorder, 0, preorder.length, 0, inorder.length);
+};
+
+/**
+ * @param {number[]} preorder
+ * @param {number[]} inorder
+ * @param {number} preorderLeft
+ * @param {number} preorderRight - 不包含在范围内的下标
+ * @param {number} inorderLeft
+ * @param {number} inorderRight - 不包含在范围内的下标
+ * @return {TreeNode | null}
+ */
+function buildTreeHelper(preorder, inorder, preorderLeft, preorderRight, inorderLeft, inorderRight)
+{
+    const PREORDER_LENGTH = preorderRight - preorderLeft;
+    const INORDER_LENGTH = inorderRight - inorderLeft;
+    if (PREORDER_LENGTH === 0 || INORDER_LENGTH === 0)
     {
         return null;
     }
-    if (inorder.length === 1)
+    if (INORDER_LENGTH === 1)
     {
-        return new TreeNode(inorder[0]);
+        return new TreeNode(inorder[inorderLeft]);
     }
-    if (preorder.length === 1)
+    if (PREORDER_LENGTH === 1)
     {
-        return new TreeNode(preorder[0]);
+        return new TreeNode(preorder[preorderLeft]);
     }
-    const rootVal = preorder[0];
-    const index = inorder.indexOf(rootVal);
+    const rootVal = preorder[preorderLeft];
+    const index = inorder.indexOf(rootVal, inorderLeft);
     const rootNode = new TreeNode(rootVal);
-    rootNode.left = null;
-    rootNode.right = null;
     if (index !== -1)
     {
-        rootNode.left = buildTree(preorder.slice(1, index+1), inorder.slice(0, index));
-        rootNode.right = buildTree(preorder.slice(index + 1), inorder.slice(index + 1));
+        const LEFT_TREE_LENGTH = index - inorderLeft;
+        //const RIGHT_TREE_LENGTH = inorderRight - index - 1;
+
+        rootNode.left = buildTreeHelper(
+            preorder, inorder,
+            // preorder 中 preorderLeft（不包含）之后 LEFT_TREE_LENGTH 个元素一定是左子树的前序遍历
+            preorderLeft + 1,
+            preorderLeft + 1 + LEFT_TREE_LENGTH,
+            // inorder 中 inorderLeft 到 index 的元素一定是左子树的中序遍历
+            inorderLeft,
+            index);
+        rootNode.right = buildTreeHelper(
+            preorder, inorder,
+            // preorder 中 preorderLeft + LEFT_TREE_LENGTH 到 preorderRight 的元素一定是右子树的前序遍历
+            preorderLeft + LEFT_TREE_LENGTH,
+            preorderRight,
+            // inorder 中 index + 1 到 inorderRight 的元素一定是右子树的中序遍历
+            index + 1,
+            inorderRight);
         return rootNode;
     }
     else
     {
-        return buildTree(preorder.slice(1), inorder);
+        return buildTreeHelper(preorder, inorder, preorderLeft + 1, preorderRight, inorderLeft, inorderRight);
     }
-};
+}
 // @lc code=end
-
-const tree = buildTree([1, 2,3], [3,2, 1]);
-
-console.log(tree);
