@@ -16,17 +16,19 @@ const rob = function (nums)
     {
         return nums[0];
     }
-    // 从 0 到 i 可以抢到的最大值
-    const dp = [
-        nums[0],
-        Math.max(nums[0], nums[1]),
-    ];
+    let evenMax = nums[0];
+    let oddMax = Math.max(nums[0], nums[1]);
     for (let i = 2; i < nums.length; i++)
     {
-        const rob = nums[i] + dp[i - 2];
-        const noRob = dp[i - 1];
-        dp[i] = Math.max(rob, noRob);
+        if (i % 2 === 0)
+        {
+            evenMax = Math.max(oddMax, evenMax + nums[i]);
+        }
+        else
+        {
+            oddMax = Math.max(evenMax, oddMax + nums[i]);
+        }
     }
-    return dp[dp.length - 1];
+    return Math.max(oddMax, evenMax);
 };
 // @lc code=end
