@@ -12,46 +12,28 @@
  */
 const wordBreak = function (s, wordDict)
 {
-    const cache = new Map();
-    return helper(s, new Set(wordDict), cache);
-};
+    const wordDictSet = new Set(wordDict);
+    /**
+     * [0,i) 范围的字符串是否可以被分解
+     * @type {boolean[]} */
+    const dp = new Array(s.length + 1);
+    dp.fill(false);
+    dp[0] = true;
 
-/**
- * @param {string} s
- * @param {Set<string>} wordDict
- * @param {Map<string, boolean>} cache
- * @return {boolean}
- */
-function helper(s, wordDict, cache)
-{
-    const cacheResult = cache.get(s);
-    if (cacheResult !== undefined)
+    for (let i = 0; i < s.length + 1; i++)
     {
-        return cacheResult;
-    }
-    const LENGTH = s.length;
-    if (LENGTH === 0)
-    {
-        return true;
-    }
-    if (wordDict.has(s))
-    {
-        cache.set(s, true);
-        return true;
-    }
-    for (let i = 1; i < LENGTH; i++)
-    {
-        const leftString = s.slice(0, i);
-        const rightString = s.slice(i);
-        if (helper(leftString, wordDict, cache)
-            && helper(rightString, wordDict, cache))
+        for (let j = 0; j < i; j++)
         {
-            cache.set(s, true);
-            return true;
+            if (dp[j] === true
+                && wordDictSet.has(s.slice(j, i)))
+            {
+                dp[i] = true;
+                break;
+            }
         }
     }
-
-    cache.set(s, false);
-    return false;
-}
+    return dp[dp.length - 1];
+};
 // @lc code=end
+
+console.log(wordBreak("leetcode", ['leet', 'code']));
