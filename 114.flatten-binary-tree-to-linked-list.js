@@ -19,38 +19,31 @@
  */
 const flatten = function (root)
 {
-    if (root !== null)
+    if (root === null)
     {
-        /**@type {TreeNode[]} */
-        const nodes = [];
-        helper(root, nodes);
-
-        for (let i = 0; i < nodes.length - 1; i++)
-        {
-            nodes[i].left = null;
-            nodes[i].right = nodes[i + 1];
-        }
-        nodes[nodes.length - 1].left = null;
-        nodes[nodes.length - 1].right = null;
+        return;
     }
-};
-
-/**
- * @param {TreeNode} root
- * @param {TreeNode[]} nodes
- * @return {void}
- */
-function helper(root, nodes)
-{
-    nodes.push(root);
     if (root.left !== null)
-    {11
-        helper(root.left, nodes);
+    {
+        flatten(root.left);
     }
     if (root.right !== null)
     {
-        helper(root.right, nodes);
+        flatten(root.right);
     }
-}
+
+    const originalRight = root.right;
+    root.right = root.left;
+    root.left = null;
+
+    let currentNode = root;
+
+    while (currentNode.right)
+    {
+        currentNode = currentNode.right;
+    }
+
+    currentNode.right = originalRight;
+};
 // @lc code=end
 
