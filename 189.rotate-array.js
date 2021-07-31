@@ -17,20 +17,20 @@ const rotate = function (nums, k)
     let temp = nums[0];
     let currentIndex = 0;
 
-    const replacedIndexes = new Set();
+    let lastIndex = 0;
+    let counter = 0;
 
-    while (replacedIndexes.size < nums.length)
+    while (counter < nums.length)
     {
         currentIndex = (currentIndex + k) % nums.length;
-        if (replacedIndexes.has(currentIndex))
+        [temp, nums[currentIndex]] = [nums[currentIndex], temp];
+        counter++;
+        // 防止陷入循环，记录上一次从哪里开始替换的
+        if (currentIndex === lastIndex)
         {
             currentIndex++;
             temp = nums[currentIndex];
-        }
-        else
-        {
-            [temp, nums[currentIndex]] = [nums[currentIndex], temp];
-            replacedIndexes.add(currentIndex)
+            lastIndex = currentIndex;
         }
     }
 };
