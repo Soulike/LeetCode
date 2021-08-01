@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=144 lang=typescript
+ * @lc app=leetcode id=94 lang=typescript
  *
- * [144] Binary Tree Preorder Traversal
+ * [94] Binary Tree Inorder Traversal
  */
 
 // @lc code=start
@@ -19,7 +19,7 @@
  * }
  */
 
-function preorderTraversal(root: TreeNode | null): number[] 
+function inorderTraversal(root: TreeNode | null): number[] 
 {
     const stack: TreeNode[] = [];
     const result: number[] = [];
@@ -31,13 +31,14 @@ function preorderTraversal(root: TreeNode | null): number[]
         while (currentNode !== null)
         {
             stack.push(currentNode);
-            result.push(currentNode.val);
             currentNode = currentNode.left;
         }
         const top = stack.pop()!;
+        result.push(top.val);
         currentNode = top.right;
     }
 
     return result;
 };
 // @lc code=end
+
