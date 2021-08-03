@@ -25,7 +25,7 @@ function mergeSort(nums)
         return nums;
     }
     const mid = Math.floor(nums.length / 2);
-    return mergeArray(
+    return mergeArrays(
         mergeSort(nums.slice(0, mid)),
         mergeSort(nums.slice(mid))
     );
@@ -36,7 +36,7 @@ function mergeSort(nums)
  * @param {number[]} nums2 
  * @returns {number[]}
  */
-function mergeArray(nums1, nums2)
+function mergeArrays(nums1, nums2)
 {
     const NUMS1_LENGTH = nums1.length;
     const NUMS2_LENGTH = nums2.length;
