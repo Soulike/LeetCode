@@ -12,43 +12,30 @@
  */
 const findKthLargest = function (nums, k) 
 {
-    quickSort(nums);
-    return nums[nums.length - k];
+    return helper(nums, k, 0, nums.length);
 };
 
 /**
- * @param {number[]} nums 
- */
-function quickSort(nums)
-{
-    quickSortHelper(nums, 0, nums.length);
-}
-
-/**
- * [`left`, `right`)
- * @param {number[]} nums 
+ * 排序范围 [`left`, `right`)
+ * @param {number[]} nums
+ * @param {number} k
  * @param {number} left
- * @param {number} right
- * @returns {void}
+ * @param {number} right 
+ * @return {number}
  */
-function quickSortHelper(nums, left, right)
+function helper(nums, k, left, right)
 {
-    if (right - left <= 1)
-    {
-        return;
-    }
-
     const comparedNum = nums[left];
     let leftIndex = left;
     let rightIndex = right - 1;
 
     while (leftIndex < rightIndex)
     {
-        while (nums[rightIndex] >= comparedNum && leftIndex < rightIndex)
+        while (nums[rightIndex] <= comparedNum && leftIndex < rightIndex)
         {
             rightIndex--;
         }
-        while (nums[leftIndex] <= comparedNum && leftIndex < rightIndex)
+        while (nums[leftIndex] >= comparedNum && leftIndex < rightIndex)
         {
             leftIndex++;
         }
@@ -56,7 +43,17 @@ function quickSortHelper(nums, left, right)
     }
     [nums[left], nums[rightIndex]] = [nums[rightIndex], nums[left]];
 
-    quickSortHelper(nums, left, rightIndex);
-    quickSortHelper(nums, rightIndex + 1, right);
+    if (rightIndex === k - 1)
+    {
+        return nums[rightIndex];
+    }
+    else if (rightIndex > k - 1)
+    {
+        return helper(nums, k, left, rightIndex);
+    }
+    else
+    {
+        return helper(nums, k, rightIndex + 1, right);
+    }
 }
 // @lc code=end
