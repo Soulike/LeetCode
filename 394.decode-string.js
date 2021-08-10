@@ -11,51 +11,47 @@
  */
 const decodeString = function (s)
 {
-    const stack = ['1', '['];
-    const sArr = s.split('');
-    sArr.push(']');
+    const repeatTimeStack = [];
+    const strStack = [];
+    const sArr = ['1', '[', ...s.split(''), ']'];
     for (let i = 0; i < sArr.length; i++)
     {
         if (sArr[i] === ']')
         {
             const repeatedStr = [];
-            let poppedStr = stack.pop();
+            let poppedStr = strStack.pop();
             while (poppedStr !== '[')
             {
                 repeatedStr.push(poppedStr);
-                poppedStr = stack.pop();
+                poppedStr = strStack.pop();
             }
             repeatedStr.reverse();
 
-            const repeatTimeStrArr = [];
-
-            poppedStr = stack.pop();
-            while (isDigit(poppedStr))
-            {
-                repeatTimeStrArr.push(poppedStr);
-                poppedStr = stack.pop();
-            }
-            stack.push(poppedStr);
-
-            const repeatTime = Number.parseInt(repeatTimeStrArr.reverse().join(''));
+            const repeatTime = repeatTimeStack.pop();
 
             for (let j = 0; j < repeatTime; j++)
             {
-                stack.push(...repeatedStr);
+                strStack.push(...repeatedStr);
             }
+        }
+        else if (isDigit(sArr[i]))
+        {
+            if (i === 0 || !isDigit(sArr[i - 1]))
+            {
+                repeatTimeStack.push(0);
+            }
+            repeatTimeStack[repeatTimeStack.length - 1] = repeatTimeStack[repeatTimeStack.length - 1] * 10 + Number.parseInt(sArr[i]);
         }
         else
         {
-            stack.push(sArr[i]);
+            strStack.push(sArr[i]);
         }
     }
-    return stack.join('');
+    return strStack.join('');
 };
 
 function isDigit(str)
 {
-    return Number.isInteger(Number.parseInt(str));
+    return !Number.isNaN(Number.parseInt(str));
 }
 // @lc code=end
-
-console.log(decodeString("3[a2[c]]"))
