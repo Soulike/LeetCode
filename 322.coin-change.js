@@ -12,67 +12,21 @@
  */
 const coinChange = function (coins, amount) 
 {
-    const cache = new Map();
-    return helper(coins, 0, amount, cache);
+    const dp = new Array(amount + 1);
+    dp.fill(amount + 1);
+    dp[0] = 0;
+    for (let i = 1; i <= amount; i++)
+    {
+        for (let j = 0; j < coins.length; j++)
+        {
+            if (coins[j] <= i)
+            {
+                dp[i] = Math.min(dp[i], 1 + dp[i - coins[j]]);
+            }
+        }
+    }
+    return dp[amount] === amount + 1 ? -1 : dp[amount];
 };
-
-/**
- * @param {number[]} coins
- * @param {number} startCoinIndex
- * @param {number} amount
- * @param {Map<number, Map<number, number>>} cache
- * @return {number}
- */
-function helper(coins, startCoinIndex, amount, cache)
-{
-    let amountToResult = cache.get(startCoinIndex);
-    if (amountToResult === undefined)
-    {
-        amountToResult = new Map();
-        cache.set(startCoinIndex, amountToResult);
-    }
-    else
-    {
-        const cachedResult = amountToResult.get(amount);
-        if (cachedResult !== undefined)
-        {
-            return cachedResult;
-        }
-    }
-
-    if (startCoinIndex === coins.length - 1)
-    {
-        let result = 0;
-        let currentCoin = coins[startCoinIndex];
-        if (Number.isInteger(amount / currentCoin))
-        {
-            result = Math.floor(amount / currentCoin);
-        }
-        else
-        {
-            result = -1;
-        }
-        amountToResult.set(amount, result);
-        return result;
-    }
-    let currentCoin = coins[startCoinIndex];
-    let minCoinAmount = Number.MAX_SAFE_INTEGER;
-    for (let i = 0; ; i++)
-    {
-        if (currentCoin * i > amount)
-        {
-            break;
-        }
-        const leftCoinAmount = helper(coins, startCoinIndex + 1, amount - currentCoin * i, cache);
-        if (leftCoinAmount !== -1 && leftCoinAmount + i < minCoinAmount)
-        {
-            minCoinAmount = leftCoinAmount + i;
-        }
-    }
-    const result = minCoinAmount === Number.MAX_SAFE_INTEGER ? -1 : minCoinAmount;
-    amountToResult.set(amount, result);
-    return result;
-}
 // @lc code=end
 
 // console.log(coinChange([1, 2, 5], 11));
