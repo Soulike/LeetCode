@@ -14,13 +14,13 @@ class Heap<T>
     /**
      * @param compareFunction - 比较函数。如果 a - b <= 0 则无需交换，反之则需要交换
      */
-    constructor(compareFunction: (a: T, b: T) => number, iterable?: Iterable<T>)
+    constructor(compareFunction: (a: T, b: T) => number, elements?: Iterable<T>)
     {
         this.treeNodes = [];
         this.compareFunction = compareFunction;
-        if (iterable !== undefined)
+        if (elements !== undefined)
         {
-            this.add(...iterable);
+            this.add(...elements);
         }
     }
 
