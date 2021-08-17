@@ -15,6 +15,7 @@ class TreeNode
 
 // @lc code=start
 /**
+ * https://www.cnblogs.com/grandyang/p/4641968.html
  * @param {TreeNode} root
  * @param {TreeNode} p
  * @param {TreeNode} q
@@ -22,57 +23,20 @@ class TreeNode
  */
 const lowestCommonAncestor = function (root, p, q)
 {
-    const pPath = findPath(root, p);
-    const qPath = findPath(root, q);
-
-    const LENGTH = Math.min(pPath.length, qPath.length);
-
-    let commonAncestor = root;
-
-    for (let i = 0; i < LENGTH; i++)
+    if (!root || p === root || q === root)
     {
-        if (pPath[i] === qPath[i])
-        {
-            commonAncestor = pPath[i];
-        }
+        return root;
     }
-
-    return commonAncestor;
+    const left = lowestCommonAncestor(root.left, p, q);
+    if (left && left !== p && left !== q)
+    {
+        return left;
+    }
+    const right = lowestCommonAncestor(root.right, p, q);
+    if (left && right)
+    {
+        return root;
+    }
+    return left ? left : right;
 };
-
-/**
- * @param {TreeNode} root
- * @param {TreeNode} node
- * @return {TreeNode[]}
- */
-function findPath(root, node)
-{
-    const path = [root];
-    if (root === node)
-    {
-        return path;
-    }
-    else
-    {
-        if (root.left !== null)
-        {
-            path.push(...findPath(root.left, node));
-        }
-        if (root.right !== null)
-        {
-            path.push(...findPath(root.right, node));
-        }
-
-        if (path[path.length - 1] !== node)
-        {
-            const result = [];
-            return result;
-        }
-        else
-        {
-            return path;
-        }
-    }
-}
 // @lc code=end
-
