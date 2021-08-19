@@ -16,68 +16,70 @@ const findAnagrams = function (s, p)
     const letterToNumber = new Map();
     for (const char of p)
     {
-        letterToNumber.set(char, letterToNumber.get(char) ? letterToNumber.get(char) + 1 : 1);
+        letterToNumber.set(char,
+            letterToNumber.get(char)
+                ? letterToNumber.get(char) + 1
+                : 1);
     }
 
     let left = 0;
     let right = p.length;
-    const letterToNumberCopy = new Map(letterToNumber);
     for (let i = left; i < right; i++)
     {
-        const letterNumber = letterToNumberCopy.get(s.charAt(i));
+        const letterNumber = letterToNumber.get(s.charAt(i));
         if (letterNumber !== undefined)
         {
-            letterToNumberCopy.set(s.charAt(i), letterNumber - 1);
+            letterToNumber.set(s.charAt(i), letterNumber - 1);
         }
     }
-    let found = true;
-    for (const letterNumber of letterToNumberCopy.values())
-    {
-        if (letterNumber !== 0)
-        {
-            found = false;
-            break;
-        }
-    }
-    if (found)
+    if (isAllZeros(letterToNumber.values()))
     {
         result.push(left);
     }
     left++;
     right++;
 
+    let beforeLeftChar = '';
+    let newRightChar = '';
+
     for (; right <= s.length; left++, right++)
     {
-        if (letterToNumberCopy.has(s.charAt(left - 1)))
+        beforeLeftChar = s.charAt(left - 1);
+        newRightChar = s.charAt(right - 1);
+        if (letterToNumber.has(beforeLeftChar))
         {
-            letterToNumberCopy.set(s.charAt(left - 1), letterToNumberCopy.get(s.charAt(left - 1)) + 1);
+            letterToNumber.set(beforeLeftChar, letterToNumber.get(beforeLeftChar) + 1);
         }
 
-        if (letterToNumberCopy.has(s.charAt(right - 1)))
+        if (letterToNumber.has(newRightChar))
         {
-            letterToNumberCopy.set(s.charAt(right - 1), letterToNumberCopy.get(s.charAt(right - 1)) - 1);
+            letterToNumber.set(newRightChar, letterToNumber.get(newRightChar) - 1);
         }
         else
         {
             continue;
         }
 
-        let found = true;
-        for (const letterNumber of letterToNumberCopy.values())
-        {
-            if (letterNumber !== 0)
-            {
-                found = false;
-                break;
-            }
-        }
-        if (found)
+        if (isAllZeros(letterToNumber.values()))
         {
             result.push(left);
         }
     }
     return result;
 };
-// @lc code=end
 
-console.log(findAnagrams('ababababa', 'ab'));
+/**
+ * @param {Iterable} iterable 
+ */
+function isAllZeros(iterable)
+{
+    for (const element of iterable)
+    {
+        if (element !== 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+// @lc code=end
