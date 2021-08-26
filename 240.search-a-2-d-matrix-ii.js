@@ -12,65 +12,53 @@
  */
 const searchMatrix = function (matrix, target) 
 {
-    return helper(matrix, 0, 0, matrix.length - 1, matrix[0].length - 1, target);
+    const ROW_LENGTH = matrix[0].length;
+
+    for (const row of matrix)
+    {
+        if (row[0] === target || row[ROW_LENGTH - 1] === target)
+        {
+            return true;
+        }
+        else if (row[0] < target && row[ROW_LENGTH - 1] > target)
+        {
+            if (binarySearch(row, target))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 };
 
 /**
- * @param {number[][]} matrix
- * @param {number} minRow
- * @param {number} minCol
- * @param {number} maxRow
- * @param {number} maxCol
- * @param {number} target
- * @return {boolean}
+ * 
+ * @param {number[]} numbers 
+ * @param {number} target 
+ * @returns {boolean}
  */
-function helper(matrix, minRow, minCol, maxRow, maxCol, target)
+function binarySearch(numbers, target)
 {
-    if (minRow === maxRow && minCol === maxCol)
+    let left = 0;
+    let right = numbers.length - 1;
+    let mid = Math.floor((left + right) / 2);
+    while (left <= right)
     {
-        return matrix[minRow][minCol] === target;
-    }
-    const midRow = Math.floor((minRow + maxRow) / 2);
-    const midCol = Math.floor((minCol + maxCol) / 2);
-    const midValue = matrix[midRow][midCol];
-    if (midValue === target)
-    {
-        return true;
-    }
-    else if (midValue > target)
-    {
-        let found = false;
-        if (midRow - 1 >= minRow)
-        {
-            found = found || helper(matrix, minRow, minCol, midRow - 1, maxCol, target);
-        }
-        if (found)
+        mid = Math.floor((left + right) / 2);
+        if (numbers[mid] === target)
         {
             return true;
         }
-        if (midCol - 1 >= minCol)
+        else if (numbers[mid] < target)
         {
-            found = found || helper(matrix, midRow, minCol, maxRow, midCol - 1, target);
+            left = mid + 1;
         }
-        return found;
+        else
+        {
+            right = mid - 1;
+        }
     }
-    else    // midValue < target
-    {
-        let found = false;
-        if (midRow + 1 <= maxRow)
-        {
-            found = found || helper(matrix, midRow + 1, minCol, maxRow, maxCol, target);
-        }
-        if (found)
-        {
-            return true;
-        }
-        if (midCol + 1 <= maxCol)
-        {
-            found = found || helper(matrix, minRow, midCol + 1, midRow, maxCol, target);
-        }
-        return found;
-    }
+    return false;
 }
 // @lc code=end
 
@@ -79,4 +67,4 @@ console.log(searchMatrix([
     [2, 5, 8, 12, 19],
     [3, 6, 9, 16, 22],
     [10, 13, 14, 17, 24],
-    [18, 21, 23, 26, 30]],27));
+    [18, 21, 23, 26, 30]], 13));
