@@ -12,26 +12,22 @@
 const maxProduct = function (nums) 
 {
     const LENGTH = nums.length;
-    /**
-     * @type {number[]}
-     * 从 0 到 i 最大的累积
-     */
-    const maxDP = new Array(LENGTH);
-    /**
-     * @type {number[]}
-     * 从 0 到 i 最小的累积
-     */
-    const minDP = new Array(LENGTH);
+    
+    let lastMax = nums[0];
+    let lastMin = nums[0];
 
-    maxDP[0] = nums[0];
-    minDP[0] = nums[0];
+    let currentMax;
+    let currentMin;
+
     let result = nums[0];
-
+    
     for (let i = 1; i < LENGTH; i++)
     {
-        maxDP[i] = Math.max(maxDP[i - 1] * nums[i], minDP[i - 1] * nums[i], nums[i]);
-        minDP[i] = Math.min(maxDP[i - 1] * nums[i], minDP[i - 1] * nums[i], nums[i]);
-        result = Math.max(result, maxDP[i]);
+        currentMax = Math.max(lastMax * nums[i], lastMin * nums[i], nums[i]);
+        currentMin = Math.min(lastMax * nums[i], lastMin * nums[i], nums[i]);
+        result = Math.max(result, currentMax);
+        lastMax = currentMax;
+        lastMin = currentMin;
     }
     return result;
 };
