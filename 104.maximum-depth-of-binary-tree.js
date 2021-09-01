@@ -21,7 +21,7 @@ class TreeNode
 
 // @lc code=start
 /**
- * @param {TreeNode} root
+ * @param {TreeNode | null} root
  * @return {number}
  */
 const maxDepth = function (root)
@@ -30,27 +30,7 @@ const maxDepth = function (root)
     {
         return 0;
     }
-    let currentQueue = [root];
-    let lastQueue = [];
-    let layerCount = 0;
-    while (currentQueue.length !== 0)
-    {
-        layerCount++;
-        lastQueue = currentQueue;
-        currentQueue = [];
-        for (const node of lastQueue)
-        {
-            if (node.left !== null)
-            {
-                currentQueue.push(node.left);
-            }
-            if (node.right !== null)
-            {
-                currentQueue.push(node.right);
-            }
-        }
-    }
-    return layerCount;
+    return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
 };
 // @lc code=end
 
