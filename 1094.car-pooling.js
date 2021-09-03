@@ -16,13 +16,19 @@ const carPooling = function (trips, capacity)
      * 第 i 距离的乘客数
      * @type {number[]}
      */
-    const numPassengers = [];
+    const numPassengers = new Array(1001);
     for (const [numPassenger, from, to] of trips)
     {
-        for (let i = from; i < to; i++)
+        numPassengers[from] = (numPassengers[from] ?? 0) + numPassenger;
+        numPassengers[to] = (numPassengers[to] ?? 0) - numPassenger;
+    }
+    let sum = 0;
+    for (const numPassenger of numPassengers)
+    {
+        if (numPassenger !== undefined)
         {
-            numPassengers[i] = (numPassengers[i] ?? 0) + numPassenger;
-            if (numPassengers[i] > capacity)
+            sum += numPassenger;
+            if (sum > capacity)
             {
                 return false;
             }
