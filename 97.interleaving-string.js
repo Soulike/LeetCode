@@ -35,6 +35,12 @@ function helper(s1, s1Start, s2, s2Start, s3, s3Start, cache)
         return cached;
     }
 
+    if ((s1.length - s1Start) + (s2.length - s2Start) !== (s3.length - s3Start))
+    {
+        cache.set(`${s1Start}-${s2Start}-${s3Start}`, false);
+        return false;
+    }
+
     if (s1.length - s1Start === 0)
     {
         const result = s2.slice(s2Start) === s3.slice(s3Start);
@@ -43,7 +49,7 @@ function helper(s1, s1Start, s2, s2Start, s3, s3Start, cache)
     }
     if (s2.length - s2Start === 0)
     {
-        const result= s1.slice(s1Start) === s3.slice(s3Start);
+        const result = s1.slice(s1Start) === s3.slice(s3Start);
         cache.set(`${s1Start}-${s2Start}-${s3Start}`, result);
         return result;
     }
