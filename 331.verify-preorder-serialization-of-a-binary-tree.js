@@ -12,45 +12,20 @@
 const isValidSerialization = function (preOrderString)
 {
     let preOrder = preOrderString.split(',');
-    /** @type {string[]} */
 
-    let newPreOrder = [];
-    while (true)
+    let outDegree = 1;  // 可用的出度
+    for (let i = 0; i < preOrder.length; i++)
     {
-        let hasLeafReplacement = false;
-        for (let i = 0; i < preOrder.length; i++)
-        {
-            if (preOrder[i] !== '#' && i <= preOrder.length - 3 && preOrder[i + 1] === '#' && preOrder[i + 2] === '#')
-            {
-                newPreOrder.push('#');
-                i += 2;
-                hasLeafReplacement = true;
-            }
-            else
-            {
-                newPreOrder.push(preOrder[i]);
-            }
-        }
-
-        if (newPreOrder.length === 3)
-        {
-            return newPreOrder[0] !== '#';
-        }
-        else if (newPreOrder.length === 1)
-        {
-            return newPreOrder[0] === '#';
-        }
-        else if (newPreOrder.length < 3)
+        if (outDegree === 0)    // 没有可用出度，但还有结点
         {
             return false;
         }
-        else if (!hasLeafReplacement)
+        outDegree--;    // 挂上结点，消耗一个出度
+        if (preOrder[i] !== '#')
         {
-            return false;
+            outDegree += 2; // 非 null 结点可以提供两个出度
         }
-
-        preOrder = newPreOrder;
-        newPreOrder = [];
     }
+    return outDegree === 0; // 没有多余的出度
 };
 // @lc code=end
