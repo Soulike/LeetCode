@@ -18,38 +18,31 @@ const numFriendRequests = function (ages)
         ageToCount.set(age,
             (ageToCount.get(age) ?? 0) + 1);
     }
-    const ageSet = Array.from(ageToCount.keys());
+    const ageSet = Array.from(ageToCount.keys()).sort((a, b) => a - b);
+    const ageSetLength = ageSet.length;
     let count = 0;
-    for (let i = 0; i < ageSet.length; i++)
+    for (let i = ageSetLength - 1; i >= 0; i--)
     {
-        const ageCount = ageToCount.get(ageSet[i]);
-        if (ageCount > 1)
+        for (let j = i; j >= 0; j--)
         {
-            if (canSendRequest(ageSet[i], ageSet[i]))
+            // Aage >= Bage
+            const Aage = ageSet[i];
+            const Bage = ageSet[j];
+            const AageCount = ageToCount.get(Aage);
+            const BageCount = ageToCount.get(Bage);
+            if (i === j)
             {
-                count += ageCount * (ageCount - 1);
+                if (AageCount > 1 && Bage > Aage * 0.5 + 7)  // 同年龄互粉
+                {
+                    count += AageCount * (AageCount - 1);
+                }
             }
-        }
-
-        for (let j = i + 1; j < ageSet.length; j++)
-        {
-            if (canSendRequest(ageSet[i], ageSet[j]))
+            else if (Bage > Aage * 0.5 + 7)
             {
-                count += ageToCount.get(ageSet[i]) * ageToCount.get(ageSet[j]);
-            }
-            if (canSendRequest(ageSet[j], ageSet[i]))
-            {
-                count += ageToCount.get(ageSet[i]) * ageToCount.get(ageSet[j]);
+                count += AageCount * BageCount;
             }
         }
     }
     return count;
 };
-
-function canSendRequest(fromAge, toAge)
-{
-    return (toAge > 0.5 * fromAge + 7)
-        && (toAge <= fromAge)
-        && (toAge <= 100 || fromAge >= 100);
-}
 // @lc code=end
