@@ -25,38 +25,50 @@ const reorderList = function (head)
     {
         return;
     }
-    
-    /** @type {ListNode[]} */
-    const listNodes = [];
-    /** @type {ListNode | null} */
-    let currentNode = head;
-    while (currentNode !== null)
-    {
-        listNodes.push(currentNode);
-        currentNode = currentNode.next;
-    }
-    const LENGTH = listNodes.length;
-    let left = 0;
-    let right = LENGTH - 1;
-    let processedNodeCount = 0;
+
+    /** @type {ListNode|null} */
+    let fast = head;
+    /** @type {ListNode|null} */
+    let slow = head;
+    let beforeSlow = head;
     while (true)
     {
-        listNodes[left].next = listNodes[right];
-        processedNodeCount++;
-        if (processedNodeCount + 1 === LENGTH)
+        beforeSlow = slow;
+        slow = slow.next;
+        fast = fast.next;
+        if (fast === null)
         {
-            listNodes[right].next = null;
             break;
         }
-        listNodes[right].next = listNodes[left + 1];
-        processedNodeCount++;
-        if (processedNodeCount + 1 === LENGTH)
+        fast = fast.next;
+        if (fast === null)
         {
-            listNodes[left+1].next = null;
             break;
         }
-        left++;
-        right--;
+    }
+    // slow 是逆序的起始点
+    beforeSlow.next = null;
+
+    /** @type {ListNode[]} */
+    const secondHalfStack = [];
+    while (slow !== null)
+    {
+        secondHalfStack.push(slow);
+        slow = slow.next;
+    }
+
+    let currentNode = head;
+    let currentNodeNext = head.next;
+    while (secondHalfStack.length > 0)
+    {
+        const listNodeToInsert = secondHalfStack.pop();
+        currentNode.next = listNodeToInsert;
+        listNodeToInsert.next = currentNodeNext;
+        currentNode = currentNodeNext;
+        if(currentNode !== null)
+        {
+            currentNodeNext = currentNode.next;
+        }
     }
 };
 // @lc code=end
