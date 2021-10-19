@@ -12,14 +12,12 @@ class Twitter
     {
         /** @type {Map<number, Set<number>>} */
         this.followerIdToFolloweeIds = new Map();
-        /** @type {Map<number, Set<number>>} */
-        this.userIdToTweetTimestamps = new Map();
-
-        this.tweetTimestamp = 0;
-
         /** @type {Map<number, number>} */
-        this.tweetTimestampToTweetId = new Map();
+        this.tweetIndexToUserId = new Map();
+        /** @type {number[]} */
+        this.tweetIds = [];
     }
+    
     /**
      * @param {number} userId
      * @param {number} tweetId
@@ -27,51 +25,39 @@ class Twitter
      */
     postTweet(userId, tweetId)
     {
-        let tweetTimestamps = this.userIdToTweetTimestamps.get(userId);
-        if (!tweetTimestamps)
-        {
-            /** @type {Set<number>} */
-            tweetTimestamps = new Set();
-        }
-        this.tweetTimestamp++;
-        tweetTimestamps.add(this.tweetTimestamp);
-        this.tweetTimestampToTweetId.set(this.tweetTimestamp, tweetId);
-        this.userIdToTweetTimestamps.set(userId, tweetTimestamps);
+        this.tweetIndexToUserId.set(this.tweetIds.length, userId);
+        this.tweetIds.push(tweetId);
     }
+
     /**
      * @param {number} userId
      * @return {number[]}
      */
     getNewsFeed(userId)
     {
-        const followeeIdsSet = this.followerIdToFolloweeIds.get(userId);
-        /** @type {number[]} */
-        let followeeIds;
-
-        if (!followeeIdsSet)
+        let followeeIds = this.followerIdToFolloweeIds.get(userId);
+        if (!followeeIds)
         {
-            followeeIds = [];
+            followeeIds = new Set();
         }
-        else
-        {
-            followeeIds = [...followeeIdsSet];
-        }
-
-        followeeIds.push(userId);
-
+        const TWEET_IDS_LENGTH = this.tweetIds.length;
         /** @type {number[]} */
-        const tweetTimestampsMix = [];
-        for (const followeeId of followeeIds)
+        let result = [];
+        for (let i = TWEET_IDS_LENGTH - 1; i >= 0; i--)
         {
-            const tweetTimestamps = this.userIdToTweetTimestamps.get(followeeId);
-            if (tweetTimestamps)
+            const tweetUserId = this.tweetIndexToUserId.get(i);
+            if (followeeIds.has(tweetUserId) || tweetUserId === userId)
             {
-                tweetTimestampsMix.push(...[...tweetTimestamps].slice(-10));
+                result.push(this.tweetIds[i]);
+            }
+            if (result.length === 10)
+            {
+                break;
             }
         }
-        tweetTimestampsMix.sort((a, b) => b - a);
-        return tweetTimestampsMix.slice(0, 10).map(timestamp => this.tweetTimestampToTweetId.get(timestamp));
+        return result;
     }
+
     /**
      * @param {number} followerId
      * @param {number} followeeId
@@ -84,10 +70,11 @@ class Twitter
         {
             /** @type {Set<number>} */
             followeeIds = new Set();
+            this.followerIdToFolloweeIds.set(followerId, followeeIds);
         }
         followeeIds.add(followeeId);
-        this.followerIdToFolloweeIds.set(followerId, followeeIds);
     }
+
     /**
      * @param {number} followerId
      * @param {number} followeeId
