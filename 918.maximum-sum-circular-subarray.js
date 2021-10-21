@@ -11,47 +11,50 @@
  */
 const maxSubarraySumCircular = function (nums)
 {
-    const NUMS_LENGTH = nums.length;
-    nums.push(...nums);
-
-    let prev = 0;
-    let current = 0;
-
-    let maxSubArraySum = Number.NEGATIVE_INFINITY;
-
-    for (let i = 0; i < NUMS_LENGTH; i++)
+    const sum = nums.reduce((prev, current) => prev + current);
+    const {minSubArraySum, maxSubArraySum} = getMinMaxSubArraySum(nums);
+    if (sum === minSubArraySum) // 数组里全都是负数
     {
-        prev = nums[i];
-        maxSubArraySum = Math.max(maxSubArraySum, prev);
-        if (nums[i] > 0)
-        {
-            const maxRightIndex = getRightIndex(i, NUMS_LENGTH);
-            for (let j = i + 1; j < maxRightIndex; j++)
-            {
-                if (prev > 0)
-                {
-                    current = prev + nums[j];
-                }
-                else
-                {
-                    current = nums[j];
-                }
-                maxSubArraySum = Math.max(maxSubArraySum, current);
-                prev = current;
-            }
-        }
+        return maxSubArraySum;
     }
-    return maxSubArraySum;
+    else
+    {
+        // 要么是数组中间的子数组最大，要么是数组扣掉中间的最小子数组最大
+        return Math.max(maxSubArraySum, sum - minSubArraySum);
+    }
 };
 
 /**
- * 
- * @param {number} leftIndex 
- * @param {number} numsLength 
- * @returns {number}
+ * @param {number[]} nums
+ * @return {{minSubArraySum: number, maxSubArraySum: number}}
  */
-function getRightIndex(leftIndex, numsLength)
+function getMinMaxSubArraySum(nums)
 {
-    return leftIndex + numsLength;
+    let maxSubArraySum = nums[0];
+    let maxPrev = nums[0];
+    let maxCurrent = 0;
+
+    let minSubArraySum = nums[0];
+    let minPrev = nums[0];
+    let minCurrent = 0;
+
+    const NUMS_LENGTH = nums.length;
+
+    for (let i = 1; i < NUMS_LENGTH; i++)
+    {
+        maxCurrent = maxPrev > 0
+            ? maxPrev + nums[i]
+            : nums[i];
+        
+        maxSubArraySum = Math.max(maxSubArraySum, maxCurrent);
+        maxPrev = maxCurrent;
+
+        minCurrent = minPrev >= 0
+            ? nums[i]
+            : minPrev + nums[i];
+        minSubArraySum = Math.min(minSubArraySum, minCurrent);
+        minPrev = minCurrent;
+    }
+    return {minSubArraySum, maxSubArraySum};
 }
 // @lc code=end
