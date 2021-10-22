@@ -13,61 +13,26 @@
  */
 const powerfulIntegers = function (x, y, bound)
 {
-    const xPows = [];
-    const yPows = [];
-    if (x !== 1)
-    {
-        for (let i = 0; ; i++)
-        {
-            const pow = x ** i;
-            if (pow <= bound)
-            {
-                xPows.push(pow);
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-    else
-    {
-        xPows.push(1);
-    }
-    
-    if (y !== 1)
-    {
-        for (let i = 0; ; i++)
-        {
-            const pow = y ** i;
-            if (pow <= bound)
-            {
-                yPows.push(pow);
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-    else
-    {
-        yPows.push(1);
-    }
-
     const result = new Set();
-    for (let i = 0; i < xPows.length; i++)
+    for (let i = 1; i <= bound; i *= x)
     {
-        for (let j = 0; j < yPows.length; j++)
+        for (let j = 1; j <= bound; j *= y)
         {
-            const sum = xPows[i] + yPows[j]
-            if (sum <= bound)
+            if (i + j <= bound)
             {
-                result.add(sum)
+                result.add(i + j);
+            }
+            if (y === 1 || i + j >= bound)
+            {
+                break;
             }
         }
+        if (x === 1)
+        {
+            break;
+        }
     }
-    return [...result];
+    return Array.from(result);
 };
 // @lc code=end
 
