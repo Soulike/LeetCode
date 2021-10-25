@@ -11,20 +11,20 @@
  */
 const arrayNesting = function (nums)
 {
-    const processedIndex = new Set();
     let maxLength = 0;
     for (let i = 0; i < nums.length; i++)
     {
-        processedIndex.add(i);
-        let length = 1;
-        let nextIndex = nums[i];
-        while (!processedIndex.has(nextIndex))
+        let length = 0;
+        let nextIndex = i;
+        while (nextIndex !== Number.MAX_SAFE_INTEGER
+            && nums[nextIndex] !== Number.MAX_SAFE_INTEGER)
         {
-            processedIndex.add(nextIndex);
             length++;
+            let beforeIndex = nextIndex;
             nextIndex = nums[nextIndex];
+            nums[beforeIndex] = Number.MAX_SAFE_INTEGER;
         }
-        maxLength = Math.max(length, maxLength);
+        maxLength = Math.max(maxLength, length);
     }
     return maxLength;
 };
