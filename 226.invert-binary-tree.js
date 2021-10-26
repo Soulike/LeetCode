@@ -26,13 +26,27 @@ class TreeNode
  */
 const invertTree = function (root)
 {
-    if (root !== null)
+    let lastLayerNodes = [root];
+    /**
+     * @type {(TreeNode|null)[]}
+     */
+    let currentLayerNodes = [];
+    while (lastLayerNodes.length > 0)
     {
-        [root.left, root.right] = [root.right, root.left];
-        invertTree(root.left);
-        invertTree(root.right);
+        for (const node of lastLayerNodes)
+        {
+            if(node !== null)
+            {
+                currentLayerNodes.push(node.left);
+                currentLayerNodes.push(node.right);
+
+                [node.left, node.right] = [node.right, node.left];
+            }
+        }
+        lastLayerNodes = currentLayerNodes;
+        currentLayerNodes = [];
     }
-    return root;
+    return root
 };
 // @lc code=end
 
