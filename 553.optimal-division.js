@@ -29,30 +29,31 @@ function optimalDivisionHelper(nums, left, right)
     }
     let leftValue = nums[left] ** 2;
     let leftNumbers = [];
+
     let maxValue = Number.NEGATIVE_INFINITY;
-    let minRightExpression = '';
-    let expression = '';
+    let maxValueExpression = '';
     for (let i = left; i < right - 1; i++)
     {
         leftValue /= nums[i];
         leftNumbers.push(nums[i]);
         const {expression: rightExpression, value: rightValue} = minimalDivisionHelper(nums, i + 1, right);
-        if (leftValue / rightValue > maxValue)
+
+        const currentValue = leftValue / rightValue;
+        if (currentValue > maxValue)
         {
-            maxValue = leftValue / rightValue;
-            minRightExpression = rightExpression;
+            maxValue = currentValue;
             if (leftNumbers.length > 1)
             {
-                expression = `(${leftNumbers.join('/')}/${minRightExpression})`;
+                maxValueExpression = `(${leftNumbers.join('/')}/${rightExpression})`;
             }
             else
             {
-                expression = `(${leftNumbers[0]}/${minRightExpression})`;
+                maxValueExpression = `(${leftNumbers[0]}/${rightExpression})`;
             }
         }
     }
 
-    return {value: maxValue, expression};
+    return {value: maxValue, expression: maxValueExpression};
 }
 
 /**
@@ -69,28 +70,29 @@ function minimalDivisionHelper(nums, left, right)
     }
     let leftValue = nums[left] ** 2;
     let leftNumbers = [];
+
     let minValue = Number.POSITIVE_INFINITY;
-    let maxRightExpression = '';
-    let expression = '';
+    let minValueExpression = '';
     for (let i = left; i < right - 1; i++)
     {
         leftValue /= nums[i];
         leftNumbers.push(nums[i]);
+
         const {expression: rightExpression, value: rightValue} = optimalDivisionHelper(nums, i + 1, right);
-        if (leftValue / rightValue < minValue)
+        const currentValue = leftValue / rightValue;
+        if (currentValue < minValue)
         {
-            minValue = leftValue / rightValue;
-            maxRightExpression = rightExpression;
+            minValue = currentValue;
             if (leftNumbers.length > 1)
             {
-                expression = `(${leftNumbers.join('/')}/${maxRightExpression})`;
+                minValueExpression = `(${leftNumbers.join('/')}/${rightExpression})`;
             }
             else
             {
-                expression = `(${leftNumbers[0]}/${maxRightExpression})`;
+                minValueExpression = `(${leftNumbers[0]}/${rightExpression})`;
             }
         }
     }
-    return {value: minValue, expression};
+    return {value: minValue, expression: minValueExpression};
 }
 // @lc code=end
