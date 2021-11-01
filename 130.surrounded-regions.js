@@ -6,40 +6,35 @@
 
 // @lc code=start
 /**
- * @param {('X'|'O')[][]} board
+ * @param {('X'|'O'|'M')[][]} board
  * @return {void} Do not return anything, modify board in-place instead.
  */
 const solve = function (board)
 {
+    const BORDER_REACHABLE = 'M';
+
     const m = board.length;
     const n = board[0].length;
-    /** @type {boolean[][]} */
-    const canReachBorder = new Array(m);
-    for (let i = 0; i < m; i++)
-    {
-        canReachBorder[i] = new Array(n);
-        canReachBorder[i].fill(false);
-    }
     for (let i = 0; i < m; i++)
     {
         if (board[i][0] === 'O')
         {
-            canReachBorder[i][0] = true;
+            board[i][0] = BORDER_REACHABLE;
         }
         if (board[i][n - 1] === 'O')
         {
-            canReachBorder[i][n - 1] = true;
+            board[i][n - 1] = BORDER_REACHABLE;
         }
     }
     for (let i = 1; i < n - 1; i++)
     {
         if (board[0][i] === 'O')
         {
-            canReachBorder[0][i] = true;
+            board[0][i] = BORDER_REACHABLE;
         }
         if (board[m - 1][i] === 'O')
         {
-            canReachBorder[m - 1][i] = true;
+            board[m - 1][i] = BORDER_REACHABLE;
         }
     }
     let changed = true;
@@ -50,14 +45,19 @@ const solve = function (board)
         {
             for (let j = 1; j < n - 1; j++)
             {
-                if (!canReachBorder[i][j])
+                if (board[i][j] !== BORDER_REACHABLE)
                 {
-                    canReachBorder[i][j] = board[i][j] === 'O' && (canReachBorder[i - 1][j]
-                        || canReachBorder[i + 1][j]
-                        || canReachBorder[i][j - 1]
-                        || canReachBorder[i][j + 1]);
+                    if (board[i][j] === 'O'
+                        && (board[i - 1][j] === BORDER_REACHABLE
+                            || board[i + 1][j] === BORDER_REACHABLE
+                            || board[i][j - 1] === BORDER_REACHABLE
+                            || board[i][j + 1] === BORDER_REACHABLE)
+                    )
+                    {
+                        board[i][j] = BORDER_REACHABLE;
+                    }
 
-                    if (canReachBorder[i][j])
+                    if (board[i][j] === BORDER_REACHABLE)
                     {
                         changed = true;
                     }
@@ -70,7 +70,7 @@ const solve = function (board)
     {
         for (let j = 0; j < n; j++)
         {
-            if (canReachBorder[i][j])
+            if (board[i][j] === BORDER_REACHABLE)
             {
                 board[i][j] = 'O';
             }
