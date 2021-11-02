@@ -15,7 +15,7 @@ const uniquePathsIII = function (grid)
     const n = grid[0].length;
     let i = 0;
     let j = 0;
-    let emptyGridCount = 1;
+    let emptyGridCount = 1; // including start grid
 
     for (let k = 0; k < m; k++)
     {
@@ -48,21 +48,17 @@ function helper(grid, i, j, walkedGridCount, emptyGridCount)
 {
     const m = grid.length;
     const n = grid[0].length;
-    grid[i][j] = -1;
+    grid[i][j] = -1;    // 已经路过，设置为障碍物
     let pathCount = 0;
 
     if (i > 0)
     {
+        // 如果要前进的格子是终点，那么要满足条件，应该已经路过了所有空白格子
         if (grid[i - 1][j] === 2)
         {
-            if ((i === m - 1 || grid[i + 1][j] === -1)
-                && (j === 0 || grid[i][j - 1] === -1)
-                && (j === n - 1 || grid[i][j + 1] === -1))
+            if (walkedGridCount + 1 === emptyGridCount)
             {
-                if (walkedGridCount + 1 === emptyGridCount)
-                {
-                    pathCount += 1;
-                }
+                pathCount += 1;
             }
         }
         else if (grid[i - 1][j] === 0)
@@ -74,14 +70,9 @@ function helper(grid, i, j, walkedGridCount, emptyGridCount)
     {
         if (grid[i + 1][j] === 2)
         {
-            if ((i === 0 || grid[i - 1][j] === -1)
-                && (j === 0 || grid[i][j - 1] === -1)
-                && (j === n - 1 || grid[i][j + 1] === -1))
+            if (walkedGridCount + 1 === emptyGridCount)
             {
-                if (walkedGridCount + 1 === emptyGridCount)
-                {
-                    pathCount += 1;
-                }
+                pathCount += 1;
             }
         }
         else if (grid[i + 1][j] === 0)
@@ -94,14 +85,9 @@ function helper(grid, i, j, walkedGridCount, emptyGridCount)
     {
         if (grid[i][j - 1] === 2)
         {
-            if ((j === n - 1 || grid[i][j + 1] === -1)
-                && (i === 0 || grid[i - 1][j] === -1)
-                && (i === m - 1 || grid[i + 1][j] === -1))
+            if (walkedGridCount + 1 === emptyGridCount)
             {
-                if (walkedGridCount + 1 === emptyGridCount)
-                {
-                    pathCount += 1;
-                }
+                pathCount += 1;
             }
         }
         else if (grid[i][j - 1] === 0)
@@ -113,14 +99,9 @@ function helper(grid, i, j, walkedGridCount, emptyGridCount)
     {
         if (grid[i][j + 1] === 2)
         {
-            if ((j === 0 || grid[i][j - 1] === -1)
-                && (i === 0 || grid[i - 1][j] === -1)
-                && (i === m - 1 || grid[i + 1][j] === -1))
+            if (walkedGridCount + 1 === emptyGridCount)
             {
-                if (walkedGridCount + 1 === emptyGridCount)
-                {
-                    pathCount += 1;
-                }
+                pathCount += 1;
             }
         }
         else if (grid[i][j + 1] === 0)
@@ -129,7 +110,7 @@ function helper(grid, i, j, walkedGridCount, emptyGridCount)
         }
     }
 
-    grid[i][j] = 0;
+    grid[i][j] = 0; // 路过完成，恢复
     return pathCount;
 }
 // @lc code=end
