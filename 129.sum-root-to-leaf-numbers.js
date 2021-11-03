@@ -24,39 +24,30 @@ class TreeNode
  */
 const sumNumbers = function (root)
 {
-    let sum = 0;
-    for (const numStr of treeNumbers(root))
-    {
-        sum += Number.parseInt(numStr);
-    }
-    return sum;
+    return helper(root, 0);
 };
 
 /**
- * @param {TreeNode|null} root
- * @return {string[]}
+ * @param {TreeNode} root
+ * @param {number} prevSum
+ * @return {number}
  */
-function treeNumbers(root)
+function helper(root, prevSum)
 {
-    if (root === null)
+    const currentSum = prevSum * 10 + root.val;
+    if (root.left === null && root.right === null)
     {
-        return [];
+        return currentSum;
     }
-    else
+    let result = 0;
+    if (root.left !== null)
     {
-        const childrenNumbers = [
-            ...treeNumbers(root.left),
-            ...treeNumbers(root.right)
-        ];
-        if (childrenNumbers.length === 0)
-        {
-            return [`${root.val}`];
-        }
-        else
-        {
-            return childrenNumbers.map(number =>
-                `${root.val}${number}`);
-        }
+        result += helper(root.left, currentSum);
     }
+    if (root.right !== null)
+    {
+        result += helper(root.right, currentSum);
+    }
+    return result;
 }
 // @lc code=end
