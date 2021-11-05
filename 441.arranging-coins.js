@@ -11,21 +11,7 @@
  */
 const arrangeCoins = function (n)
 {
-    let stairCount = 0;
-    let coinsLeftCount = n;
-    for (let i = 1; ; i++)
-    {
-        coinsLeftCount -= i;
-        if (coinsLeftCount >= 0)
-        {
-            stairCount++;
-        }
-        else
-        {
-            break;
-        }
-    }
-    return stairCount;
+    return Math.floor(Math.sqrt(2 * n + 0.25) - 0.5);
 };
 // @lc code=end
 
