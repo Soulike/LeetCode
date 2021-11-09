@@ -12,31 +12,28 @@
  */
 const findNumOfValidWords = function (words, puzzles)
 {
-    const letterToMask = new Map();
     const aCharCode = 'a'.charCodeAt(0);
-    for (let i = 0; i < 26; i++)
-    {
-        letterToMask.set(String.fromCharCode(aCharCode + i), 1 << i);
-    }
+
     const wordsMask = words.map(word =>
     {
         let mask = 0;
         for (const letter of word)
         {
-            mask |= letterToMask.get(letter);
+            mask |= 1 << (letter.charCodeAt(0) - aCharCode);
         }
         return mask;
     });
+
     const puzzlesMaskInfo = puzzles.map(puzzle =>
     {
         let mask = 0;
         for (const letter of puzzle)
         {
-            mask |= letterToMask.get(letter);
+            mask |= 1 << (letter.charCodeAt(0) - aCharCode);
         }
         return {
             mask,
-            requiredMask: letterToMask.get(puzzle[0])
+            requiredMask: 1 << (puzzle[0].charCodeAt(0) - aCharCode)
         };
     });
 
