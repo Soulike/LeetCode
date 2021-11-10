@@ -11,38 +11,14 @@
  */
 const maxAlternatingSum = function (nums)
 {
-    const cache = new Map();
-    return helper(nums, 0, true, cache);
+    let maxSum = nums[0];
+    for (let i = 1; i < nums.length; i++)
+    {
+        if (nums[i] - nums[i - 1] > 0)
+        {
+            maxSum += nums[i] - nums[i - 1];
+        }
+    }
+    return maxSum;
 };
-
-/**
- * @param {number[]} nums
- * @param {number} startIndex
- * @param {boolean} startSignIsAdd
- * @param {Map<string, number>} cache
- * @return {number}
- */
-function helper(nums, startIndex, startSignIsAdd, cache)
-{
-    const cached = cache.get(`${startIndex}-${startSignIsAdd}`);
-    if (cached !== undefined)
-    {
-        return cached;
-    }
-    if (startIndex === nums.length - 1)
-    {
-        return startSignIsAdd
-            ? nums[startIndex]
-            : 0;
-    }
-    const result = Math.max(
-        (startSignIsAdd
-            ? nums[startIndex]
-            : -nums[startIndex]) +
-        helper(nums, startIndex + 1, !startSignIsAdd, cache),
-        helper(nums, startIndex + 1, startSignIsAdd, cache)
-    );
-    cache.set(`${startIndex}-${startSignIsAdd}`, result);
-    return result;
-}
 // @lc code=end
