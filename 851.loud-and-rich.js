@@ -14,17 +14,17 @@ const loudAndRich = function (richer, quiet)
 {
     const PERSON_AMOUNT = quiet.length;
     /** @type {boolean[][]} */
-    const graph = new Array(PERSON_AMOUNT);
+    const reachableGraph = new Array(PERSON_AMOUNT);
     for (let i = 0; i < PERSON_AMOUNT; i++)
     {
-        graph[i] = new Array(PERSON_AMOUNT);
-        graph[i].fill(false);
-        graph[i][i] = true;
+        reachableGraph[i] = new Array(PERSON_AMOUNT);
+        reachableGraph[i].fill(false);
+        reachableGraph[i][i] = true;
     }
 
     for (const [a, b] of richer)
     {
-        graph[b][a] = true;
+        reachableGraph[b][a] = true;
     }
 
     let hasNewEdge = true;
@@ -35,14 +35,14 @@ const loudAndRich = function (richer, quiet)
         {
             for (let j = 0; j < PERSON_AMOUNT; j++)
             {
-                if (graph[i][j])
+                if (reachableGraph[i][j])
                 {
                     for (let k = 0; k < PERSON_AMOUNT; k++)
                     {
-                        if (graph[j][k] && !graph[i][k])
+                        if (reachableGraph[j][k] && !reachableGraph[i][k])
                         {
                             hasNewEdge = true;
-                            graph[i][k] = true;
+                            reachableGraph[i][k] = true;
                         }
                     }
                 }
@@ -50,21 +50,16 @@ const loudAndRich = function (richer, quiet)
         }
     }
 
-    const personSortedByQuiet = quiet
-        .map((quietValue, person) => [person, quietValue])
-        .sort(([, quietValue1], [, quietValue2]) => quietValue1 - quietValue2)
-        .map(([person,]) => person);
-
     const result = new Array(PERSON_AMOUNT);
     for (let i = 0; i < PERSON_AMOUNT; i++)
     {
+        let minQuiet = Number.POSITIVE_INFINITY;
         for (let j = 0; j < PERSON_AMOUNT; j++)
         {
-            let quietPerson = personSortedByQuiet[j];
-            if (graph[i][quietPerson])
+            if (reachableGraph[i][j] && quiet[j] < minQuiet)
             {
-                result[i] = quietPerson;
-                break;
+                result[i] = j;
+                minQuiet = quiet[j];
             }
         }
     }
