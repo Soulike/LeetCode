@@ -29,49 +29,16 @@ const maximalNetworkRank = function (n, roads)
         connected[a][b] = true;
         connected[b][a] = true;
     }
-    const cityToConnectedRoadCountArray = Array.from(cityToConnectedRoadCount).sort((a, b) => b[1] - a[1]);
-
-    /**
-     * 具有最大的两个出度的城市列表
-     * @type {[number, number][]}
-     */
-    const max2RouteCountCityToRouteCounts = [];
-    let nThMaxRouteCount = 0;
-    let lastRouteCount = -1;
-    for (const [city, roadCount] of cityToConnectedRoadCountArray)
-    {
-        if (lastRouteCount !== roadCount)
-        {
-            nThMaxRouteCount++;
-            lastRouteCount = roadCount;
-        }
-        if (nThMaxRouteCount > 2)
-        {
-            break;
-        }
-        max2RouteCountCityToRouteCounts.push([city, roadCount]);
-    }
 
     let maxRoadCountBetweenCities = 0;
-    for (let i = 0; i < max2RouteCountCityToRouteCounts.length; i++)
+    for (let i = 0; i < n; i++)
     {
-        const city1ToRoadCount = max2RouteCountCityToRouteCounts[i];
-        for (let j = i + 1; j < max2RouteCountCityToRouteCounts.length; j++)
+        for (let j = i + 1; j < n; j++)
         {
-            const city2ToRoadCount = max2RouteCountCityToRouteCounts[j];
-            if (connected[city1ToRoadCount[0]][city2ToRoadCount[0]])
-            {
-                maxRoadCountBetweenCities = Math.max(
-                    maxRoadCountBetweenCities,
-                    city1ToRoadCount[1] + city2ToRoadCount[1] - 1
-                );
-            }
-            else if(city1ToRoadCount[1] + city2ToRoadCount[1] >= maxRoadCountBetweenCities)
-            {
-                maxRoadCountBetweenCities = city1ToRoadCount[1] + city2ToRoadCount[1];
-                // 两个城市没有连接且能取得最大值，继续遍历只能取得相等或更小的值，不用继续遍历
-                break;
-            }
+            maxRoadCountBetweenCities = Math.max(
+                maxRoadCountBetweenCities,
+                (cityToConnectedRoadCount.get(i) ?? 0) + (cityToConnectedRoadCount.get(j) ?? 0) + (connected[i][j] ? -1 : 0)
+            );
         }
     }
     return maxRoadCountBetweenCities;
