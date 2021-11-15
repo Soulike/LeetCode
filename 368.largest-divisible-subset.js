@@ -12,72 +12,48 @@
 const largestDivisibleSubset = function (nums)
 {
     nums.sort((a, b) => a - b);
-
-    /**
-     * 所有的子集
-     * @type {number[][]}
-     */
-    const subsets = [];
-    /**
-     * 最长子集的长度
-     */
-    let maxLength = 0;
-    /**
-     * 指向最长子集的引用
+    /** 
+     * `parent[i]` 为下标为 `i` 的数字在组成最长子集时的前一个数的下标，-1 代表没有前一个数
      * @type {number[]}
      */
-    let maxLengthSubset = [];
+    const parent = new Array(nums.length);
+    parent.fill(-1);
+    /**
+     * `numInIndexMaxSubsetLength[i]` 为下标为 `i` 的数字在组成最长子集时的长度
+     * @type {number[]}
+     */
+    const numInIndexMaxSubsetLength = new Array(nums.length);
+    numInIndexMaxSubsetLength.fill(1);
 
-    for (const num of nums)
+    let maxLength = 0;
+    let maxLengthIndex = 0;
+
+    for (let i = 1; i < nums.length; i++)
     {
-        let hasDivisibleSubset = false;
-        // 因为会改变数组，因此要保存长度
-        const subsetLength = subsets.length;
-        /**
-         * 对于 `num` 可以添加到末尾的最长子集的长度
-         */
-        let subsetMaxLength = 0;
-        /**
-         * 对于 `num` 可以添加到末尾的最长子集
-         */
-        let subsetWithMaxLength = [];
-        for (let i = 0; i < subsetLength; i++)
+        for (let j = 0; j < i; j++)
         {
-            const subset = subsets[i];
-            const lastNum = subset[subset.length - 1];
-            if (num % lastNum === 0)
+            if (nums[i] % nums[j] === 0 && numInIndexMaxSubsetLength[j] + 1 > numInIndexMaxSubsetLength[i])
             {
-                hasDivisibleSubset = true;
-                if (subset.length > subsetMaxLength)
+                parent[i] = j;
+                numInIndexMaxSubsetLength[i] = numInIndexMaxSubsetLength[j] + 1;
+
+                if (numInIndexMaxSubsetLength[i] > maxLength)
                 {
-                    subsetMaxLength = subset.length;
-                    subsetWithMaxLength = subset;
+                    maxLength = numInIndexMaxSubsetLength[i];
+                    maxLengthIndex = i;
                 }
             }
         }
-
-        if (hasDivisibleSubset)
-        {
-            // 复制一份，因为可能还有其他因数的数字拼接
-            subsets.push([...subsetWithMaxLength]);
-            subsetWithMaxLength.push(num);
-            if (subsetWithMaxLength.length > maxLength)
-            {
-                maxLength = subsetWithMaxLength.length;
-                maxLengthSubset = subsetWithMaxLength;
-            }
-        }
-        else    // 没有可以添加到末尾的子集，是新子集
-        {
-            const newSubset = [num];
-            subsets.push(newSubset);
-            if (1 > maxLength)
-            {
-                maxLength = 1;
-                maxLengthSubset = newSubset;
-            }
-        }
     }
-    return maxLengthSubset;
+
+    let prevIndex = maxLengthIndex;
+    const maxSubset = [];
+    while (prevIndex !== -1)
+    {
+        maxSubset.push(nums[prevIndex]);
+        prevIndex = parent[prevIndex];
+    }
+
+    return maxSubset;
 };
 // @lc code=end
