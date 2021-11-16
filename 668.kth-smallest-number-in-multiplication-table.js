@@ -18,14 +18,14 @@ const findKthNumber = function (m, n, k)
     while (left < right)
     {
         let mid = Math.floor((left + right) / 2);
-        let smallerNumberCount = 0;
+        let lessEqualNumberCount = 0;
         for (let i = 1; i <= m; i++)
         {
-            smallerNumberCount += (mid > n * i)
+            lessEqualNumberCount += (mid > n * i)
                 ? n
                 : Math.floor((mid / i));
         }
-        if (smallerNumberCount < k)
+        if (lessEqualNumberCount < k)
         {
             left = mid + 1;
         }
