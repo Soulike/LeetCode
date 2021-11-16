@@ -34,7 +34,7 @@ const largestDivisibleSubset = function (nums)
         {
             if (nums[i] % nums[j] === 0 && numInIndexMaxSubsetLength[j] + 1 > numInIndexMaxSubsetLength[i])
             {
-                parent[i] = j;
+                parent[i] = j;.
                 numInIndexMaxSubsetLength[i] = numInIndexMaxSubsetLength[j] + 1;
 
                 if (numInIndexMaxSubsetLength[i] > maxLength)
