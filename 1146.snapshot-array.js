@@ -8,7 +8,7 @@
 
 class SnapshotArray
 {
-    /** @type {Map<number, number>[]} */
+    /** @type {Map<number, Map<number, number>>} */
     #store;
     /** @type {number} */
     #lastSnapId;
@@ -20,7 +20,7 @@ class SnapshotArray
     */
     constructor(length)
     {
-        this.#store = [];
+        this.#store = new Map();
         this.#lastSnapId = -1;
     }
 
@@ -31,11 +31,11 @@ class SnapshotArray
      */
     set(index, val)
     {
-        let snapIdToValues = this.#store[index];
+        let snapIdToValues = this.#store.get(index);
         if (snapIdToValues === undefined)
         {
-            this.#store[index] = new Map();
-            snapIdToValues = this.#store[index];
+            snapIdToValues = new Map();
+            this.#store.set(index, snapIdToValues);
         }
         snapIdToValues.set(SnapshotArray.noSnappedId, val);
     }
@@ -46,7 +46,7 @@ class SnapshotArray
     snap()
     {
         const snapId = ++this.#lastSnapId;
-        for (const snapIdToValues of this.#store)
+        for (const [,snapIdToValues] of this.#store)
         {
             if (snapIdToValues !== undefined)
             {
@@ -64,7 +64,7 @@ class SnapshotArray
      */
     get(index, snap_id)
     {
-        const snapIdToValues = this.#store[index];
+        const snapIdToValues = this.#store.get(index);
         if (snapIdToValues === undefined)
         {
             return 0;
