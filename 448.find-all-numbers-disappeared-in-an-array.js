@@ -11,17 +11,28 @@
  */
 const findDisappearedNumbers = function (nums)
 {
-    const LENGTH = nums.length;
-    const numberSet = new Set();
-    for (let i = 0; i < LENGTH; i++)
+    let currentIndex = 0;
+    while (currentIndex < nums.length)
     {
-        numberSet.add(i+1);
+        const currentNum = nums[currentIndex];
+        if (currentNum - 1 !== currentIndex && nums[currentNum-1]!== currentNum)
+        {
+            [nums[currentIndex], nums[currentNum - 1]] = [nums[currentNum - 1], nums[currentIndex]];
+        }
+        else
+        {
+            currentIndex++;
+        }
     }
-    for (const num of nums)
+
+    const result = [];
+    for (let i = 0; i < nums.length; i++)
     {
-        numberSet.delete(num);
+        if (nums[i] !== i + 1)
+        {
+            result.push(i + 1);
+        }
     }
-    return Array.from(numberSet);
+    return result;
 };
 // @lc code=end
-
