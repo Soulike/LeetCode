@@ -13,13 +13,11 @@
 const hammingDistance = function (x, y)
 {
     let distance = 0;
-    const xorResult = (x ^ y).toString(2);
-    for (const bit of xorResult)
+    let xorResult = (x ^ y);
+    while (xorResult > 0)
     {
-        if (bit === '1')
-        {
-            distance++;
-        }
+        distance += (xorResult & 0b1);
+        xorResult = xorResult >>> 1;
     }
     return distance;
 };
