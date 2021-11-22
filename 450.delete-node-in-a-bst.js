@@ -31,46 +31,98 @@ const deleteNode = function (root, key)
     {
         return root;
     }
-    if (root.val === key)
+
+    /**@type {TreeNode|null}*/
+    let currentNode = root;
+    /**@type {TreeNode|null}*/
+    let prevNode = null;
+    let isLeftChild = false;
+    while (currentNode.val !== key)
     {
-        if (root.left === null && root.right === null)
+        prevNode = currentNode;
+        if (key > currentNode.val)
+        {
+            prevNode = currentNode;
+            isLeftChild = false;
+            currentNode = currentNode.right;
+        }
+        else if (key < currentNode.val)
+        {
+            isLeftChild = true;
+            currentNode = currentNode.left;
+        }
+        if (currentNode === null)
+        {
+            return root;
+        }
+    }
+
+    const deletedNode = currentNode;
+
+    if (currentNode.left === null && currentNode.right === null)
+    {
+        if (prevNode === null)
         {
             return null;
         }
-        else if (root.left === null && root.right !== null)
+        else if (isLeftChild)
         {
-            return root.right;
-        }
-        else if (root.left !== null && root.right === null)
-        {
-            return root.left;
+            prevNode.left = null;
         }
         else
         {
-            let currentNode = root.right;
-            let prevNode = root;
-            if (currentNode.left === null)
-            {
-                root.val = currentNode.val;
-                root.right = currentNode.right;
-            }
-            else
-            {
-                while (currentNode.left !== null)
-                {
-                    prevNode = currentNode;
-                    currentNode = currentNode.left;
-                }
-                prevNode.left = currentNode.right;
-                root.val = currentNode.val;
-                return root;
-            }
+            prevNode.right = null;
+        }
+    }
+    else if (currentNode.left !== null && currentNode.right === null)
+    {
+        if (prevNode === null)
+        {
+            return currentNode.left;
+        }
+        else if (isLeftChild)
+        {
+            prevNode.left = currentNode.left;
+        }
+        else
+        {
+            prevNode.right = currentNode.left;
+        }
+    }
+    else if (currentNode.left === null && currentNode.right !== null)
+    {
+        if (prevNode === null)
+        {
+            return currentNode.right;
+        }
+        else if (isLeftChild)
+        {
+            prevNode.left = currentNode.right;
+        }
+        else
+        {
+            prevNode.right = currentNode.right;
         }
     }
     else
     {
-        root.left = deleteNode(root.left, key);
-        root.right = deleteNode(root.right, key);
+        prevNode = currentNode;
+        currentNode = currentNode.right;
+        if (currentNode.left === null)
+        {
+            deletedNode.val = currentNode.val;
+            deletedNode.right = currentNode.right;
+        }
+        else
+        {
+            while (currentNode.left !== null)
+            {
+                prevNode = currentNode;
+                currentNode = currentNode.left;
+            }
+            prevNode.left = currentNode.right;
+            deletedNode.val = currentNode.val;
+        }
     }
     return root;
 };
