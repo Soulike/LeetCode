@@ -16,14 +16,7 @@ const maxSubArray = function (nums)
 
     for (let i = 1; i < nums.length; i++)
     {
-        if (lastSum + nums[i] > nums[i])
-        {
-            lastSum = lastSum + nums[i];
-        }
-        else
-        {
-            lastSum = nums[i];
-        }
+        lastSum = Math.max(lastSum + nums[i], nums[i]);
         maxSum = Math.max(maxSum, lastSum);
     }
 
