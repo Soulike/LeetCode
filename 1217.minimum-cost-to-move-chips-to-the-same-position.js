@@ -11,26 +11,19 @@
  */
 const minCostToMoveChips = function (position)
 {
-    const positionToCoinCount = new Map();
-    for (const coinPosition of position)
+    let oddCoinCount = 0;
+    let evenCoinCount = 0;
+    for (const pos of position)
     {
-        positionToCoinCount.set(coinPosition,
-            (positionToCoinCount.get(coinPosition) ?? 0) + 1);
-    }
-
-    const positions = [...positionToCoinCount.keys()];
-
-    let minCost = Number.POSITIVE_INFINITY;
-    for (const moveToPosition of positions)
-    {
-        let currentMoveCost = 0;
-        for (const moveFromPosition of positions)
+        if (pos % 2)
         {
-            currentMoveCost += Math.abs(moveFromPosition - moveToPosition) % 2 * positionToCoinCount.get(moveFromPosition);
+            oddCoinCount++;
         }
-        minCost = Math.min(minCost, currentMoveCost);
+        else
+        {
+            evenCoinCount++;
+        }
     }
-
-    return minCost;
+    return Math.min(oddCoinCount, evenCoinCount);
 };
 // @lc code=end
