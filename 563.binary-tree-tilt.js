@@ -23,71 +23,25 @@ function TreeNode(val, left, right)
  */
 const findTilt = function (root)
 {
-    const nodeTiltsSumCache = new Map();
-    const treeSumCache = new Map();
-    return getTiltsSum(root, nodeTiltsSumCache, treeSumCache)
+    const tileSum = {sum: 0}
+    postOrderTransverse(root, tileSum);
+    return tileSum.sum;
 };
 
 /**
  * @param {TreeNode|null} root
- * @param {Map<TreeNode, number>} nodeTiltsSumCache
- * @param {Map<TreeNode, number>} treeSumCache
- * @return {number}
+ * @param {{sum: number}} tileSum
+ * @return {number} - 以 root 为根的树的所有结点的和
  */
-function getTiltsSum(root, nodeTiltsSumCache, treeSumCache)
+function postOrderTransverse(root, tileSum)
 {
     if (root === null)
     {
         return 0;
     }
-    const cached = nodeTiltsSumCache.get(root);
-    if (cached !== undefined)
-    {
-        return cached;
-    }
-    let result;
-    if (root.left === null && root.right === null)
-    {
-        result = 0;
-    }
-    else if (root.left === null && root.right !== null)
-    {
-        result = Math.abs(getTreeSum(root.right, treeSumCache));
-        result += getTiltsSum(root.right, nodeTiltsSumCache, treeSumCache);
-    }
-    else if (root.left !== null && root.right === null)
-    {
-        result = Math.abs(getTreeSum(root.left, treeSumCache));
-        result += getTiltsSum(root.left, nodeTiltsSumCache, treeSumCache);
-    }
-    else
-    {
-        result = Math.abs(getTreeSum(root.left, treeSumCache) - getTreeSum(root.right, treeSumCache));
-        result += (getTiltsSum(root.left, nodeTiltsSumCache, treeSumCache) + getTiltsSum(root.right, nodeTiltsSumCache, treeSumCache));
-    }
-
-    nodeTiltsSumCache.set(root, result);
-    return result;
-}
-
-/**
- * @param {TreeNode| null} root
- * @param {Map<TreeNode, number>} cache
- * @return {number}
- */
-function getTreeSum(root, cache)
-{
-    if (root === null)
-    {
-        return 0;
-    }
-    const cached = cache.get(root);
-    if (cached !== undefined)
-    {
-        return cached;
-    }
-    const treeSum = root.val + getTreeSum(root.left, cache) + getTreeSum(root.right, cache);
-    cache.set(root, treeSum);
-    return treeSum;
+    const leftTreeSum = postOrderTransverse(root.left, tileSum);
+    const rightTreeSum = postOrderTransverse(root.right, tileSum);
+    tileSum.sum += Math.abs(leftTreeSum - rightTreeSum);
+    return leftTreeSum + rightTreeSum + root.val;
 }
 // @lc code=end
