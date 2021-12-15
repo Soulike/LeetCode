@@ -11,41 +11,22 @@
  */
 const checkPowersOfThree = function (n)
 {
-    const cache = new Map();
-    return helper(n, 0, cache);
-};
-
-function helper(n, minExp, cache)
-{
-    const cached = cache.get(`${n}-${minExp}`);
-    if (cached !== undefined)
+    let nLeft = n;
+    while (nLeft > 0)
     {
-        return cached;
-    }
-
-    let result = false;
-    for (let i = minExp; ; i++)
-    {
-        const threePower = 3 ** i;
-        if (threePower === n)
+        if (nLeft % 3 === 2)
         {
-            result = true;
+            return false;
         }
-        else if (threePower > n)
+        if (nLeft % 3 === 0)
         {
-            break;
+            nLeft /= 3;
         }
         else
         {
-            result = helper(n - threePower, i + 1, cache);
-            if (result)
-            {
-                break;
-            }
+            nLeft--;
         }
     }
-
-    cache.set(`${n}-${minExp}`, result);
-    return result;
-}
+    return true;
+};
 // @lc code=end
