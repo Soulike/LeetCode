@@ -17,7 +17,7 @@ const checkPowersOfThree = function (n)
 
 function helper(n, minExp, cache)
 {
-    const cached = cache.get(n);
+    const cached = cache.get(`${n}-${minExp}`);
     if (cached !== undefined)
     {
         return cached;
@@ -45,7 +45,7 @@ function helper(n, minExp, cache)
         }
     }
 
-    cache.set(n, result);
+    cache.set(`${n}-${minExp}`, result);
     return result;
 }
 // @lc code=end
