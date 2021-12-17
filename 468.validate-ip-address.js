@@ -11,55 +11,43 @@
  */
 const validIPAddress = function (queryIP)
 {
-    const splittedByDot = queryIP.split('.');
-    if (splittedByDot.length !== 1 && splittedByDot.length !== 4)
+    if (queryIP.length < 7)
     {
         return 'Neither';
     }
-    if (splittedByDot.length === 1) // not IPv4
+    let type = '';
+    for (let i = 0; i < 5; i++)
     {
-        const splittedByColon = queryIP.split(':');
-        if (splittedByColon.length !== 8)
+        if (queryIP[i] === '.')
+        {
+            type = 'IPv4';
+            break;
+        }
+        if (queryIP[i] === ':')
+        {
+            type = 'IPv6';
+            break;
+        }
+    }
+
+    if (type === 'IPv4')
+    {
+        const splitted = queryIP.split('.');
+        if (splitted.length !== 4)
         {
             return 'Neither';
         }
-        else    // possible IPv6
+        for (const x of splitted)
         {
-            for (let x of splittedByColon)
-            {
-                if (x.length > 4 || x.length < 1)
-                {
-                    return 'Neither';
-                }
-                x = x.toUpperCase();
-                for (const digit of x)
-                {
-                    const charCode = digit.charCodeAt(0);
-                    if ((charCode < '0'.charCodeAt(0) || charCode > '9'.charCodeAt(0)) &&
-                        (charCode < 'A'.charCodeAt(0) || charCode > 'F'.charCodeAt(0))
-                    )
-                    {
-                        return 'Neither';
-                    }
-                }
-                const parsedX = Number.parseInt(x, 16);
-                if (parsedX < 0 || parsedX > 0xFFFF)
-                {
-                    return 'Neither';
-                }
-            }
-            return 'IPv6';
-        }
-    }
-    else    // possible IPv4
-    {
-        for (const x of splittedByDot)
-        {
-            if (x.length < 1 || x.length > 3
-                || (x[0] === '0' && x.length !== 1))
+            if (x.length < 1 || x.length > 3)
             {
                 return 'Neither';
             }
+            if (x[0] === '0' && x.length !== 1)
+            {
+                return 'Neither';
+            }
+            let xNum = 0;
             for (const digit of x)
             {
                 const charCode = digit.charCodeAt(0);
@@ -67,14 +55,46 @@ const validIPAddress = function (queryIP)
                 {
                     return 'Neither';
                 }
-            }
-            const parsedX = Number.parseInt(x);
-            if (parsedX < 0 || parsedX > 255)
-            {
-                return 'Neither';
+                xNum = xNum * 10 + Number.parseInt(digit, 10);
+                if (xNum > 255)
+                {
+                    return 'Neither';
+                }
             }
         }
         return 'IPv4';
+    }
+    else    // IPv6
+    {
+        const splitted = queryIP.split(':');
+        if (splitted.length !== 8)
+        {
+            return 'Neither';
+        }
+        for (let x of splitted)
+        {
+            if (x.length < 1 || x.length > 4)
+            {
+                return 'Neither';
+            }
+            x = x.toUpperCase();
+            let xNum = 0;
+            for (const digit of x)
+            {
+                const charCode = digit.charCodeAt(0);
+                if ((charCode < '0'.charCodeAt(0) || charCode > '9'.charCodeAt(0))
+                    && (charCode < 'A'.charCodeAt(0) || charCode > 'F'.charCodeAt(0)))
+                {
+                    return 'Neither';
+                }
+                xNum = xNum * 16 + Number.parseInt(digit, 16);
+                if (xNum > 0xFFFF)
+                {
+                    return 'Neither';
+                }
+            }
+        }
+        return 'IPv6';
     }
 };
 // @lc code=end
