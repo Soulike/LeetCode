@@ -29,8 +29,7 @@ const largestRectangleArea = function (heights)
         else
         {
             const topIndex = monostack[monostack.length - 1];
-            const topHeight = heights[topIndex];
-            if (topHeight < heights[i])
+            if (heights[topIndex] < heights[i])
             {
                 monostack.push(i);
             }
@@ -39,7 +38,7 @@ const largestRectangleArea = function (heights)
                 monostack.pop();
                 const poppedTopIndex = monostack[monostack.length - 1];
 
-                maxArea = Math.max(maxArea, topHeight * (
+                maxArea = Math.max(maxArea, heights[topIndex] * (
                     monostack.length === 0
                         ? i
                         : (i - poppedTopIndex - 1)));
@@ -47,7 +46,6 @@ const largestRectangleArea = function (heights)
             }
         }
     }
-
 
     return maxArea;
 };
