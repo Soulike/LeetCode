@@ -11,36 +11,29 @@
  */
 const dailyTemperatures = function (temperatures) 
 {
-    const LENGTH = temperatures.length;
-    /** @type {number[]} */
-    const stack = [];
-    const output = new Array(LENGTH);
-    output.fill(0);
-    for (let i = 0; i < LENGTH; i++)
+    const result = new Array(temperatures.length);
+    result.fill(0);
+
+    const monostack = [];   // 递增栈，存储索引
+    for (let i = 0; i < temperatures.length; i++)
     {
-        if (stack.length === 0)
+        if (monostack.length === 0)
         {
-            stack.push(i);
+            monostack.push(i);
         }
         else
         {
-            while (stack.length > 0)
+            let top = monostack[monostack.length - 1];
+            while (monostack.length > 0 && temperatures[top] < temperatures[i])
             {
-                const top = stack[stack.length - 1];
-                if (temperatures[top] < temperatures[i])
-                {
-                    stack.pop();
-                    output[top] = i - top;
-                }
-                else
-                {
-                    break;
-                }
+                result[top] = i - top;
+                monostack.pop();
+                top = monostack[monostack.length - 1];
             }
-            stack.push(i);
+            monostack.push(i);
         }
     }
-    return output;
+    return result;
 };
 // @lc code=end
 
