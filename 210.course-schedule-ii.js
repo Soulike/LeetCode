@@ -12,50 +12,57 @@
  */
 const findOrder = function (numCourses, prerequisites) 
 {
-    /**@type {Map<number, number>} */
-    const inCounts = new Map();
-    /**@type {Map<number, number[]>} */
-    const courseToPrerequisites = new Map();
-    for (let i = 0; i < numCourses; i++)
+    /** @type {Map<number, number>} */
+    const courseToInDegree = new Map();
+
+    /** @type {Map<number, Set<number>>} */
+    const courseToDependents = new Map();
+
+    for (const [course, prerequisite] of prerequisites)
     {
-        inCounts.set(i, 0);
-        courseToPrerequisites.set(i, []);
-    }
-    for (const [i, j] of prerequisites)
-    {
-        inCounts.set(j,
-            inCounts.get(j) + 1);
-        courseToPrerequisites.get(i).push(j);
+        courseToInDegree.set(course,
+            (courseToInDegree.get(course) ?? 0) + 1);
+        
+        const courseDependents = courseToDependents.get(prerequisite);
+        if (courseDependents === undefined)
+        {
+            courseToDependents.set(prerequisite, new Set([course]));
+        }
+        else
+        {
+            courseDependents.add(course);
+        }
     }
 
-    const result = [];
-    while (inCounts.size !== 0)
+    const result = new Set();
+    let found = true;
+
+    while (found)
     {
-        const inCountsCopy = new Map(inCounts);
-        let found = false;
-        for (const [course, inCount] of inCountsCopy)
+        found = false;
+        for (let i = 0; i < numCourses; i++)
         {
-            if (inCount === 0)
+            if (!result.has(i) && (courseToInDegree.get(i) ?? 0) === 0)  // 入度是 0
             {
                 found = true;
-                result.push(course);
-                inCounts.delete(course);
-                const prerequisiteCourses = courseToPrerequisites.get(course);
-                for (const prerequisiteCourse of prerequisiteCourses)
+                const dependents = courseToDependents.get(i) ?? new Set();
+                for (const dependent of dependents)
                 {
-                    inCounts.set(prerequisiteCourse,
-                        inCounts.get(prerequisiteCourse) - 1);
+                    courseToInDegree.set(dependent,
+                        courseToInDegree.get(dependent) - 1);
                 }
-                break;
+                result.add(i);
             }
         }
-        if (!found)
-        {
-            return [];
-        }
     }
-    return result.reverse();
+
+    if(result.size === numCourses)
+    {
+        return Array.from(result);
+    }
+    else
+    {
+        return [];
+    }
 };
 // @lc code=end
-
-console.log(findOrder(4, [[1, 0], [2, 0], [3, 1], [3, 2]]));
