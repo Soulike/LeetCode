@@ -12,74 +12,52 @@
  */
 const findAnagrams = function (s, p) 
 {
-    const result = [];
-    const letterToNumber = new Map();
-    for (const char of p)
+    const letterToAmount = new Map();
+
+    for (const letter of p)
     {
-        letterToNumber.set(char,
-            letterToNumber.get(char)
-                ? letterToNumber.get(char) + 1
-                : 1);
+        letterToAmount.set(letter,
+            (letterToAmount.get(letter) ?? 0) + 1);
     }
+
+    let result = [];
+
+    let usedLetterCount = 0;
 
     let left = 0;
-    let right = p.length;
-    for (let i = left; i < right; i++)
+    for (let right = 0; right < s.length; right++)
     {
-        const letterNumber = letterToNumber.get(s.charAt(i));
-        if (letterNumber !== undefined)
+        const rightLetter = s[right];
+        const rightLetterAmount = letterToAmount.get(rightLetter);
+        if (rightLetterAmount !== undefined)
         {
-            letterToNumber.set(s.charAt(i), letterNumber - 1);
+            letterToAmount.set(rightLetter, rightLetterAmount - 1);
+            if (rightLetterAmount - 1 >= 0)
+            {
+                usedLetterCount++;
+            }
+        }
+
+        while (usedLetterCount === p.length)
+        {
+            if (right - left + 1 === p.length)
+            {
+                result.push(left);
+            }
+            const leftLetter = s[left];
+            const leftLetterAmount = letterToAmount.get(leftLetter);
+            if (leftLetterAmount !== undefined)
+            {
+                letterToAmount.set(leftLetter, leftLetterAmount + 1);
+                if (leftLetterAmount + 1 > 0)
+                {
+                    usedLetterCount--;
+                }
+            }
+            left++;
         }
     }
-    if (isAllZeros(letterToNumber.values()))
-    {
-        result.push(left);
-    }
-    left++;
-    right++;
 
-    let beforeLeftChar = '';
-    let newRightChar = '';
-
-    for (; right <= s.length; left++, right++)
-    {
-        beforeLeftChar = s.charAt(left - 1);
-        newRightChar = s.charAt(right - 1);
-        if (letterToNumber.has(beforeLeftChar))
-        {
-            letterToNumber.set(beforeLeftChar, letterToNumber.get(beforeLeftChar) + 1);
-        }
-
-        if (letterToNumber.has(newRightChar))
-        {
-            letterToNumber.set(newRightChar, letterToNumber.get(newRightChar) - 1);
-        }
-        else
-        {
-            continue;
-        }
-
-        if (isAllZeros(letterToNumber.values()))
-        {
-            result.push(left);
-        }
-    }
     return result;
 };
-
-/**
- * @param {Iterable} iterable 
- */
-function isAllZeros(iterable)
-{
-    for (const element of iterable)
-    {
-        if (element !== 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
 // @lc code=end
