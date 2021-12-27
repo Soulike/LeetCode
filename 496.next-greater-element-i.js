@@ -19,8 +19,8 @@ const nextGreaterElement = function (nums1, nums2)
         numToIndexOfNums2.set(nums2[i], i);
     }
 
-    const nextGreaterElementIndexOfNums2 = new Array(nums2.length);
-    nextGreaterElementIndexOfNums2.fill(-1);
+    const nextGreaterElementOfNums2 = new Array(nums2.length);
+    nextGreaterElementOfNums2.fill(-1);
 
     const monostackOfElementIndexInNums2 = [];  // 栈底到栈顶，单调递减
     for (let i = 0; i < nums2.length; i++)
@@ -35,7 +35,7 @@ const nextGreaterElement = function (nums1, nums2)
             let topTemp = nums2[topIndex];
             while (topTemp < nums2[i])   // 遇到了一个上升的温度
             {
-                nextGreaterElementIndexOfNums2[topIndex] = i;
+                nextGreaterElementOfNums2[topIndex] = nums2[i];
                 monostackOfElementIndexInNums2.pop();
                 if (monostackOfElementIndexInNums2.length === 0)
                 {
@@ -53,8 +53,7 @@ const nextGreaterElement = function (nums1, nums2)
     for (const num of nums1)
     {
         const numIndexInNums2 = numToIndexOfNums2.get(num);
-        const nextGreaterIndexInNums2 = nextGreaterElementIndexOfNums2[numIndexInNums2];
-        result.push(nextGreaterIndexInNums2 === -1 ? -1 : nums2[nextGreaterIndexInNums2]);
+        result.push(nextGreaterElementOfNums2[numIndexInNums2]);
     }
 
     return result;
