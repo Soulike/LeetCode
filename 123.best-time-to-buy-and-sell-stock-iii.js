@@ -11,37 +11,62 @@
  */
 const maxProfit = function (prices)
 {
-    const left = [];    // left[i] i 天之前买入和卖出股票的最大收益
-    const right = [];   // right[j] j 天之后（含有 j）买入和卖出股票的最大收益
-
-    const LENGTH = prices.length;
-
-    left[0] = left[1] = 0;
-    right[LENGTH - 1] = 0;
-
-    let valley = prices[0];
-    for (let i = 1; i < LENGTH; i++)
+    let K = 2;
+    const DAY_COUNT = prices.length;
+    K = Math.min(K, Math.floor(DAY_COUNT / 2));
+    if (DAY_COUNT === 0 || K === 0)
     {
-        valley = Math.min(valley, prices[i]);
-        left[i] = Math.max(left[i - 1], prices[i] - valley);
+        return 0;
     }
-
-    let peak = prices[LENGTH - 1];
-    for (let i = LENGTH - 2; i >= 0; i--)
+    /** dp[i][k][0 或 1]
+     * 在第 i 天，如果最多进行 k 次交易，在买（1）或者不买今天的股票（0）的情况下，最多可获得的利润
+     */
+    const dp = new Array(DAY_COUNT);
+    for (let i = 0; i < DAY_COUNT; i++)
     {
-        peak = Math.max(peak, prices[i]);
-        right[i] = Math.max(right[i + 1], peak - prices[i]);
-    }
-
-    let max = 0;
-    for (let i = 0; i < LENGTH; i++)
-    {
-        if (left[i] + right[i] > max)
+        dp[i] = new Array(K + 1);
+        for (let k = 0; k <= K; k++)
         {
-            max = left[i] + right[i];
+            dp[i][k] = new Array(2);
         }
     }
-    return max;
+
+    /**
+     * 在第 i 天，
+     * 前一天买了股票
+     * 今天要卖出
+     * dp[i][k][0] = dp[i-1][k][1] + prices[i]
+     * 今天摸了
+     * dp[i][k][1] = dp[i-1][k][1]
+     * 
+     * 前一天没买股票
+     * 今天要买入
+     * dp[i][k][1] = dp[i-1][k-1][0] - prices[i]
+     * 今天摸了
+     * dp[i][k][0] = dp[i-1][k][0];
+     */
+
+    for (let i = 0; i < DAY_COUNT; i++)
+    {
+        dp[i][0][1] = Number.NEGATIVE_INFINITY;
+        dp[i][0][0] = 0;
+    }
+    for (let k = 1; k <= K; k++)
+    {
+        dp[0][k][0] = 0;
+        dp[0][k][1] = -prices[0];
+    }
+
+    for (let i = 1; i < DAY_COUNT; i++)
+    {
+        for (let k = 1; k <= K; k++)
+        {
+            dp[i][k][0] = Math.max(dp[i - 1][k][1] + prices[i], dp[i - 1][k][0]);
+            dp[i][k][1] = Math.max(dp[i - 1][k][1], dp[i - 1][k - 1][0] - prices[i]);
+        }
+    }
+
+    return dp[DAY_COUNT - 1][K][0];
 };
 // @lc code=end
 
