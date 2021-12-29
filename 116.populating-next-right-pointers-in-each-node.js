@@ -22,24 +22,30 @@ const connect = function (root)
     {
         return root;
     }
-    const hasNextLayer = root.left !== null;
-    if (hasNextLayer)
+    let prevLayerFirst = null;
+    let currentLayerFirst = root;
+    while (currentLayerFirst !== null)
     {
-        let currentNode = root;
-        let prevNode = null;
-        while (currentNode !== null)
+        const hasNextLayer = currentLayerFirst.left !== null;
+        if (hasNextLayer)
         {
-            currentNode.left.next = currentNode.right;
-            if (prevNode !== null)
+            let currentNode = currentLayerFirst;
+            let prevNode = null;
+            while (currentNode !== null)
             {
-                prevNode.right.next = currentNode.left;
+                currentNode.left.next = currentNode.right;
+                if (prevNode !== null)
+                {
+                    prevNode.right.next = currentNode.left;
+                }
+                prevNode = currentNode;
+                currentNode = currentNode.next;
             }
-            prevNode = currentNode;
-            currentNode = currentNode.next;
         }
-        connect(root.left);
-        connect(root.right);
+        prevLayerFirst = currentLayerFirst;
+        currentLayerFirst = currentLayerFirst.left;
     }
+    
     return root;
 };
 // @lc code=end
