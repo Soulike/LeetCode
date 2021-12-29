@@ -25,12 +25,17 @@ const connect = function (root)
     {
         return null;
     }
+    /** 当前这一层的第一个结点 */
     let currentLayerFirstNode = root;
     while (currentLayerFirstNode !== null)
     {
+        /** 正在被连接子结点的当前层结点 */
         let currentLayerNode = currentLayerFirstNode;
+        /** 正在下一层的第一个结点 */
         let nextLayerFirstNode = null;
+        /** 下一层被发现的最后一个结点 */
         let prevChildNode = null;
+        /** 下一层被发现的新的最后一个结点 */
         let currentChildNode = null;
         while (currentLayerNode !== null)   // 把下一层连接起来
         {
@@ -62,7 +67,7 @@ const connect = function (root)
             }
             currentLayerNode = currentLayerNode.next;
         }
-        currentLayerFirstNode = nextLayerFirstNode;
+        currentLayerFirstNode = nextLayerFirstNode; // 切换到下一层
     }
 
     return root;
