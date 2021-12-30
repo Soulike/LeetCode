@@ -32,36 +32,44 @@ const canPartition = function (nums)
          * dp[i][maxSum] = dp[i-1][maxSum-nums[i-1]]
          * 如果不取 nums[i-1]
          * dp[i][maxSum] = dp[i-1][maxSum]
+         * 
+         * 进一步优化，
+         * lastDp <== dp[i-1]
+         * currentDp <== dp[i]
+         * 
+         * base case
+         * lastDp.fill(false);   // dp[0][maxSum] = false
+         * lastDp[0] = true
+         * 
+         * 如果要取 nums[i-1]
+         * currentDp[maxSum] = lastDp[maxSum-nums[i-1]]
+         * 如果不取 nums[i-1]
+         * currentDp[maxSum] = lastDp[maxSum]
          */
 
-        const dp = new Array(nums.length + 1);
-        for (let i = 0; i <= nums.length; i++)
-        {
-            dp[i] = new Array(target + 1);
-
-            dp[i][0] = true;
-            if (i === 0)
-            {
-                dp[i].fill(false);
-            }
-        }
+        let lastDp = new Array(target + 1);
+        lastDp.fill(false)
+        lastDp[0] = true;
+        let currentDp = null;
 
         for (let i = 1; i <= nums.length; i++)
         {
+            currentDp = new Array(target + 1);
             for (let maxSum = 1; maxSum <= target; maxSum++)
             {
                 if (maxSum - nums[i - 1] < 0)   // 装不下，只能选择不取
                 {
-                    dp[i][maxSum] = dp[i - 1][maxSum];
+                    currentDp[maxSum] = lastDp[maxSum];
                 }
                 else
                 {
-                    dp[i][maxSum] = dp[i - 1][maxSum - nums[i - 1]] || dp[i - 1][maxSum];
+                    currentDp[maxSum] = lastDp[maxSum - nums[i - 1]] || lastDp[maxSum];
                 }
             }
+            lastDp = currentDp;
         }
 
-        return dp[nums.length][target];
+        return currentDp[target];
     }
 };
 // @lc code=end
