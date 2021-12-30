@@ -12,29 +12,44 @@
  */
 const coinChange = function (coins, amount) 
 {
-    const dp = new Array(amount + 1);
-    dp.fill(amount + 1);
-    dp[0] = 0;
-    for (let i = 1; i <= amount; i++)
+    const minCoin = Math.min(...coins);
+    const cache = new Map();
+
+    function helper(amountLeft)
     {
-        for (let j = 0; j < coins.length; j++)
+        const cached = cache.get(amountLeft);
+        if (cached !== undefined)
         {
-            if (coins[j] <= i)
+            return cached;
+        }
+
+        if (amountLeft === 0)
+        {
+            return 0;
+        }
+        if (amountLeft < minCoin)
+        {
+            return -1;
+        }
+        let minCoinCount = Number.POSITIVE_INFINITY;
+
+        for (const coin of coins)
+        {
+            const result = helper(amountLeft - coin);
+            if (result !== -1)
             {
-                dp[i] = Math.min(dp[i], 1 + dp[i - coins[j]]);
+                minCoinCount = Math.min(minCoinCount, 1 + result);
             }
         }
+
+        if (minCoinCount === Number.POSITIVE_INFINITY)
+        {
+            minCoinCount = -1;
+        }
+        cache.set(amountLeft, minCoinCount);
+        return minCoinCount;
     }
-    return dp[amount] === amount + 1 ? -1 : dp[amount];
+
+    return helper(amount);
 };
 // @lc code=end
-
-// console.log(coinChange([1, 2, 5], 11));
-
-// console.log(coinChange([186, 419, 83, 408], 6249)); // 20
-
-// console.log(coinChange([2], 3));
-
-// console.log(coinChange([411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422], 9864)); // 24
-
-// console.log(coinChange([288, 160, 10, 249, 40, 77, 314, 429], 9208));   // 22
