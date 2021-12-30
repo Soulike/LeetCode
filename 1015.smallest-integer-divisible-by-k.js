@@ -16,10 +16,9 @@ const smallestRepunitDivByK = function (k)
         return -1;
     }
 
-    // 若K不能被2或5整除，则一定有一个长度小于等于K且均由1组成的数，可以整除K
     let length = 0;
     let remainder = 0;
-    while (true)
+    for (let i = 0; i < k;i++)  // 最多只有 k 个余数
     {
         remainder = (remainder * 10 + 1) % k;
         length++;
@@ -28,6 +27,7 @@ const smallestRepunitDivByK = function (k)
             return length;
         }
     }
+    return -1;
 };
 // @lc code=end
 
