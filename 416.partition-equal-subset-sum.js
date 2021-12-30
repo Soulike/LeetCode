@@ -22,14 +22,14 @@ const canPartition = function (nums)
 
         /** 背包问题，让最多的数字装进去等于 target */
         /**
-         * dp[i][maxSum] 在数字和限制为 maxSum 的情况下，取 0...i-1 范围内的 nums 能取得的最大和
+         * dp[i][maxSum] 在数字和限制为 maxSum 的情况下，取 0...i-1 范围内的 nums 做和能否等于 maxSum
          * 
          * base case
-         * dp[0][maxSum] = 0
-         * dp[i][0] = 0
+         * dp[0][maxSum] = false
+         * dp[i][0] = true
          * 
          * 如果要取 nums[i-1]
-         * dp[i][maxSum] = nums[i-1]+dp[i-1][maxSum-nums[i-1]]
+         * dp[i][maxSum] = dp[i-1][maxSum-nums[i-1]]
          * 如果不取 nums[i-1]
          * dp[i][maxSum] = dp[i-1][maxSum]
          */
@@ -39,10 +39,10 @@ const canPartition = function (nums)
         {
             dp[i] = new Array(target + 1);
 
-            dp[i][0] = 0;
+            dp[i][0] = true;
             if (i === 0)
             {
-                dp[i].fill(0);
+                dp[i].fill(false);
             }
         }
 
@@ -56,15 +56,12 @@ const canPartition = function (nums)
                 }
                 else
                 {
-                    dp[i][maxSum] = Math.max(
-                        nums[i - 1] + dp[i - 1][maxSum - nums[i - 1]],
-                        dp[i - 1][maxSum]
-                    );
+                    dp[i][maxSum] = dp[i - 1][maxSum - nums[i - 1]] || dp[i - 1][maxSum];
                 }
             }
         }
 
-        return dp[nums.length - 1][target] === target;
+        return dp[nums.length][target];
     }
 };
 // @lc code=end
