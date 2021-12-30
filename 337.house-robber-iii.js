@@ -16,71 +16,28 @@ function TreeNode(val, left, right)
  */
 const rob = function (root) 
 {
-    if (root === null)
-    {
-        return 0;
-    }
-    const cache = new Map();
-    return Math.max(
-        helper(root, true, cache),
-        helper(root, false, cache));
+    return Math.max(...helper(root));
 };
 
 /**
- * 抢或者不抢 root 可以取得的最大值
  * @param {TreeNode} root
- * @param {boolean} shouldRob
- * @param {Map<TreeNode, Map<boolean, number>>} cache
- * @return {number}
+ * @returns {[number, number]} [不抢 root 取得的最大值，抢 root 取得的最大值]
  */
-function helper(root, shouldRob, cache)
+function helper(root)
 {
-    let cachedMap = cache.get(root);
-    if (cachedMap === undefined)
+    /** @type {[number,number]} */
+    const result = [0, 0];
+    if (root === null)
     {
-        cachedMap = new Map();
-        cache.set(root, cachedMap);
+        return result;
     }
-
-    const cachedAmount = cachedMap.get(shouldRob);
-    if (cachedAmount !== undefined)
-    {
-        return cachedAmount;
-    }
-
-    // cachedAmount === undefined
-    let amount = 0;
-    if (shouldRob)
-    {
-        amount = root.val;
-        if (root.left !== null)
-        {
-            amount += helper(root.left, false, cache);
-        }
-        if (root.right !== null)
-        {
-            amount += helper(root.right, false, cache);
-        }
-    }
-    else    // !shouldRob
-    {
-        amount = 0;
-        if (root.left !== null)
-        {
-            amount += Math.max(
-                helper(root.left, true, cache),
-                helper(root.left, false, cache));
-        }
-        if (root.right !== null)
-        {
-            amount += Math.max(
-                helper(root.right, true, cache),
-                helper(root.right, false, cache));
-        }
-    }
-
-    cachedMap.set(shouldRob, amount);
-    return amount;
+    const leftResult = helper(root.left);
+    const rightResult = helper(root.right);
+    // 当前的没抢，子树可抢可不抢
+    result[0] = Math.max(...leftResult) + Math.max(...rightResult);
+    // 当前的抢了，子树不能抢
+    result[1] = root.val + leftResult[0] + rightResult[0];
+    return result;
 }
 // @lc code=end
 
