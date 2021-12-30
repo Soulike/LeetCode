@@ -12,49 +12,59 @@
  */
 const minDistance = function (word1, word2)
 {
-    /** 
-     * cache[word1Index][word2Index] = 最小编辑距离
-     * @type {number[][]} */
-    const cache = new Array(word1.length);
-    for (let i = 0; i < word1.length; i++)
+    /**
+     * dp[i][j] word1[0...i-1] 和 word2[0...j-1] 的最小编辑距离
+     * @type {number[][]}
+     */
+    const dp = new Array(word1.length + 1);
+    for (let i = 0; i < word1.length + 1; i++)
     {
-        cache[i] = new Array(word2.length);
-    }
+        dp[i] = new Array(word2.length + 1);
 
-    function dp(word1Index, word2Index)
-    {
-        if (word1Index === -1)
+        // base case
+        dp[i][0] = i;
+        if (i === 0)
         {
-            return word2Index + 1;
-        }
-        if (word2Index === -1)
-        {
-            return word1Index + 1;
-        }
-        if (cache[word1Index][word2Index] !== undefined)
-        {
-            return cache[word1Index][word2Index];
-        }
-
-        if (word1[word1Index] === word2[word2Index])
-        {
-            const result = dp(word1Index - 1, word2Index - 1);
-            cache[word1Index][word2Index] = result;
-            return result;
-        }
-        else
-        {
-            const result = 1 + Math.min(
-                dp(word1Index, word2Index - 1), // 插入
-                dp(word1Index - 1, word2Index), // 删除
-                dp(word1Index - 1, word2Index - 1), // 修改
-            );
-            cache[word1Index][word2Index] = result;
-            return result;
+            for (let j = 0; j < word2.length + 1; j++)
+            {
+                dp[0][j] = j;
+            }
         }
     }
 
-    return dp(word1.length - 1, word2.length - 1);
+    /**
+     * base case，其中一个字符串用完了，那就是另一个字符串剩下的长度（直接插入到前面）
+     * dp[0][j] = j
+     * dp[i][0] = i
+     * 
+     * 如果 word1[i-1] === word2[j-1]
+     * dp[i][j] = dp[i-1][j-1]
+     * 如果 word1[i-1] !== word2[j-1]
+     * dp[i][j] = 1+min(
+     *      dp[i][j-1],     // 插入
+     *      dp[i-1][j],     // 删除
+     *      dp[i-1][j-1]    // 替换
+     * )
+     */
+
+    for (let i = 1; i <= word1.length; i++)
+    {
+        for (let j = 1; j <= word2.length; j++)
+        {
+            if (word1[i - 1] === word2[j - 1])
+            {
+                dp[i][j] = dp[i - 1][j - 1];
+            }
+            else
+            {
+                dp[i][j] = 1 + Math.min(
+                    dp[i][j - 1],
+                    dp[i - 1][j],
+                    dp[i - 1][j - 1]
+                );
+            }
+        }
+    }
+    return dp[word1.length][word2.length];
 };
 // @lc code=end
-
