@@ -12,44 +12,39 @@
  */
 const coinChange = function (coins, amount) 
 {
-    const minCoin = Math.min(...coins);
-    const cache = new Map();
-
-    function helper(amountLeft)
+    /**
+     * dp[a] = i 到数额 a，至少需要 i 个硬币
+     * dp[a] = min(dp[a-...coin] + 1)
+     * 
+     * base case dp[coin] = 1
+     * dp[0] = 0;
+     */
+    const dp = new Array(amount + 1);
+    dp.fill(Number.POSITIVE_INFINITY);
+    for (const coin of coins)
     {
-        const cached = cache.get(amountLeft);
-        if (cached !== undefined)
-        {
-            return cached;
-        }
+        dp[coin] = 1;
+    }
+    dp[0] = 0;
 
-        if (amountLeft === 0)
+    for (let a = 1; a <= amount; a++)
+    {
+        if (dp[a] === 1)
         {
-            return 0;
+            continue;
         }
-        if (amountLeft < minCoin)
+        for (let j = 0; j < coins.length; j++)
         {
-            return -1;
-        }
-        let minCoinCount = Number.POSITIVE_INFINITY;
-
-        for (const coin of coins)
-        {
-            const result = helper(amountLeft - coin);
-            if (result !== -1)
+            const leftAmount = a - coins[j];
+            if (leftAmount >= 0)
             {
-                minCoinCount = Math.min(minCoinCount, 1 + result);
+                dp[a] = Math.min(dp[a], dp[leftAmount] + 1);
             }
         }
-
-        if (minCoinCount === Number.POSITIVE_INFINITY)
-        {
-            minCoinCount = -1;
-        }
-        cache.set(amountLeft, minCoinCount);
-        return minCoinCount;
     }
 
-    return helper(amount);
+    return dp[amount] === Number.POSITIVE_INFINITY ? -1 : dp[amount];
 };
 // @lc code=end
+
+console.log(coinChange([1,2,5], 11))
