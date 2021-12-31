@@ -19,39 +19,23 @@
  */
 const maxAncestorDiff = function (root)
 {
-    /**
-     * @param {TreeNode} root
-     * @returns {{maxVal: number, minVal: number, maxDiff: number}} 当前子树中的最小值，当前子树中的最大值，当前子树中的最大差
-     */
-    const helper = (root) =>
-    {
-        let leftMaxVal = -1;
-        let leftMinVal = Number.POSITIVE_INFINITY;
-        let leftMaxDiff = 0;
-        let rightMaxVal = -1;
-        let rightMinVal = Number.POSITIVE_INFINITY;
-        let rightMaxDiff = 0;
-        if (root.left !== null)
-        {
-            const leftResult = helper(root.left);
-            leftMaxVal = leftResult.maxVal;
-            leftMinVal = leftResult.minVal;
-            leftMaxDiff = leftResult.maxDiff;
-        }
-        if (root.right !== null)
-        {
-            const rightResult = helper(root.right);
-            rightMaxVal = rightResult.maxVal;
-            rightMinVal = rightResult.minVal;
-            rightMaxDiff = rightResult.maxDiff;
-        }
-        const maxVal = Math.max(leftMaxVal, rightMaxVal, root.val);
-        const minVal = Math.min(leftMinVal, rightMinVal, root.val);
-        const maxDiff = Math.max(leftMaxDiff, rightMaxDiff, Math.abs(root.val - minVal), Math.abs(root.val - maxVal));
-        return {maxVal, minVal, maxDiff};
-    }
+    let maxDiff = 0;
 
-    const {maxDiff} = helper(root);
+    const dfs = (root, minValInAncestor, maxValInAncestor) =>
+    {
+        if (root !== null)
+        {
+            maxDiff = Math.max(maxDiff,
+                Math.abs(minValInAncestor - root.val),
+                Math.abs(maxValInAncestor - root.val));
+            minValInAncestor = Math.min(minValInAncestor, root.val);
+            maxValInAncestor = Math.max(maxValInAncestor, root.val);
+            dfs(root.left, minValInAncestor, maxValInAncestor);
+            dfs(root.right, minValInAncestor, maxValInAncestor);
+        }
+    };
+
+    dfs(root, root.val, root.val);
     return maxDiff;
 };
 // @lc code=end
