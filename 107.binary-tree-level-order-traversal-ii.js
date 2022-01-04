@@ -23,36 +23,30 @@ var levelOrderBottom = function (root)
     {
         return [];
     }
-    let lastLevelNodes = [root];
-    let currentLevelNodes = [];
-    let currentLevelValues = [];
+    const levelNodes = [];
 
-    const values = [[root.val]];
-    while (lastLevelNodes.length > 0)
+    function dfs(root, level)
     {
-        for (const node of lastLevelNodes)
+        if (root === null)
         {
-            if (node.left !== null)
-            {
-                currentLevelNodes.push(node.left);
-                currentLevelValues.push(node.left.val);
-            }
-            if (node.right !== null)
-            {
-                currentLevelNodes.push(node.right);
-                currentLevelValues.push(node.right.val);
-            }
+            return;
         }
-        if (currentLevelValues.length > 0)
-        {
-            values.push(currentLevelValues);
-        }
-        lastLevelNodes = currentLevelNodes;
-        currentLevelNodes = [];
-        currentLevelValues = [];
+
+        const nodes = levelNodes[level] ?? [];
+        nodes.push(root.val);
+        levelNodes[level] = nodes;
+
+        dfs(root.left, level + 1);
+        dfs(root.right, level + 1);
     }
-    values.reverse();
-    return values;
+    
+    dfs(root, 0);
+
+    return levelNodes.reduceRight((prev, curr) =>
+    {
+        prev.push(curr);
+        return prev;
+    }, []);
 };
 // @lc code=end
 
