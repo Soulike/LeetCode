@@ -32,9 +32,8 @@ var permuteUnique = function (nums)
         subResults = permuteUnique([...nums.slice(0, i), ...nums.slice(i + 1)]);
         for (const subResult of subResults)
         {
-            results.push([
-                nums[i], ...subResult
-            ]);
+            subResult.push(nums[i]);
+            results.push(subResult);
         }
     }
     return results;
