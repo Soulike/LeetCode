@@ -52,11 +52,11 @@ const partition = function (s)
     // 以下转化成为图可达问题，找到所有从 0 开始到 s.length 结束的可达路径
 
     /**
-     * @returns {[number,number][][]} - 从 startIndex 开始，能到达 s.length 的路径
+     * @returns {number[][]} - 从 startIndex 开始，能到达 s.length 的路径，逆序
      */
     function getRoutes(startIndex)
     {
-        /** @type {[number,number][][]} */
+        /** @type {number[][]} */
         const result = [];
         for (let j = startIndex + 1; j <= s.length; j++)
         {
@@ -67,12 +67,13 @@ const partition = function (s)
                     const restRoutes = getRoutes(j);
                     for (const restRoute of restRoutes)
                     {
-                        result.push([[startIndex, j], ...restRoute]);
+                        restRoute.push(startIndex);
+                        result.push(restRoute);
                     }
                 }
                 else
                 {
-                    result.push([[startIndex, j]]);
+                    result.push([j, startIndex]);
                 }
             }
         }
@@ -84,9 +85,9 @@ const partition = function (s)
     for (const route of routes)
     {
         const substrings = [];
-        for (const [start, end] of route)
+        for (let i = route.length - 2; i >= 0; i--)
         {
-            substrings.push(s.slice(start, end));
+            substrings.push(s.slice(route[i + 1], route[i]));
         }
         result.push(substrings);
     }
