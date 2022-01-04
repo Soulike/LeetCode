@@ -11,27 +11,31 @@
  */
 const permute = function (nums) 
 {
-    const numsLength = nums.length;
-    if (numsLength === 0)
-    {
-        return [];
-    }
-    if (numsLength === 1)
-    {
-        return [nums];
-    }
+    const usedNums = new Set();
     const results = [];
-    let subResults = [];
-    for (let i = 0; i < numsLength;i++)
+
+    function helper()
     {
-        subResults = permute([...nums.slice(0, i), ...nums.slice(i + 1)]);
-        for (const subResult of subResults)
+        if (usedNums.size === nums.length)
         {
-            results.push([
-                nums[i], ...subResult
-            ]);
+            results.push([...usedNums]);
+        }
+        else
+        {
+            for (const num of nums)
+            {
+                if (!usedNums.has(num))
+                {
+                    usedNums.add(num);
+                    helper();
+                    usedNums.delete(num);
+                }
+            }
         }
     }
+
+    helper();
+
     return results;
 };
 // @lc code=end
