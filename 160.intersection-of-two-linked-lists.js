@@ -20,63 +20,30 @@
  */
 var getIntersectionNode = function (headA, headB)
 {
-    if (headA === headB)
-    {
-        return headA;
-    }
+    let currentNode1 = headA;
+    let currentNode2 = headB;
 
-    const nodeSet = new Set();
-    let aCurrentNode = headA;
-    let bCurrentNode = headB;
-
-    while (aCurrentNode !== null && bCurrentNode !== null)
+    while (currentNode1 !== currentNode2)
     {
-        if (nodeSet.has(aCurrentNode))
+        if (currentNode1 === null)
         {
-            return aCurrentNode;
+            currentNode1 = headB;
         }
         else
         {
-            nodeSet.add(aCurrentNode);
-            aCurrentNode = aCurrentNode.next;
+            currentNode1 = currentNode1.next;
         }
-
-        if (nodeSet.has(bCurrentNode))
+        if (currentNode2 === null)
         {
-            return bCurrentNode;
+            currentNode2 = headA;
         }
         else
         {
-            nodeSet.add(bCurrentNode);
-            bCurrentNode = bCurrentNode.next;
+            currentNode2 = currentNode2.next;
         }
     }
 
-    while (aCurrentNode !== null)
-    {
-        if (nodeSet.has(aCurrentNode))
-        {
-            return aCurrentNode;
-        }
-        else
-        {
-            aCurrentNode = aCurrentNode.next;
-        }
-    }
-
-    while (bCurrentNode !== null)
-    {
-        if (nodeSet.has(bCurrentNode))
-        {
-            return bCurrentNode;
-        }
-        else
-        {
-            bCurrentNode = bCurrentNode.next;
-        }
-    }
-
-    return null;
+    return currentNode1;
 };
 // @lc code=end
 
