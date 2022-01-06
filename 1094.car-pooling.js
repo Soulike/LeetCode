@@ -16,7 +16,7 @@ const carPooling = function (trips, capacity)
      * 第 i 距离的乘客数
      * @type {number[]}
      */
-    const numPassengers = new Array(1001);
+    const numPassengers = [];
     for (const [numPassenger, from, to] of trips)
     {
         numPassengers[from] = (numPassengers[from] ?? 0) + numPassenger;
