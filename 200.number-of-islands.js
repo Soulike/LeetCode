@@ -6,16 +6,15 @@
 
 // @lc code=start
 
-const WATER = '0';
-const LAND = '1';
-const VISITED_LAND = '2';
-
 /**
  * @param {string[][]} grid
  * @return {number}
  */
 const numIslands = function (grid) 
 {
+    const WATER = '0';
+    const LAND = '1';
+    const VISITED_LAND = '2';
     let islandNum = 0;
     const ROW_LENGTH = grid[0].length;
     const COL_LENGTH = grid.length;
@@ -26,37 +25,31 @@ const numIslands = function (grid)
             if (grid[i][j] === LAND)
             {
                 islandNum++;
-                visit(grid, i, j);
+                visit(i, j);
             }
         }
     }
     return islandNum;
-};
 
-/**
- * @param {string[][]} grid
- * @param {number} i
- * @param {number} j
- * @return {void}
- */
-function visit(grid, i, j)
-{
-    grid[i][j] = VISITED_LAND;
-    if (i - 1 >= 0 && grid[i - 1][j] === LAND)
+
+    /**
+     * @param {number} i
+     * @param {number} j
+     * @return {void}
+     */
+    function visit(i, j)
     {
-        visit(grid, i - 1, j);
+        if (i < 0 || i === COL_LENGTH
+            || j < 0 || j === ROW_LENGTH
+            || grid[i][j] !== LAND)
+        {
+            return;
+        }
+        grid[i][j] = VISITED_LAND;
+        visit(i - 1, j);
+        visit(i + 1, j);
+        visit(i, j - 1);
+        visit(i, j + 1);
     }
-    if (j - 1 >= 0 && grid[i][j - 1] === LAND)
-    {
-        visit(grid, i, j - 1);
-    }
-    if (i + 1 < grid.length && grid[i + 1][j] === LAND)
-    {
-        visit(grid, i + 1, j);
-    }
-    if (j + 1 < grid[0].length && grid[i][j + 1] === LAND)
-    {
-        visit(grid, i, j + 1);
-    }
-}
+};
 // @lc code=end
