@@ -13,7 +13,7 @@
 var search = function (nums, target)
 {
     let left = 0;
-    let right = nums.length-1;
+    let right = nums.length - 1;
     let mid = Math.floor((left + right) / 2);
 
     while (left <= right)
@@ -22,7 +22,7 @@ var search = function (nums, target)
         {
             left = mid + 1;
         }
-        else if(target < nums[mid])
+        else if (target < nums[mid])
         {
             right = mid - 1;
         }
