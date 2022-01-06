@@ -35,10 +35,9 @@ function helper(num)
     let numSqrt = Math.floor(Math.sqrt(num));
     for (let i = numSqrt; i >= 1; i--)
     {
-        const other = num / i;
-        if (Number.isInteger(other))
+        if (num % i === 0)
         {
-            return [i, other];
+            return [i, num / i];
         }
     }
 }
