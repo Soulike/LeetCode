@@ -48,33 +48,29 @@ var networkDelayTime = function (times, n, k)
 
     while (processedNodes.size < n)
     {
-        // 在已处理结点集合中寻找邻接的结点 n，使得 start 到 n 的距离最短
-        let minFrom = -1;
-        let minTo = -1;
-        let minDelay = Number.POSITIVE_INFINITY;
-        for (const from of processedNodes)
+        let minTo = 0;
+        let minToDelay = Number.POSITIVE_INFINITY;
+        for (const unprocessedNode of unprocessedNodes)
         {
-            const toDelays = matrix[from];
-            for (let to = 0; to < n; to++)
+            if (minDelaysFromStart[unprocessedNode] < minToDelay)
             {
-                if (!processedNodes.has(to) && minDelaysFromStart[from] + toDelays[to] < minDelay)
-                {
-                    minFrom = from;
-                    minTo = to;
-                    minDelay = minDelaysFromStart[from] + toDelays[to];
-                }
+                minToDelay = minDelaysFromStart[unprocessedNode];
+                minTo = unprocessedNode;
             }
         }
 
-        // 图中有孤立结点
-        if (minDelay === Number.POSITIVE_INFINITY)
+        if (minToDelay === Number.POSITIVE_INFINITY)
         {
-            break;
+            return -1;
         }
 
-        minDelaysFromStart[minTo] = Math.min(minDelaysFromStart[minTo], minDelay);
-        unprocessedNodes.delete(minTo);
+        for (let i = 0; i < n; i++)
+        {
+            minDelaysFromStart[i] = Math.min(minDelaysFromStart[i], minDelaysFromStart[minTo] + matrix[minTo][i]);
+        }
+
         processedNodes.add(minTo);
+        unprocessedNodes.delete(minTo);
     }
 
     const maxDelay = Math.max(...minDelaysFromStart);
