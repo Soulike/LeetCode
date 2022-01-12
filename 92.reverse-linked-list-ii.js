@@ -30,30 +30,85 @@ function ListNode(val, next)
  */
 const reverseBetween = function (head, left, right) 
 {
-    const fakeHead = new ListNode(undefined, head);
-    let currentListNode = fakeHead;
-    let leftNode = null;
-    let rightNode = null;
-    const listNodes = [];
-    for (let i = 0; i <= left - 2; i++)
+    const fakeHead = new ListNode();
+    fakeHead.next = head;
+    let leftNode = head;
+    let leftNodeBefore = fakeHead;
+
+    // 定位 left
+    for (let i = 1; i < left; i++)
     {
-        currentListNode = currentListNode.next;
+        leftNodeBefore = leftNode;
+        leftNode = leftNode.next;
     }
-    leftNode = currentListNode;
-    currentListNode = currentListNode.next;
-    for (let i = left; i <= right; i++)
+
+    // 定位 right
+    let rightNode = leftNode;
+    for (let i = 0; i < right - left; i++)
     {
-        listNodes.push(currentListNode);
-        currentListNode = currentListNode.next;
-        if (listNodes.length >= 2)
-        {
-            listNodes[listNodes.length - 1].next = listNodes[listNodes.length - 2];
-        }
+        rightNode = rightNode.next;
     }
-    rightNode = currentListNode;
-    leftNode.next = listNodes[listNodes.length - 1];
-    listNodes[0].next = rightNode;
+
+    const rightNodeNext = rightNode.next;
+
+    // 把被反转部分切出来
+    leftNodeBefore.next = null;
+    rightNode.next = null;
+
+    leftNodeBefore.next = reverseList(leftNode);
+    leftNode.next = rightNodeNext;  // leftNode 就是被反转链表的最后一个结点
+
     return fakeHead.next;
+};
+
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+const reverseList = function (head)
+{
+    if (head === null || head.next === null)
+    {
+        return head;
+    }
+    if (head.next.next === null)
+    {
+        const newHead = head.next;
+        head.next = null;
+        newHead.next = head;
+        return newHead;
+    }
+
+    let slow = head;
+    let fast = head;
+
+    while (fast.next !== null)
+    {
+        slow = slow.next;
+        fast = fast.next;
+        if (fast.next === null)
+        {
+            break;
+        }
+        fast = fast.next;
+    }
+
+    let list1 = head;
+    let list2 = slow.next;
+    slow.next = null;
+
+    list1 = reverseList(list1);
+    list2 = reverseList(list2);
+
+    let list2Tail = list2;
+    while (list2Tail.next !== null)
+    {
+        list2Tail = list2Tail.next;
+    }
+
+    list2Tail.next = list1;
+
+    return list2;
 };
 // @lc code=end
 
