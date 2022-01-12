@@ -22,44 +22,29 @@ const reverseList = function (head)
     {
         return head;
     }
-    if (head.next.next === null)
+    let tail = head;
+    while (tail.next !== null)
     {
-        const newHead = head.next;
-        head.next = null;
-        newHead.next = head;
-        return newHead;
+        tail = tail.next;
     }
 
-    let slow = head;
-    let fast = head;
+    const newHead = tail;
+    const newTail = head;
 
-    while (fast.next !== null)
+    newHead.next = newTail;
+
+    let currentNode = head.next;
+    let nextNode;
+    newTail.next = null;
+    while (currentNode !== newHead)
     {
-        slow = slow.next;
-        fast = fast.next;
-        if (fast.next === null)
-        {
-            break;
-        }
-        fast = fast.next;
+        nextNode = currentNode.next;
+        currentNode.next = newHead.next;
+        newHead.next = currentNode;
+        currentNode = nextNode;
     }
 
-    let list1 = head;
-    let list2 = slow.next;
-    slow.next = null;
-
-    list1 = reverseList(list1);
-    list2 = reverseList(list2);
-
-    let list2Tail = list2;
-    while (list2Tail.next !== null)
-    {
-        list2Tail = list2Tail.next;
-    }
-
-    list2Tail.next = list1;
-
-    return list2;
+    return newHead;
 };
 // @lc code=end
 
