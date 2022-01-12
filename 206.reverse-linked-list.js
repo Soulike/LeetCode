@@ -18,33 +18,27 @@
  */
 const reverseList = function (head)
 {
-    if (head === null || head.next === null)
+    if (head === null)
     {
         return head;
     }
-    let tail = head;
-    while (tail.next !== null)
+    let preNode = null;
+    let currentNode = head;
+    let nextNode = head.next;
+
+    while (currentNode !== null)
     {
-        tail = tail.next;
-    }
+        currentNode.next = preNode;
 
-    const newHead = tail;
-    const newTail = head;
-
-    newHead.next = newTail;
-
-    let currentNode = head.next;
-    let nextNode;
-    newTail.next = null;
-    while (currentNode !== newHead)
-    {
-        nextNode = currentNode.next;
-        currentNode.next = newHead.next;
-        newHead.next = currentNode;
+        preNode = currentNode;
         currentNode = nextNode;
+        if (nextNode !== null)
+        {
+            nextNode = nextNode.next;
+        }
     }
 
-    return newHead;
+    return preNode;
 };
 // @lc code=end
 
