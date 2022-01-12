@@ -11,53 +11,100 @@
  */
 const threeSum = function (nums) 
 {
-    nums.sort((a, b) => a - b);
-
-    let left = 0;
-    let right = 0;
-    let sum = 0;
-    const length = nums.length;
-    const ret = [];
-
-    for (let i = 0; i < length - 2; i++)
+    if (nums.length < 3)
     {
-        if (nums[i] > 0)
-        {
-            break;
-        }
-        if (i > 0 && nums[i] == nums[i - 1]) continue;
-        left = i + 1;
-        right = length - 1;
-        while (left < right)
-        {
-            sum = nums[left] + nums[right] + nums[i];
-            if (sum > 0)
-            {
-                right--;
-            }
-            else if (sum < 0)
-            {
-                left++;
-            }
-            else
-            {
-                ret.push([nums[left], nums[right], nums[i]]);
-                while (left<right && nums[left] === nums[left + 1])
-                {
-                    left++;
-                }
-                left++;
-                while (left<right && nums[right] === nums[right - 1])
-                {
-                    right--;
-                }
-                right--;
-            }
-        }
+        return [];
+    }
+    return nSum(3, nums, 0);
+};
+
+/**
+ * @param {number} n 要求和由几个数字组成，最小是 2
+ * @param {number[]} nums 数字数组
+ * @param {number} target 要求的和
+ * @returns {number[][]}
+ */
+function nSum(n, nums, target)
+{
+    if (nums.length < n)
+    {
+        return [];
     }
 
-    return ret;
+    nums.sort((a, b) => a - b);
+    return nSumHelper(n, nums, 0, target);
 
-};
+    /**
+ * @param {number} n 要求和由几个数字组成，最小是 2
+ * @param {number[]} nums 已经排序的数字数组
+ * @param {number} start 从 nums 的什么位置开始
+ * @param {number} target 要求的和
+ * @returns {number[][]}
+ */
+    function nSumHelper(n, nums, start, target)
+    {
+        if (n === 2)
+        {
+            let left = start;
+            let right = nums.length - 1;
+            let results = [];
+
+            while (left < right)
+            {
+                const sum = nums[left] + nums[right];
+                if (sum > target)
+                {
+                    right--;
+                    while (nums[right] === nums[right + 1])
+                    {
+                        right--;
+                    }
+                }
+                else if (sum < target)
+                {
+                    left++;
+                    while (nums[left] === nums[left - 1])
+                    {
+                        left++;
+                    }
+                }
+                else if (sum === target)
+                {
+                    results.push([nums[left], nums[right]]);
+                    right--;
+                    while (nums[right] === nums[right + 1])
+                    {
+                        right--;
+                    }
+                    left++;
+                    while (nums[left] === nums[left - 1])
+                    {
+                        left++;
+                    }
+                }
+            }
+            return results;
+        }
+        else if (n > 2)
+        {
+            const results = [];
+            for (let i = start; i < nums.length - 1; i++)
+            {
+                if (i === start || nums[i] !== nums[i - 1])
+                {
+                    const subResults = nSumHelper(n - 1, nums, i + 1, target - nums[i]);
+                    for (const subResult of subResults)
+                    {
+                        subResult.push(nums[i]);
+                        results.push(subResult);
+                    }
+                }
+            }
+
+            return results;
+        }
+    }
+}
 // @lc code=end
 
+console.log(threeSum([-1, 0, 1]));
