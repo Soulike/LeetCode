@@ -12,42 +12,33 @@
  */
 var canPlaceFlowers = function (flowerbed, n)
 {
+    if (n === 0)
+    {
+        return true;
+    }
+
     const LENGTH = flowerbed.length;
 
-    return helper(0, n);
-
-    function helper(flowerbedLeftIndex, nLeft)
+    for (let i = 0; i < LENGTH; i++)
     {
-        if (nLeft === 0)
+        if (flowerbed[i] === 0)
         {
-            return true;
-        }
-        if (flowerbedLeftIndex === LENGTH)
-        {
-            return false;
-        }
+            if ((i - 1 < 0
+                || flowerbed[i - 1] === 0)
+                && (i + 1 > LENGTH - 1
+                    || flowerbed[i + 1] === 0))
+            {
+                flowerbed[i] = 1;
+                n--;
 
-        // 已经被占
-        if (flowerbed[flowerbedLeftIndex] === 1)
-        {
-            return helper(flowerbedLeftIndex + 1, nLeft);
+                if (n === 0)
+                {
+                    return true;
+                }
+            }
         }
-        // 相邻已经被占
-        else if ((flowerbedLeftIndex > 0
-            && flowerbed[flowerbedLeftIndex - 1] === 1)
-            || (
-                flowerbedLeftIndex < LENGTH - 1
-                && flowerbed[flowerbedLeftIndex + 1] === 1
-            ))
-        {
-            return helper(flowerbedLeftIndex + 1, nLeft);
-        }
-        else
-        {
-            // 可以种，占上
-            flowerbed[flowerbedLeftIndex] = 1;
-            return helper(flowerbedLeftIndex + 1, nLeft - 1);
-        }
-    }
+    };
+
+    return false;
 };
 // @lc code=end
