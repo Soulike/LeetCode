@@ -35,37 +35,25 @@ function TreeNode(val, left, right)
  */
 const isValidBST = function (root)
 {
-    const maxLog = {max: Number.NEGATIVE_INFINITY};
-    return visit(root, maxLog);
+    return visit(root, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
 };
 
-/**
- * @param {TreeNode} root
- * @param {{max: number}} maxLog
- * @returns {boolean}
- */
-function visit(root, maxLog)
+function visit(root, min, max)
 {
-    if (root.left !== null)
+    if (root === null)
     {
-        if (!visit(root.left, maxLog))
-        {
-            return false;
-        }
+        return true;
     }
-    if (root.val <= maxLog.max)
+
+    if (root.val <= min || root.val >= max)
     {
         return false;
     }
     else
     {
-        maxLog.max = root.val;
+        return visit(root.left, min, root.val)
+            && visit(root.right, root.val, max);
     }
-    if (root.right !== null)
-    {
-        return visit(root.right, maxLog);
-    }
-    return true;
 }
 // @lc code=end
 
