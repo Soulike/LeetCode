@@ -32,7 +32,7 @@ var findDuplicateSubtrees = function (root)
 
         const preorder = preorderTranverse(root);
         const postorder = postorderTranverse(root);
-        const dfsResult = `${preorder.join('-')}#${postorder.join('-')}`;
+        const dfsResult = `${preorder}#${postorder}`;
         if (dfsResultToRoot.has(dfsResult))
         {
             duplicates.add(dfsResultToRoot.get(dfsResult));
@@ -52,9 +52,9 @@ var findDuplicateSubtrees = function (root)
         }
         if (root === null)
         {
-            return [null];
+            return 'n';
         }
-        const result = [...preorderTranverse(root.left), root.val, ...preorderTranverse(root.right)];
+        const result = `${preorderTranverse(root.left)},${root.val},${preorderTranverse(root.right)}`;
         preorderCache.set(root, result);
         return result;
     }
@@ -68,9 +68,9 @@ var findDuplicateSubtrees = function (root)
         }
         if (root === null)
         {
-            return [null];
+            return ['n'];
         }
-        const result = [...postorderTranverse(root.left), ...postorderTranverse(root.right), root.val];
+        const result = `${postorderTranverse(root.left)},${postorderTranverse(root.right)},${root.val}`;
         postorderCache.set(root, result);
         return result;
     }
