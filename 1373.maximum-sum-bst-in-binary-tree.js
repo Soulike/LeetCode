@@ -23,8 +23,7 @@ var maxSumBST = function (root)
     return maxSum;
 
     /**
-    * root 是否是一个合法的 BST？
-    * @returns {{isValid: boolean, sum?: number, min?: number, max?: number}}
+    * @returns {{isValid: boolean, sum?: number, min?: number, max?: number}} - root 是否是一个合法的 BST？如果是，该树的数字和是多少，树中最大最小值分别是多少？
     */
     function traverse(root)
     {
