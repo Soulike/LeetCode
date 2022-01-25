@@ -31,8 +31,7 @@ var findDuplicateSubtrees = function (root)
         helper(root.right);
 
         const preorder = preorderTranverse(root);
-        const postorder = postorderTranverse(root);
-        const dfsResult = `${preorder}#${postorder}`;
+        const dfsResult = `${preorder}`;
         if (dfsResultToRoot.has(dfsResult))
         {
             duplicates.add(dfsResultToRoot.get(dfsResult));
@@ -54,24 +53,8 @@ var findDuplicateSubtrees = function (root)
         {
             return 'n';
         }
-        const result = `${preorderTranverse(root.left)},${root.val},${preorderTranverse(root.right)}`;
+        const result = `${root.val},${preorderTranverse(root.left)},${preorderTranverse(root.right)}`;
         preorderCache.set(root, result);
-        return result;
-    }
-
-    const postorderCache = new Map();
-    function postorderTranverse(root)
-    {
-        if (postorderCache.has(root))
-        {
-            return postorderCache.get(root);
-        }
-        if (root === null)
-        {
-            return ['n'];
-        }
-        const result = `${postorderTranverse(root.left)},${postorderTranverse(root.right)},${root.val}`;
-        postorderCache.set(root, result);
         return result;
     }
 
