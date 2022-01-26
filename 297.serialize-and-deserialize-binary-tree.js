@@ -21,7 +21,24 @@
  */
 var serialize = function (root)
 {
-    return JSON.stringify(getTraverseResult(root));
+    const nodeVals = [];
+
+    function helper(root)
+    {
+        if (root === null)
+        {
+            nodeVals.push('');
+        }
+        else
+        {
+            nodeVals.push(root.val);
+            helper(root.left);
+            helper(root.right);
+        }
+    }
+
+    helper(root);
+    return nodeVals.join(',');
 };
 
 /**
@@ -32,79 +49,42 @@ var serialize = function (root)
  */
 var deserialize = function (data)
 {
-    const [preorder, inorder, idToVal] = JSON.parse(data);
-    return buildTree(preorder, inorder, idToVal);
-};
-
-function getTraverseResult(root)
-{
-    const preorderNodeIds = [];
-    const inorderNodeIds = [];
-    const idToVal = [];
-    let id = 0;
-    function traverse(root)
+    const nodeVals = data.split(',').map(val =>
     {
-        if (root === null)
-        {
-            return;
-        }
-        const currentNodeId = id++;
-        idToVal[currentNodeId] = root.val;
-        preorderNodeIds.push(currentNodeId);
-        traverse(root.left);
-        inorderNodeIds.push(currentNodeId);
-        traverse(root.right);
-    }
-
-    traverse(root);
-    return [preorderNodeIds, inorderNodeIds, idToVal];
-}
-
-/**
- * @param {number[]} preorder
- * @param {number[]} inorder
- * @return {TreeNode | null}
- */
-const buildTree = function (preorder, inorder, idToVal) 
-{
-    /**
-     * @param {[number,number]} preorderRange
-     * @param {[number,number]} inorderRange
-     */
-    function helper(preorderRange, inorderRange)
-    {
-        const [preorderStart, preorderEnd] = preorderRange;
-        const [inorderStart, inorderEnd] = inorderRange;
-        if (preorderEnd === preorderStart)
+        if (val === '')
         {
             return null;
         }
-
-        const rootId = preorder[preorderStart];
-        let rootIndexInInorder = inorderStart;
-        for (let i = inorderStart; i < inorderEnd; i++)
+        else
         {
-            if (inorder[i] === rootId)
-            {
-                rootIndexInInorder = i;
-                break;
-            }
+            return Number.parseInt(val);
         }
+    });
 
-        const leftChildNodeCount = rootIndexInInorder - inorderStart;
-
-        const leftChild = helper(
-            [preorderStart + 1, preorderStart + 1 + leftChildNodeCount],
-            [inorderStart, rootIndexInInorder]);
-        const rightChild = helper(
-            [preorderStart + 1 + leftChildNodeCount, preorderEnd],
-            [rootIndexInInorder + 1, inorderEnd]);
-
-        const root = new TreeNode(idToVal[rootId], leftChild, rightChild);
-        return root;
+    // 当前要作为根结点的值的下标
+    let rootIndex = 0;
+    function helper()
+    {
+        if (rootIndex === nodeVals.length)
+        {
+            return null;
+        }
+        if (nodeVals[rootIndex] === null)
+        {
+            rootIndex++;
+            return null;
+        }
+        else
+        {
+            const root = new TreeNode(nodeVals[rootIndex]);
+            rootIndex++;
+            root.left = helper();
+            root.right = helper();
+            return root;
+        }
     }
 
-    return helper([0, preorder.length], [0, inorder.length]);
+    return helper();
 };
 
 /**
