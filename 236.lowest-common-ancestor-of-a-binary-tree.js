@@ -15,28 +15,44 @@ class TreeNode
 
 // @lc code=start
 /**
- * https://www.cnblogs.com/grandyang/p/4641968.html
  * @param {TreeNode} root
  * @param {TreeNode} p
  * @param {TreeNode} q
- * @return {TreeNode}
+ * @return {TreeNode|null}
  */
 const lowestCommonAncestor = function (root, p, q)
 {
-    if (!root || p === root || q === root)
+    if (root === null)
+    {
+        return null;
+    }
+
+    // 如果 p 和 q 之一就是该结点，返回
+    if (root === p || root === q)
     {
         return root;
     }
+
+    // LCA，或者 p 或 q
     const left = lowestCommonAncestor(root.left, p, q);
-    if (left && left !== p && left !== q)
+
+    if (left !== null && left !== p && left !== q)
     {
         return left;
     }
+
+    // LCA，或者 p 或 q
     const right = lowestCommonAncestor(root.right, p, q);
-    if (left && right)
+
+    // p 和 q 分别在左右子树
+    if (left === p && right === q
+        || left === q && right === p)
     {
         return root;
     }
-    return left ? left : right;
+    else    // p 和 q 在左右子树之一
+    {
+        return left ?? right;
+    }
 };
 // @lc code=end
