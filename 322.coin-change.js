@@ -12,39 +12,47 @@
  */
 const coinChange = function (coins, amount) 
 {
-    /**
-     * dp[a] = i 到数额 a，至少需要 i 个硬币
-     * dp[a] = min(dp[a-...coin] + 1)
-     * 
-     * base case dp[coin] = 1
-     * dp[0] = 0;
-     */
-    const dp = new Array(amount + 1);
-    dp.fill(Number.POSITIVE_INFINITY);
-    for (const coin of coins)
-    {
-        dp[coin] = 1;
-    }
-    dp[0] = 0;
+    coins.sort((a, b) => b - a);
 
-    for (let a = 1; a <= amount; a++)
+    const cache = new Map();
+
+    function helper(amount)
     {
-        if (dp[a] === 1)
+        if (cache.has(amount))
         {
-            continue;
+            return cache.get(amount);
         }
-        for (let j = 0; j < coins.length; j++)
+        if (amount === 0)
         {
-            const leftAmount = a - coins[j];
-            if (leftAmount >= 0)
+            return 0;
+        }
+        if (coins[coins.length - 1] > amount)
+        {
+            return -1;
+        }
+
+        let result = Infinity;
+        for (const coin of coins)
+        {
+            if (amount >= coin)
             {
-                dp[a] = Math.min(dp[a], dp[leftAmount] + 1);
+                const rest = helper(amount - coin);
+                if (rest !== -1)
+                {
+                    result = Math.min(result, rest + 1);
+                }
             }
         }
+        if (result === Infinity)
+        {
+            result = -1;
+        }
+        cache.set(amount, result);
+        return result;
     }
 
-    return dp[amount] === Number.POSITIVE_INFINITY ? -1 : dp[amount];
+    return helper(amount);
 };
 // @lc code=end
 
-console.log(coinChange([1,2,5], 11))
+console.log(coinChange([186, 419, 83, 408], 6249));
