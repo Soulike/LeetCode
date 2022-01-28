@@ -14,45 +14,33 @@ const coinChange = function (coins, amount)
 {
     coins.sort((a, b) => b - a);
 
-    const cache = new Map();
+    // dp[i] 价值为 i 的钱至少要由多少个硬币组成
+    const dp = [];
 
-    function helper(amount)
+    /**
+     * base case 
+     * dp[0] = 0
+     * dp[...coins] = 1
+     * dp[...other] = Infinity
+     * 
+     * for(i from 1 to amount)
+     * dp[i] = min(dp[i-...coins])+1
+     */
+
+    dp[0] = 0;
+    for (const coin of coins)
     {
-        if (cache.has(amount))
-        {
-            return cache.get(amount);
-        }
-        if (amount === 0)
-        {
-            return 0;
-        }
-        if (coins[coins.length - 1] > amount)
-        {
-            return -1;
-        }
-
-        let result = Infinity;
-        for (const coin of coins)
-        {
-            if (amount >= coin)
-            {
-                const rest = helper(amount - coin);
-                if (rest !== -1)
-                {
-                    result = Math.min(result, rest + 1);
-                }
-            }
-        }
-        if (result === Infinity)
-        {
-            result = -1;
-        }
-        cache.set(amount, result);
-        return result;
+        dp[coin] = 1;
     }
 
-    return helper(amount);
+    for (let i = 1; i <= amount; i++)
+    {
+        for (const coin of coins)
+        {
+            dp[i] = Math.min(dp[i] ?? Infinity, (dp[i - coin] ?? Infinity)+ 1);
+        }
+    }
+
+    return dp[amount] === Infinity ? -1 : dp[amount];
 };
 // @lc code=end
-
-console.log(coinChange([186, 419, 83, 408], 6249));
