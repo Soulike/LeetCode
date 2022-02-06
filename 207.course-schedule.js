@@ -13,55 +13,52 @@
  */
 const canFinish = function (numCourses, prerequisites)
 {
-    const graph = new Array(numCourses);
-    for (let i = 0; i < numCourses; i++)
+    const prerequisitesMap = new Map();
+    for (let i = 0; i < numCourses;i++)
     {
-        graph[i] = new Array(numCourses);
-        graph[i].fill(false);
-    }
-    const courseToInValue = new Map();
-    for (let i = 0; i < numCourses; i++)
-    {
-        courseToInValue.set(i, 0);
-    }
-    for (const [i, j] of prerequisites)
-    {
-        courseToInValue.set(j,
-            courseToInValue.get(j) + 1
-        );
-        graph[i][j] = true;
+        prerequisitesMap.set(i, new Set());
     }
 
-    while (true)
+    for (const [from, to] of prerequisites)
     {
-        if (courseToInValue.size === 0)
+        prerequisitesMap.get(from).add(to);
+    }
+
+    while (prerequisitesMap.size > 0)
+    {
+        const removedCourses = new Set();
+        for (const [from, tos] of prerequisitesMap)
         {
-            return true;
-        }
-
-        const courseToInValueCopy = new Map(courseToInValue);
-
-        let zeroInCourse = -1;
-        for (const [i, j] of courseToInValueCopy)
-        {
-            if (j === 0)
+            if (tos.size === 0)
             {
-                zeroInCourse = i;
-                courseToInValue.delete(i);
-                break;
+                removedCourses.add(from);
             }
         }
-        if (zeroInCourse === -1)
+
+        if (removedCourses.size === 0)
         {
             return false;
         }
-        for (let j = 0; j < numCourses; j++)
+        else
         {
-            if (graph[zeroInCourse][j])
+            for (const course of removedCourses)
             {
-                courseToInValue.set(j, courseToInValue.get(j) - 1);
+                prerequisitesMap.delete(course);
+            }
+
+            for (const [_, tos] of prerequisitesMap)
+            {
+                for (const course of removedCourses)
+                {
+                    if (tos.has(course))
+                    {
+                        tos.delete(course);
+                    }
+                }
             }
         }
     }
+
+    return true;
 };
 // @lc code=end
