@@ -12,57 +12,55 @@
  */
 const findOrder = function (numCourses, prerequisites) 
 {
-    /** @type {Map<number, number>} */
-    const courseToInDegree = new Map();
-
-    /** @type {Map<number, Set<number>>} */
-    const courseToDependents = new Map();
-
-    for (const [course, prerequisite] of prerequisites)
+    const prerequisitesMap = new Map();
+    for (let i = 0; i < numCourses; i++)
     {
-        courseToInDegree.set(course,
-            (courseToInDegree.get(course) ?? 0) + 1);
-        
-        const courseDependents = courseToDependents.get(prerequisite);
-        if (courseDependents === undefined)
+        prerequisitesMap.set(i, new Set());
+    }
+
+    for (const [from, to] of prerequisites)
+    {
+        prerequisitesMap.get(from).add(to);
+    }
+
+    const order = [];
+
+    while (prerequisitesMap.size > 0)
+    {
+        const removedCourses = new Set();
+        for (const [from, tos] of prerequisitesMap)
         {
-            courseToDependents.set(prerequisite, new Set([course]));
+            if (tos.size === 0)
+            {
+                removedCourses.add(from);
+            }
+        }
+
+        if (removedCourses.size === 0)
+        {
+            return [];
         }
         else
         {
-            courseDependents.add(course);
-        }
-    }
-
-    const result = new Set();
-    let found = true;
-
-    while (found)
-    {
-        found = false;
-        for (let i = 0; i < numCourses; i++)
-        {
-            if (!result.has(i) && (courseToInDegree.get(i) ?? 0) === 0)  // 入度是 0
+            for (const course of removedCourses)
             {
-                found = true;
-                const dependents = courseToDependents.get(i) ?? new Set();
-                for (const dependent of dependents)
+                prerequisitesMap.delete(course);
+                order.push(course);
+            }
+
+            for (const [_, tos] of prerequisitesMap)
+            {
+                for (const course of removedCourses)
                 {
-                    courseToInDegree.set(dependent,
-                        courseToInDegree.get(dependent) - 1);
+                    if (tos.has(course))
+                    {
+                        tos.delete(course);
+                    }
                 }
-                result.add(i);
             }
         }
     }
 
-    if(result.size === numCourses)
-    {
-        return Array.from(result);
-    }
-    else
-    {
-        return [];
-    }
+    return order;
 };
 // @lc code=end
