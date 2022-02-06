@@ -11,65 +11,31 @@
  */
 var allPathsSourceTarget = function (graph)
 {
+    const START = 0;
     const TARGET = graph.length - 1;
-    const pathsCache = new Map();
+
+    let currentPath = [];
+    let paths = [];
 
     function helper(start)
     {
-        if (pathsCache.has(start))
-        {
-            return pathsCache.get(start);
-        }
-
-        let result;
-
+        currentPath.push(start);
         if (start === TARGET)
         {
-            result = [[TARGET]];
+            paths.push(Array.from(currentPath));
         }
         else
         {
             const tos = graph[start];
-            if (tos.length === 0)
+            for (const to of tos)
             {
-                result = null;
-            }
-            else
-            {
-                const paths = [];
-                for (const to of tos)
-                {
-                    const subPaths = helper(to);
-                    if (subPaths !== null)
-                    {
-                        for (const subPath of subPaths)
-                        {
-                            paths.push([start,...subPath]);
-                        }
-                    }
-                }
-                if (paths.length === 0)
-                {
-                    result = null;
-                }
-                else
-                {
-                    result = paths;
-                }
+                helper(to);
             }
         }
-
-        pathsCache.set(start, result);
-        return result;
-    }  
-
-    const paths = helper(0);
-    if (paths === null)
-    {
-        return [];
+        currentPath.pop();
     }
+
+    helper(START);
     return paths;
 };
 // @lc code=end
-
-allPathsSourceTarget([[1, 2], [3], [3], []])
