@@ -5,136 +5,21 @@
  */
 
 // @lc code=start
-class ListNode
-{
-    key;
-    value;
-    prev;
-    next;
 
-    constructor(key, value)
-    {
-        this.key = key;
-        this.value = value;
-        this.prev = null;
-        this.next = null;
-    }
-}
-class LinkedHashMap
+class LRUCache
 {
-    /**
-     * 越靠近链表尾部越新
-     */
-
-    fakeHead;
-    tail;
+    keyToValue;
     capacity;
-    keyToListNode;
 
     constructor(capacity)
     {
         this.capacity = capacity;
-
-        this.fakeHead = new ListNode(-1, -1);
-        this.tail = this.fakeHead;
-        this.keyToListNode = new Map();
+        this.keyToValue = new Map();
     }
 
-    size()
+    #size()
     {
-        return this.keyToListNode.size;
-    }
-
-    removeOldest()
-    {
-        if (this.size() !== 0)
-        {
-            const removedNode = this.fakeHead.next;
-            const prevNode = removedNode.prev;
-            const nextNode = removedNode.next;
-
-            prevNode.next = nextNode;
-            if (nextNode !== null)
-            {
-                nextNode.prev = prevNode;
-            }
-
-            if (removedNode === this.tail)
-            {
-                this.tail = prevNode;
-            }
-
-            this.keyToListNode.delete(removedNode.key);
-        }
-    }
-
-    add(key, value)
-    {
-        if (this.keyToListNode.has(key))
-        {
-            this.touch(key);
-            this.keyToListNode.get(key).value = value;
-        }
-        else
-        {
-            if (this.size() === this.capacity)
-            {
-                this.removeOldest();
-            }
-            const newNode = new ListNode(key, value);
-            this.tail.next = newNode;
-            newNode.prev = this.tail;
-            this.tail = newNode;
-            this.keyToListNode.set(key, newNode);
-        }
-    }
-
-    getValue(key)
-    {
-        if (this.keyToListNode.has(key))
-        {
-            this.touch(key);
-            return this.keyToListNode.get(key).value;
-        }
-        else
-        {
-            return -1;
-        }
-    }
-
-    touch(key)
-    {
-        const touchedNode = this.keyToListNode.get(key);
-        if (touchedNode !== undefined)
-        {
-            // 已经是 tail 则无需调整
-            if (this.tail !== touchedNode)
-            {
-                const prevNode = touchedNode.prev;
-                const nextNode = touchedNode.next;
-
-                prevNode.next = nextNode;
-                if (nextNode !== null)
-                {
-                    nextNode.prev = prevNode;
-                }
-
-                this.tail.next = touchedNode;
-                touchedNode.prev = this.tail;
-                touchedNode.next = null;
-                this.tail = touchedNode;
-            }
-        }
-    }
-}
-
-class LRUCache
-{
-    linkedHashMap;
-
-    constructor(capacity)
-    {
-        this.linkedHashMap = new LinkedHashMap(capacity);
+        return this.keyToValue.size;
     }
 
     /**
@@ -143,7 +28,17 @@ class LRUCache
      */
     get(key)
     {
-        return this.linkedHashMap.getValue(key);
+        const value = this.keyToValue.get(key);
+        if (value !== undefined)
+        {
+            this.keyToValue.delete(key);
+            this.keyToValue.set(key, value);
+            return value;
+        }
+        else
+        {
+            return -1;
+        }
     }
     /**
      * @param {number} key
@@ -152,7 +47,21 @@ class LRUCache
      */
     put(key, value)
     {
-        return this.linkedHashMap.add(key, value);
+        if (!this.keyToValue.has(key))
+        {
+            if (this.#size() === this.capacity)
+            {
+                const iterator = this.keyToValue.keys();
+                const oldestKey = iterator.next().value;
+                this.keyToValue.delete(oldestKey);
+            }
+            this.keyToValue.set(key, value);
+        }
+        else
+        {
+            this.keyToValue.delete(key);
+            this.keyToValue.set(key, value);
+        }
     }
 }
 
@@ -163,15 +72,3 @@ class LRUCache
  * obj.put(key,value)
  */
 // @lc code=end
-
-/*
-["LRUCache","put","put","get","put","get","put","get","get","get"]
-[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]
-
-*/
-
-const lruCache = new LRUCache(1);
-lruCache.put(2, 1);
-lruCache.get(2);
-lruCache.put(3, 2);
-lruCache.get(2);
