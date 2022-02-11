@@ -12,42 +12,23 @@
  */
 var twoSum = function (numbers, target)
 {
-    function binarySearch(left, right, target)
-    {
-        if (left <= right)
-        {
-            const mid = left + Math.floor((right - left) / 2);
-            if (numbers[mid] > target)
-            {
-                return binarySearch(left, mid - 1, target);
-            }
-            else if (numbers[mid] < target)
-            {
-                return binarySearch(mid + 1, right, target);
-            }
-            else if (numbers[mid] === target)
-            {
-                return mid;
-            }
+    let left = 0;
+    let right = numbers.length - 1;
 
+    while (left < right)
+    {
+        const sum = numbers[left] + numbers[right];
+        if (sum < target)
+        {
+            left++;
+        }
+        else if (sum > target)
+        {
+            right--;
         }
         else
         {
-            return -1;
-        }
-    }
-
-    const largestNum = numbers[numbers.length - 1];
-
-    for (let i = 0; i < numbers.length; i++)
-    {
-        if (numbers[i] + largestNum >= target)
-        {
-            const j = binarySearch(i + 1, numbers.length - 1, target - numbers[i]);
-            if (j !== -1)
-            {
-                return [i + 1, j + 1];
-            }
+            return [left + 1, right + 1];
         }
     }
 };
