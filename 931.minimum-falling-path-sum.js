@@ -20,42 +20,43 @@ var minFallingPathSum = function (matrix)
       dp[i][j] = Math.min(dp[i-1][j-1], dp[i-1][j], dp[i-1][j+1]) + matrix[i][j]
 
       ret = Math.min(dp[matrix.length-1][j])
+
+      可以优化到只有最后一列
+
+      dp = matrix[0][j]
+
+      newDp = Math.min(dp[j-1], dp[j], dp[j+1]) + matrix[i][j]
      */
     
-    const dp = new Array(matrix.length);
-    for (let i = 0; i < matrix.length; i++)
-    {
-        dp[i] = new Array(matrix[0].length);
-        dp[i].fill(0);
-    }
-
-    
+    let dp = new Array(matrix[0].length);
 
     for (let j = 0; j < matrix[0].length; j++)
     {
-        dp[0][j] = matrix[0][j];
+        dp[j] = matrix[0][j];
     }
 
     for (let i = 1; i < matrix.length; i++)
     {
+        const newDp = new Array(matrix[0].length);
         for (let j = 0; j < matrix[0].length; j++)
         {
             if (j > 0 && j < matrix[0].length - 1)
             {
-                dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i - 1][j + 1]) + matrix[i][j];
+                newDp[j] = Math.min(dp[j - 1], dp[j], dp[j + 1]) + matrix[i][j];
             }
             else if (j === 0)
             {
-                dp[i][j] = Math.min(dp[i - 1][j], dp[i - 1][j + 1]) + matrix[i][j];
+                newDp[j] = Math.min(dp[j], dp[j + 1]) + matrix[i][j];
             }
             else
             {
-                dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j]) + matrix[i][j];
+                newDp[j] = Math.min(dp[j - 1], dp[j]) + matrix[i][j];
             }
         }
+        dp = newDp;
     }
 
-    return Math.min(...dp[matrix.length - 1]);
+    return Math.min(...dp);
 };
 // @lc code=end
 
