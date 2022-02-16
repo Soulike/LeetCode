@@ -12,53 +12,40 @@
  */
 const findTargetSumWays = function (nums, target)
 {
+    let currentSum = 0;
     const cache = new Map();
-    return helper(nums, 0, target, cache);
-};
 
-/**
- * @param {number[]} nums
- * @param {number} index
- * @param {number} target
- * @param {Map<number, Map<number, number>>} cache
- * @return {number}
- */
-function helper(nums, index, target, cache)
-{
-    const indexMap = cache.get(index);
-    if (indexMap !== undefined)
+    /**
+     * 回溯法
+     * @param {number} index
+     */
+    function helper(index)
     {
-        const cacheNum = indexMap.get(target);
-        if (cacheNum !== undefined)
+        const cacheKey = `${index}-${currentSum}`;
+        if (cache.has(cacheKey))
         {
-            return cacheNum;
+            return cache.get(cacheKey);
         }
-    }
-    const NUM_LENGTH = nums.length;
-    if (NUM_LENGTH - index === 0)
-    {
-        if (target === 0)
+
+        let result = 0;
+        if (index < nums.length)
         {
-            return 1;
+            currentSum += nums[index];
+            result += helper(index + 1);
+            currentSum -= nums[index];
+
+            currentSum -= nums[index];
+            result += helper(index + 1);
+            currentSum += nums[index];
         }
         else
         {
-            return 0;
+            result = currentSum === target ? 1 : 0;
         }
-    }
-    else
-    {
-        const result = helper(nums, index + 1, target + nums[index], cache) + helper(nums, index + 1, target - nums[index], cache);
-        const indexCache = cache.get(index);
-        if (indexCache === undefined)
-        {
-            cache.set(index, new Map([[target, result]]));
-        }
-        else
-        {
-            indexCache.set(target, result);
-        }
+        cache.set(cacheKey, result);
         return result;
     }
-}
+
+    return helper(0);
+};
 // @lc code=end
