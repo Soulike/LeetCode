@@ -11,45 +11,50 @@
  */
 const minPathSum = function (grid) 
 {
-    const m = grid.length;
-    if (m < 1)
+    /**
+     * dp[i][j] 从 (0,0) 到 (i,j) 的最小路径和
+     * 
+     * base case
+     * dp[0][0] = grid[0][0]
+     * 
+     * dp[i][j] = Math.min(dp[i-1][j], dp[i][j-1]) + grid[i][j]
+     */
+
+    const M = grid.length;
+    const N = grid[0].length;
+
+    const dp = new Array(M);
+    for (let i = 0; i < M; i++)
     {
-        return 0;
+        dp[i] = new Array(N);
     }
-    // m > 0
-    const n = grid[0].length;
-    if (n < 1)
+
+    for (let i = 0; i < M; i++)
     {
-        return 0;
-    }
-    /**@type {number[][]} */
-    const tempArray = new Array(m);
-    for (let i = 0; i < m; i++)
-    {
-        tempArray[i] = new Array(n);
-    }
-    for (let i = 0; i < m; i++)
-    {
-        for (let j = 0; j < n; j++)
+        for (let j = 0; j < N; j++)
         {
-            if (i !== 0 && j !== 0)
+            if (i === 0 && j === 0)
             {
-                tempArray[i][j] = Math.min(tempArray[i - 1][j], tempArray[i][j - 1]) + grid[i][j];
+                dp[0][0] = grid[0][0];
             }
-            else if (i === 0 && j !== 0)
+            else
             {
-                tempArray[i][j] = tempArray[i][j - 1] + grid[i][j];
-            }
-            else if (i !== 0 && j === 0)
-            {
-                tempArray[i][j] = tempArray[i-1][j] + grid[i][j];
-            }
-            else    // i === 0 && j === 0
-            {
-                tempArray[i][j] = grid[i][j];
+                if (i === 0)
+                {
+                    dp[i][j] = dp[i][j - 1] + grid[i][j];
+                }
+                else if (j === 0)
+                {
+                    dp[i][j] = dp[i - 1][j] + grid[i][j];
+                }
+                else
+                {
+                    dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+                }
             }
         }
     }
-    return tempArray[m - 1][n - 1];
+
+    return dp[M - 1][N - 1];
 };
 // @lc code=end
