@@ -30,18 +30,28 @@ const canPartition = function (nums)
      * dp[i][j] = dp[i-1][j]
      * 
      * // 装第 i 个物品 
-     * dp[i][j] = dp[i-1][j-nums[i-1]]2
+     * dp[i][j] = dp[i-1][j-nums[i-1]]
+     * 
+     * 节省内存
+     * lastDp = dp[i-1]
+     * dp = dp[i]
+     * 
+     * base case 
+     * lastDp[j] = false
+     * lastDp[0] = true
+     * 
+     * // 不装第 i 个物品
+     * dp[j] = lastDp[j]
+     * 
+     * // 装第 i 个物品 
+     * dp[j] = lastDp[j-nums[i-1]]
      */
 
-    const dp = new Array(nums.length + 1);
-    for (let i = 0; i < dp.length; i++)
-    {
-        dp[i] = new Array(subsetSum + 1);
-        dp[i][0] = true;
-    }
+    let lastDp = new Array(subsetSum + 1);
+    lastDp.fill(false);
+    lastDp[0] = true;
 
-    dp[0].fill(false);
-    dp[0][0] = true;
+    let dp = new Array(subsetSum + 1);
 
     for (let i = 1; i <= nums.length; i++)
     {
@@ -49,17 +59,20 @@ const canPartition = function (nums)
         {
             if (j - nums[i - 1] < 0)    // 装不下
             {
-                dp[i][j] = dp[i - 1][j];
+                dp[j] = lastDp[j];
             }
             else
             {
-                dp[i][j] =
-                    dp[i - 1][j]
-                    || dp[i - 1][j - nums[i - 1]];
+                dp[j] =
+                    lastDp[j]
+                    || lastDp[j - nums[i - 1]];
             }
         }
+
+        lastDp = dp;
+        dp = new Array(subsetSum + 1); 
     }
 
-    return dp[nums.length][subsetSum];
+    return lastDp[subsetSum];
 };
 // @lc code=end
