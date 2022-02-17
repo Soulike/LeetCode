@@ -12,48 +12,27 @@
  */
 const combinationSum = function (candidates, target) 
 {
-    candidates.sort((a, b) => a - b);
-    return helper(candidates, candidates.length - 1, [], target);
+    const results = [];
+    let currentComb = [];
+    function backtrack(candidateIndex, target)
+    {
+        if (target === 0)
+        {
+            results.push([...currentComb]);
+        }
+        else if (target > 0)
+        {
+            for (let i = candidateIndex; i < candidates.length; i++)
+            {
+                currentComb.push(candidates[i]);
+                backtrack(i, target - candidates[i]);
+                currentComb.pop();
+            }
+        }
+    }
+
+    backtrack(0, target);
+
+    return results;
 };
-
-/**
- * @param {number[]} candidates
- * @param {number} candidatesRight
- * @param {number[]} lastArray
- * @param {number} target
- * @return {number[][]}
- */
-function helper(candidates,candidatesRight, lastArray, target)
-{
-    if (target === 0)
-    {
-        return [lastArray];
-    }
-    if (candidatesRight === -1)
-    {
-        return [];
-    }
-    /**@type {number[][]} */
-    const result = [];
-    const lastArrayLastElement = lastArray[lastArray.length - 1];
-    let right = -1;
-    for (let i = candidatesRight; i >= 0; i--)
-    {
-        if (candidates[i] <= target)
-        {
-            right = i;
-            break;
-        }
-    }
-    for (let i = right; i >= 0; i--)
-    {
-        if (lastArray.length === 0 || candidates[i] >= lastArrayLastElement)
-        {
-            result.push(...helper(candidates, right, [...lastArray, candidates[i]], target - candidates[i]));
-        }
-    }
-    return result;
-}
 // @lc code=end
-
-console.log(combinationSum([2,3,5], 8));
