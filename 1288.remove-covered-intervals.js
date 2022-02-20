@@ -15,46 +15,33 @@ var removeCoveredIntervals = function (intervals)
     {
         return 1;
     }
+
+    // 按照 start 升序排序，如果 start 相同，按照 end 降序排序
     intervals.sort(([start1, end1], [start2, end2]) =>
     {
-        if (end1 === end2)
+        if (start1 === start2)
         {
-            return start2 - start1;
+            return end2 - end1;
         }
         else
         {
-            return end1 - end2;
+            return start1 - start2;
         }
     });
 
-    let currentIntervals = intervals;
-    let nextIntervals = [];
+    let count = 0;
+    let right = -1; // 当前见过的最大的 end
 
-    while (true)
+    for (const [_, end] of intervals)
     {
-        for (let i = 0; i < currentIntervals.length - 1; i++)
+        if (end > right)    // 见到了更大的，是新区间
         {
-            const [start1, end1] = currentIntervals[i];
-            const [start2, end2] = currentIntervals[i + 1];
-
-            if (end1 < end2)
-            {
-                if (start1 < start2)
-                {
-                    nextIntervals.push(currentIntervals[i]);
-                }
-            }
+            count++;
+            right = end;
         }
-
-        nextIntervals.push(currentIntervals[currentIntervals.length - 1]);
-
-        if (currentIntervals.length === nextIntervals.length)
-        {
-            return nextIntervals.length;
-        }
-
-        currentIntervals = nextIntervals;
-        nextIntervals = [];
+        // 没见到更大的，start 也一定大于等于之前的，所以会被合并
     }
+
+    return count;
 };
 // @lc code=end
