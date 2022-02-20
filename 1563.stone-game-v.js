@@ -19,59 +19,66 @@ var stoneGameV = function (stoneValue)
         return prev + curr;
     }, 0);
 
-    const cache = new Map();
-
-    // 如果取 [left, right]，alice 能在其中取得的最大分数
-    function helper(left, right)
-    {
-        const cacheKey = `${left}-${right}`;
-        if (cache.has(cacheKey))
-        {
-            return cache.get(cacheKey);
-        }
-        if (right === left)
-        {
-            return 0;
-        }
-        let max = 0;    // Alice 的最多得分
-        // i 是 right 部分的开始
-        for (let i = left + 1; i <= right; i++)
-        {
-            const leftSum = getSum(left, i - 1);
-            const rightSum = getSum(i, right);
-            if (leftSum > rightSum) // 扔掉左边
-            {
-                max = Math.max(max,
-                    rightSum + helper(i, right)
-                );
-            }
-            else if (leftSum < rightSum)    // 扔掉右边
-            {
-                max = Math.max(max,
-                    leftSum + helper(left, i - 1)
-                );
-            }
-            else    // 都尝试一下
-            {
-                max = Math.max(max,
-                    rightSum + helper(i, right)
-                );
-                max = Math.max(max,
-                    leftSum + helper(left, i - 1)
-                );
-            }
-        }
-
-        cache.set(cacheKey, max);
-        return max;
-    }
-
     function getSum(start, end)
     {
         return prefixSum[end] - prefixSum[start] + stoneValue[start];
     }
 
-    const result = helper(0, n - 1);
-    return result;
+    /**
+     * dp[i][j] 如果取 [i, j]，alice 能在其中取得的最大分数
+     * 
+     * base case
+     * dp[i][i] = 0
+     * 
+     * dp[i][j] = max(
+     * for k from i+1 to j
+     *  if leftSum > rightSum
+     *      rightSum + dp[k][j]
+     *  else if leftSum < rightSum
+     *      leftSum + dp[i][k-1]
+     *  else
+     *      max(rightSum + dp[k][j],leftSum + dp[i][k-1])
+     * )
+     * 
+     * return dp[0,n-1]
+     */
+
+    const dp = new Array(n);
+    for (let i = 0; i < dp.length; i++)
+    {
+        dp[i] = new Array(n);
+        dp[i][i] = 0;
+    }
+
+    for (let left = n - 1; left >= 0; left--)
+    {
+        for (let right = left + 1; right < n; right++)
+        {
+            let max = 0;
+            for (let rightPartStart = left + 1; rightPartStart <= right; rightPartStart++)
+            {
+                const leftSum = getSum(left, rightPartStart - 1);
+                const rightSum = getSum(rightPartStart, right);
+
+                if (leftSum > rightSum)
+                {
+                    max = Math.max(max, rightSum + dp[rightPartStart][right]);
+                }
+                else if (leftSum < rightSum)
+                {
+                    max = Math.max(max, leftSum + dp[left][rightPartStart - 1]);
+                }
+                else
+                {
+                    max = Math.max(max,
+                        Math.max(rightSum + dp[rightPartStart][right],
+                            leftSum + dp[left][rightPartStart - 1]));
+                }
+            }
+            dp[left][right] = max;
+        }
+    }
+
+    return dp[0][n - 1];
 };
 // @lc code=end
