@@ -25,6 +25,9 @@ var stoneGameVII = function (stones)
     }
 
     const cache = new Map();
+    /**
+     * 如果先手在 [left,right] 上选择，最多能比后手多选择多少数量的石子
+     */
     function helper(left, right)
     {
         const cacheKey = `${left}-${right}`;
