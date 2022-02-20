@@ -11,30 +11,36 @@
  */
 var winnerSquareGame = function (n)
 {
-    const cache = new Map();
-    // 如果拿到 n 个石子，最佳情况下能不能赢
-    function helper(n)
+    /**
+     * dp[i] 如果还剩下 i 个石子，能不能赢
+     * 
+     * base case
+     * dp[0] = false
+     * 
+     * dp[i] = 
+     * for k from 1 to sqrt(i)
+     * if !dp[i-k**2]
+     *  dp[i] = true
+     *  break;
+     */
+
+    const dp = new Array(n + 1);
+    dp[0] = false;
+
+    for (let i = 1; i <= n; i++)
     {
-        if (cache.has(n))
+        dp[i] = false;
+        const sqrt = Math.sqrt(i);
+        for (let k = 1; k <= sqrt; k++)
         {
-            return cache.get(n);
-        }
-        if (n === 0)
-        {
-            return false;
-        }
-        for (let i = 1; i <= Math.sqrt(n); i++)
-        {
-            if (!helper(n - i ** 2))    // 有一种拿法对方输了
+            if (!dp[i - k ** 2])    // 对方会输
             {
-                cache.set(n, true);
-                return true;
+                dp[i] = true;
+                break;
             }
         }
-        cache.set(n, false);
-        return false;
     }
 
-    return helper(n);
+    return dp[n];
 };
 // @lc code=end
