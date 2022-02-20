@@ -19,45 +19,53 @@ var stoneGameIII = function (stoneValue)
         return prev + curr;
     }, 0);
 
-    const cache = new Map();
-
-    function helper(stoneStartIndex)
-    {
-        if (cache.has(stoneStartIndex))
-        {
-            return cache.get(stoneStartIndex);
-        }
-        let maxCount = -Infinity;
-        for (let i = 1; i <= 3; i++)
-        {
-            // 自己取完了还有剩下的
-            if (stoneStartIndex + i < n)
-            {
-                const takeCount = getSum(stoneStartIndex, stoneStartIndex + i - 1);
-                const restCount = getSum(stoneStartIndex + i, n - 1);
-                const anotherTakeCount = helper(stoneStartIndex + i);
-                maxCount = Math.max(maxCount,
-                    takeCount + restCount - anotherTakeCount);
-            }
-            // 全部取完了
-            else
-            {
-                const takeCount = getSum(stoneStartIndex, n - 1);
-                maxCount = Math.max(maxCount,
-                    takeCount);
-            }
-
-        }
-        cache.set(stoneStartIndex, maxCount);
-        return maxCount;
-    }
+    /**
+     * dp[i] 从 i 开始取石头，能取得的最多石头
+     * base case 
+     * dp[n-1] = stoneValue[n-1]
+     * 
+     * dp[i] = max(
+     * for k from 1 to 3
+     * if i+k < n   // 还有剩下的
+     * sum(i,i+k-1)+sum(i+k,n-1)-dp[i+k]
+     * else // 可以全拿走
+     * sum(i,n-1)
+     * )
+     */
 
     function getSum(start, end)
     {
         return prefixSum[end] - prefixSum[start] + stoneValue[start];
     }
 
-    const aliceCount = helper(0);
+    const dp = new Array(n);
+    dp[n - 1] = stoneValue[n - 1];
+
+    for (let i = n - 2; i >= 0; i--)
+    {
+        let max = -Infinity;
+        for (let k = 1; k <= 3; k++)
+        {
+            if (i + k < n)
+            {
+                const takeCount = getSum(i, i + k - 1);
+                const restCount = getSum(i + k, n - 1);
+                max = Math.max(max,
+                    takeCount
+                    + restCount - dp[i + k]);
+            }
+            else
+            {
+                const takeCount = getSum(i, n - 1);
+                max = Math.max(max,
+                    takeCount);
+                break;
+            }
+        }
+        dp[i] = max;
+    }
+
+    const aliceCount = dp[0];
     const bobCount = prefixSum[n - 1] - aliceCount;
 
     return aliceCount === bobCount ? 'Tie' : (
@@ -66,4 +74,4 @@ var stoneGameIII = function (stoneValue)
 };
 // @lc code=end
 
-console.log(stoneGameIII([1, 2, 3, 6]));
+console.log(stoneGameIII([1, 2, 3, 7]));
