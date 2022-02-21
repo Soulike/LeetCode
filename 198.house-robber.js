@@ -12,28 +12,43 @@
  */
 const rob = function (nums) 
 {
-    // 抢当前房子能得到的最大值
-    let robMax = nums[0];
-    // 不抢当前房子能得到的最大值
-    let notRobMax = 0;
+    /**
+     * rob[i] 抢第 i 房子，最多拿到多少钱
+     * noRob[i] 不抢第 i 个房子，最多拿到多少钱
+     * 
+     * base case
+     * rob[0] = nums[0]
+     * noRob[0] = 0
+     * 
+     * rob[i] = noRob[i-1]+nums[i]
+     * noRob[i] = max(noRob[i-1], rob[i-1])
+     * 
+     * 返回 max(rob[n-1], noRob[n-1])
+     * 
+     * 空间优化
+     * base case 
+     * rob = nums[0]
+     * noRob = 0;
+     * 
+     * prevRob = rob
+     * rob = noRob+nums[i]
+     * noRob = max(noRob, prevRob)
+     * 
+     * 返回 max(rob, noRob)
+     */
 
-    // 抢前一个房子能得到的最大值
-    let preRobMax = robMax;
-    // 不抢前一个房子能得到的最大值
-    let preNotRobMax = notRobMax;
+    const n = nums.length;
+    let rob = nums[0];
+    let noRob = 0;
+    let prevRob = 0;
 
-    for (let i = 1; i < nums.length; i++)
+    for (let i = 1; i < n; i++)
     {
-        preRobMax = robMax;
-        preNotRobMax = notRobMax;
-
-        // 要抢当前的房子，那前一个房子就不能抢
-        robMax = preNotRobMax + nums[i];
-
-        // 不抢当前房子，那前一个房子可抢可不抢
-        notRobMax = Math.max(preNotRobMax, preRobMax);
+        prevRob = rob;
+        rob = noRob + nums[i];
+        noRob = Math.max(noRob, prevRob);
     }
 
-    return Math.max(robMax, notRobMax);
+    return Math.max(rob, noRob)
 };
 // @lc code=end
