@@ -11,42 +11,46 @@
  */
 const jump = function (nums)
 {
-    const LENGTH = nums.length;
-    if (LENGTH === 1)
-    {
-        return 0;
-    }
-    let currentStartIndex = 0;
-    let currentMaxJumpIndex = nums[0] + 0;
+    /**
+     * dp[i] 从 i 位置到终点所需的最小跳跃数
+     * 
+     * base case
+     * dp[target] = 0
+     * 
+     * dp[i] = 
+     * if nums[i] === 0
+     *  Infinity
+     * else if i+nums[i] >= target
+     *  1
+     * else
+     *  min(1+dp[i+1...nums[i]]) 
+     */
 
-    if (currentMaxJumpIndex >= LENGTH - 1)
-    {
-        return 1;
-    }
+    const n = nums.length;
+    const dp = new Array(n);
+    dp[n - 1] = 0;
 
-    let nextStartIndex = 0;
-    let nextMaxJumpIndex = 0;
-    let step = 0;
-
-    while (true)
+    for (let i = n - 2; i >= 0; i--)
     {
-        for (let i = currentStartIndex + 1; i <= currentMaxJumpIndex; i++)
+        if (nums[i] === 0)
         {
-            if (nums[i] + i > nextMaxJumpIndex)
+            dp[i] = Infinity;
+        }
+        else if (i + nums[i] >= n - 1)
+        {
+            dp[i] = 1;
+        }
+        else
+        {
+            dp[i] = Infinity;
+            for (let j = nums[i]; j >= 1; j--)
             {
-                nextMaxJumpIndex = nums[i] + i;
-                nextStartIndex = i;
+                dp[i] = Math.min(dp[i], dp[i + j]);
             }
-        }
-        currentStartIndex = nextStartIndex;
-        currentMaxJumpIndex = nextMaxJumpIndex;
-        step++;
-        if (currentMaxJumpIndex >= LENGTH - 1)
-        {
-            return step + 1;
+            dp[i]++;
         }
     }
+
+    return dp[0];
 };
 // @lc code=end
-
-console.log(jump([2,3,0,1,4]));
