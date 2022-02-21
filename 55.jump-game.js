@@ -12,34 +12,41 @@
 const canJump = function (nums) 
 {
     const destIndex = nums.length - 1;
-    const cache = new Map();
-    function helper(index)
-    {
-        if (cache.has(index))
-        {
-            return cache.get(index);
-        }
+    
+    /**
+     * dp[i] 在 i 位置是否能到达终点
+     * 
+     * dp[i] = i+nums[i] >= destIndex || dp[i+1...nums[i]]
+     * 
+     * base case
+     * dp[destIndex] = true
+     */
 
-        if (index >= destIndex)
+    const dp = new Array(nums.length);
+    dp.fill(false);
+    dp[destIndex] = true;
+
+    for (let i = destIndex - 1; i >= 0; i--)
+    {
+        if (i + nums[i] >= destIndex)
         {
-            cache.set(index, true);
-            return true;
+            dp[i] = true;
         }
-        const maxStepCount = nums[index];
-        for (let i = 1; i <= maxStepCount; i++)
+        else
         {
-            if (helper(index + i))
+            for (let j = nums[i]; j >= 1; j--)
             {
-                cache.set(index, true);
-                return true;
+                if (dp[i + j])
+                {
+                    dp[i] = true;
+                    break;
+                }
             }
         }
-        cache.set(index, false);
-        return false;
     }
 
-    return helper(0);
+    return dp[0];
 };
 // @lc code=end
 
-console.log(canJump([3, 2, 1, 0, 4]));
+console.log(canJump([2, 3, 1, 1, 4]));
