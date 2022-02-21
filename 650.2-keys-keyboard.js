@@ -21,57 +21,54 @@ var minSteps = function (n)
      * 粘贴
      */
 
-    const cache = new Map();
     /**
-     * @returns {number} - 在当前状态下，所需要的最小操作次数。如果不可能，返回 Infinity
+     * dp[i][j] 当已经输入了 i 个字符，剪切板里面字符数量为 j 的时候，最小的操作次数
+     * 
+     * base case 
+     * dp[n][?] = 0
+     * 
+     * dp[i][j] = 
+     * if j === 0
+     *  1+dp[i][i]
+     * else if(j<i)
+     *  1+min(
+     *  dp[i][i],  // copy
+     *  i+j>n?Infinity: dp[i+j][j]
+     *  )
+     * else
+     *  1+(i+j>n?Infinity:dp[i+j][j])
+     * 
+     * 返回 dp[1][0]
      */
-    function helper(inputtedCount, clipboardCount)
+
+    const dp = new Array(n + 1);
+    for (let i = 0; i < dp.length; i++)
     {
-        const cacheKey = `${inputtedCount}-${clipboardCount}`;
-        if (cache.has(cacheKey))
-        {
-            return cache.get(cacheKey);
-        }
-        if (inputtedCount > n)
-        {
-            return Infinity;
-        }
+        dp[i] = new Array(n + 1);
+    }
+    dp[n].fill(0);
 
-        if (inputtedCount === n)
+    for (let i = n - 1; i >= 1; i--)
+    {
+        for (let j = n; j >= 0; j--)
         {
-            return 0;
+            if (j === 0)
+            {
+                dp[i][j] = 1 + dp[i][i];
+            }
+            else if (j < i)
+            {
+                dp[i][j] = 1 + Math.min(dp[i][i],
+                    i + j > n ? Infinity : dp[i + j][j]);
+            }
+            else
+            {
+                dp[i][j] = 1 +
+                    (i + j > n ? Infinity : dp[i + j][j]);
+            }
         }
-
-        let result = Infinity;
-
-        // 剪切板是空的，只能复制
-        if (clipboardCount === 0)
-        {
-            const doCopyRestStepCount = helper(inputtedCount, inputtedCount);
-
-            result = 1 + doCopyRestStepCount;
-        }
-        // 剪切板大小和文本不一致，两种选择
-        else if (inputtedCount > clipboardCount)
-        {
-            const doCopyRestStepCount = helper(inputtedCount, inputtedCount);
-            const doPasteRestStepCount = helper(inputtedCount + clipboardCount, clipboardCount);
-
-            result = 1 + Math.min(doCopyRestStepCount, doPasteRestStepCount);
-        }
-        // 剪切板大小和文本一样，只能粘贴
-        else
-        {
-            const doPasteRestStepCount = helper(inputtedCount + clipboardCount, clipboardCount);
-            result = 1 + doPasteRestStepCount;
-        }
-
-        cache.set(cacheKey, result);
-        return result;
     }
 
-    return helper(1, 0);
+    return dp[1][0];
 };
 // @lc code=end
-
-console.log(minSteps(1000));
