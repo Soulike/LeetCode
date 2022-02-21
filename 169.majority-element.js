@@ -11,6 +11,7 @@
  */
 var majorityElement = function (nums)
 {
+    // https://www.zhihu.com/question/49973163
     let element = nums[0];
     let elementCount = 0;
 
