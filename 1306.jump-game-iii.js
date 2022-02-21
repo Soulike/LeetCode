@@ -12,56 +12,43 @@
  */
 const canReach = function (arr, start)
 {
-    const visitedIndexes = new Set();
+    const n = arr.length;
     const cache = new Map();
-    return helper(arr, start, visitedIndexes, cache);
+    const visited = new Set();
+    /**
+     * 从 start 开始，能否到达有 0 的位置
+     */
+    function helper(start)
+    {
+        if (cache.has(start))
+        {
+            return cache.get(start);
+        }
+        // 转一圈回来了
+        if (visited.has(start))
+        {
+            return false;
+        }
+        
+        visited.add(start);
+        let result;
+        if (start >= n || start < 0)
+        {
+            result = false;
+        }
+        else if (arr[start] === 0)
+        {
+            result = true;
+        }
+        else
+        {
+            result = helper(start + arr[start])
+                || helper(start - arr[start]);
+        }
+        cache.set(start, result);
+        return result;
+    }
+
+    return helper(start);
 };
-
-/**
- * @param {number[]} arr
- * @param {number} start
- * @param {Set<number>} visitedIndexes
- * @param {Map<number, boolean>} cache
- * @return {boolean}
- */
-function helper(arr, start, visitedIndexes, cache)
-{
-    const cached = cache.get(start);
-    if (cached !== undefined)
-    {
-        return cached;
-    }
-
-    if (arr[start] === 0)
-    {
-        cache.set(start, true);
-        return true;
-    }
-    else if (visitedIndexes.has(start))
-    {
-        cache.set(start, false);
-        return false;
-    }
-    else
-    {
-        visitedIndexes.add(start);
-        let reachable = false;
-        const step = arr[start];
-        if (start + step < arr.length)
-        {
-            reachable = reachable || helper(arr, start + step, visitedIndexes, cache);
-        }
-        if (reachable)
-        {
-            cache.set(start, true);
-            return true;
-        }
-        if (start - step >= 0)
-        {
-            reachable = reachable || helper(arr, start - step, visitedIndexes, cache);
-        }
-        cache.set(start, reachable);
-        return reachable;
-    }
-}
 // @lc code=end
