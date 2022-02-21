@@ -12,7 +12,7 @@
  */
 var superEggDrop = function (K, N)
 {
-    const cache = {};
+    const cache = new Map();
     /**
      * 在 [1-N] 层扔鸡蛋，还剩下 K 个鸡蛋可以扔，最坏情况下最少的尝试次数
      */
@@ -35,7 +35,7 @@ var superEggDrop = function (K, N)
 
         let minTimes = Infinity;
         // 每一层都尝试扔一下
-        for (let i = 1; i <= N; i++)
+        /* for (let i = 1; i <= N; i++)
         {
             // 在这一层碎了，1到i-1层
             const brokenTimes = helper(K - 1, i - 1);
@@ -44,6 +44,42 @@ var superEggDrop = function (K, N)
 
             minTimes = Math.min(minTimes,
                 Math.max(brokenTimes, notBrokenTimes) + 1);
+        } */
+
+        /**
+         * helper(K,N) 在 K 确定时是一个关于 N 的单调递增函数
+         * 那么 helper(K - 1, i - 1) 关于 i 递增
+         * helper(K, N - i) 关于 i 递减
+         * 根据 minTimes = Math.min(minTimes,
+                Math.max(brokenTimes, notBrokenTimes) + 1);
+         * 我们需要求出两个函数关于 i 时在图像上的交点
+         * 使用二分法
+         */
+
+        let left = 1;
+        let right = N;
+
+        while (left <= right)
+        {
+            const mid = left + Math.floor((right - left) / 2);
+            // 在这一层碎了，1到i-1层
+            const brokenTimes = helper(K - 1, mid - 1);
+            // 在这一层没碎，i+1到N层
+            const notBrokenTimes = helper(K, N - mid);
+
+            if (brokenTimes > notBrokenTimes)
+            {
+                minTimes = Math.min(minTimes,
+                    brokenTimes + 1);
+                right = mid - 1;
+            }
+            else
+            {
+                minTimes = Math.min(minTimes,
+                    notBrokenTimes + 1);
+                left = mid + 1;
+            }
+            
         }
 
         cache.set(cacheKey, minTimes);
@@ -54,5 +90,3 @@ var superEggDrop = function (K, N)
     return result;
 };
 // @lc code=end
-
-console.log(superEggDrop(4, 5000));
