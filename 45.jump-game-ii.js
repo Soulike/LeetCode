@@ -11,46 +11,33 @@
  */
 const jump = function (nums)
 {
-    /**
-     * dp[i] 从 i 位置到终点所需的最小跳跃数
-     * 
-     * base case
-     * dp[target] = 0
-     * 
-     * dp[i] = 
-     * if nums[i] === 0
-     *  Infinity
-     * else if i+nums[i] >= target
-     *  1
-     * else
-     *  min(1+dp[i+1...nums[i]]) 
-     */
-
-    const n = nums.length;
-    const dp = new Array(n);
-    dp[n - 1] = 0;
-
-    for (let i = n - 2; i >= 0; i--)
+    function helper(start)
     {
-        if (nums[i] === 0)
+        if (start >= nums.length - 1)
         {
-            dp[i] = Infinity;
+            return 0;
         }
-        else if (i + nums[i] >= n - 1)
+
+        const maxReachIndex = nums[start] + start;
+
+        if (maxReachIndex >= nums.length - 1)
         {
-            dp[i] = 1;
+            return 1;
         }
-        else
+
+        let nextMaxReach = -1;
+        let nextIndex = -1;
+        for (let i = start + 1; i <= maxReachIndex; i++)
         {
-            dp[i] = Infinity;
-            for (let j = nums[i]; j >= 1; j--)
+            if (i + nums[i] > nextMaxReach)
             {
-                dp[i] = Math.min(dp[i], dp[i + j]);
+                nextMaxReach = i + nums[i];
+                nextIndex = i;
             }
-            dp[i]++;
         }
+        return 1 + helper(nextIndex);
     }
 
-    return dp[0];
+    return helper(0);
 };
 // @lc code=end
