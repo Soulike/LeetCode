@@ -12,51 +12,47 @@
  */
 var superEggDrop = function (K, N)
 {
-    let memo = {};
-
-    let dp = function (K, N)
+    const cache = {};
+    /**
+     * 在 [1-N] 层扔鸡蛋，还剩下 K 个鸡蛋可以扔，最坏情况下最少的尝试次数
+     */
+    function helper(K, N)
     {
-        // base case
-        if (K === 1) return N;
-        if (N === 0) return 0;
-
-        // 避免重复计算
-        let key = K + ',' + N;
-        if (memo[key] !== undefined)
+        const cacheKey = `${K}-${N}`;
+        if (cache.has(cacheKey))
         {
-            return memo[key];
+            return cache.get(cacheKey);
+        }
+        // 就剩下一个鸡蛋了，只能逐层尝试
+        if (K === 1)
+        {
+            return N;   // 最坏情况下一直尝试到楼顶
+        }
+        if (N === 0)
+        {
+            return 0;
         }
 
-        // 正无穷
-        let res = Infinity;
-
-        // 用二分搜索代替线性搜索
-        let lo = 1, hi = N;
-        while (lo <= hi)
+        let minTimes = Infinity;
+        // 每一层都尝试扔一下
+        for (let i = 1; i <= N; i++)
         {
-            let mid = Math.floor((lo + hi) / 2);
-            let broken = dp(K - 1, mid - 1); // 碎
-            let not_broken = dp(K, N - mid); //  没碎
+            // 在这一层碎了，1到i-1层
+            const brokenTimes = helper(K - 1, i - 1);
+            // 在这一层没碎，i+1到N层
+            const notBrokenTimes = helper(K, N - i);
 
-            // res = min(max(碎，没碎) + 1)
-            if (broken > not_broken)
-            {
-                hi = mid - 1;
-                res = Math.min(res, broken + 1);
-            } else
-            {
-                lo = mid + 1;
-                res = Math.min(res, not_broken + 1);
-            }
+            minTimes = Math.min(minTimes,
+                Math.max(brokenTimes, notBrokenTimes) + 1);
         }
 
+        cache.set(cacheKey, minTimes);
+        return minTimes;
+    }
 
-        // 记入备忘录
-        memo[key] = res;
-        return res;
-    };
-
-    return dp(K, N);
+    const result = helper(K, N);
+    return result;
 };
 // @lc code=end
 
+console.log(superEggDrop(4, 5000));
