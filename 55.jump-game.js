@@ -11,31 +11,35 @@
  */
 const canJump = function (nums) 
 {
-    const numsLength = nums.length;
-    let currentNum = 0;
-    let farestIndex = 0;
-    for (let i = 0; ;)
+    const destIndex = nums.length - 1;
+    const cache = new Map();
+    function helper(index)
     {
-        currentNum = nums[i];
-        farestIndex = currentNum + i;
-        if (farestIndex >= numsLength - 1)
+        if (cache.has(index))
         {
+            return cache.get(index);
+        }
+
+        if (index >= destIndex)
+        {
+            cache.set(index, true);
             return true;
         }
-        if (currentNum === 0)
+        const maxStepCount = nums[index];
+        for (let i = 1; i <= maxStepCount; i++)
         {
-            return false;
-        }
-        for (let j = i + 1; j < numsLength; j++)
-        {
-            if (j + nums[j] >= farestIndex)
+            if (helper(index + i))
             {
-                i = j;
-                break;
+                cache.set(index, true);
+                return true;
             }
         }
+        cache.set(index, false);
+        return false;
     }
+
+    return helper(0);
 };
 // @lc code=end
 
-console.log(canJump([2, 3, 1, 1, 1, 1, 1, 1, 4]));
+console.log(canJump([3, 2, 1, 0, 4]));
