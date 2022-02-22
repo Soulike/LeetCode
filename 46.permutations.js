@@ -11,31 +11,34 @@
  */
 const permute = function (nums) 
 {
-    const usedNums = new Set();
-    const results = [];
+    let result = [];
+    let results = [];
+    let usedNums = new Set();
+    const n = nums.length;
 
     function helper()
     {
-        if (usedNums.size === nums.length)
+        for (const num of nums)
         {
-            results.push([...usedNums]);
-        }
-        else
-        {
-            for (const num of nums)
+            if (!usedNums.has(num))
             {
-                if (!usedNums.has(num))
+                usedNums.add(num);
+                result.push(num);
+                if (result.length === n)
                 {
-                    usedNums.add(num);
-                    helper();
-                    usedNums.delete(num);
+                    results.push([...result]);
                 }
+                else
+                {
+                    helper();
+                }
+                result.pop();
+                usedNums.delete(num);
             }
         }
     }
 
     helper();
-
     return results;
 };
 // @lc code=end
