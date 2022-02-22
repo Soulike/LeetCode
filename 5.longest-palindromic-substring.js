@@ -11,99 +11,55 @@
  */
 const longestPalindrome = function (s) 
 {
-    if (s.length === 0)
-    {
-        return '';
-    }
-    else if (s.length === 1)
-    {
-        return s;
-    }
-    else if (s.length === 2)
-    {
-        if (s.charAt(0) === s.charAt(1))
-        {
-            return s;
-        }
-        else
-        {
-            return s.charAt(0);
-        }
-    }
-    // s.length >= 3
-    let longestSubstring = '';
-    let longestSubstringFromOddCenter = '';
-    let longestSubstringFromEvenCenter = '';
-    // 奇数串中心字符
-    let substringCenter = 1;
-    // 偶数串中心字符
-    let substringCenterLeft = 0;
-    let substringCenterRight = 1;
+    /**
+     * dp[i][j] s[i] 到 s[j] ，以 j 结尾的最长的回文字串长度
+     * 
+     * base case
+     * dp[i][i] = 1
+     * 
+     * dp[i][j] = 
+     * if dp[i+1][j-1] === 0 || s[i] !== s[j]
+     *  dp[i][j] = 0
+     * else
+     *  dp[i][j] = dp[i+1][j-1]+2
+     */
 
-    while (substringCenter < s.length)
+    const n = s.length;
+    const dp = new Array(n);
+    for (let i = 0; i < n; i++)
     {
-        // 查找奇数对称串
-        longestSubstringFromOddCenter = getLongestSubstringFromRange(s, substringCenter - 1, substringCenter + 1);
-        // 查找偶数对称串
-        longestSubstringFromEvenCenter = getLongestSubstringFromRange(s, substringCenterLeft, substringCenterRight);
+        dp[i] = new Array(n);
+        dp[i].fill(0);
+        dp[i][i] = 1;
+    }
 
-        // 找出最大对称串
-        if(longestSubstringFromOddCenter.length > longestSubstringFromEvenCenter.length)
+    let maxLen = 1;
+    let maxLenSubStr = s[0];
+
+    for (let i = n - 2; i >= 0; i--)
+    {
+        for (let j = i + 1; j < n; j++)
         {
-            if (longestSubstringFromOddCenter.length > longestSubstring.length)
+            if (j > i + 1)
             {
-                longestSubstring = longestSubstringFromOddCenter;
+                if (dp[i + 1][j - 1] !== 0 && s[i]===s[j])
+                {
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                }
+            }
+            else if (s[i] === s[j])    // j === i+1
+            {
+                dp[i][j] = 2;
+            }
+
+            if (dp[i][j] > maxLen)
+            {
+                maxLen = dp[i][j];
+                maxLenSubStr = s.slice(i, j + 1);
             }
         }
-        else
-        {
-            if (longestSubstringFromEvenCenter.length > longestSubstring.length)
-            {
-                longestSubstring = longestSubstringFromEvenCenter;
-            }
-        }
-
-        // 移动中心
-        substringCenter++;
-        substringCenterLeft = substringCenter - 1;
-        substringCenterRight = substringCenterLeft + 1;
     }
-    return longestSubstring;
+
+    return maxLenSubStr;
 };
-
-/**
- * @description 找到从 left 和 right 开始扩张的最长的对称字符串
- * @param {string} s
- * @param {number} left
- * @param {number} right
- * @return {string}
- */
-function getLongestSubstringFromRange(s, left, right)
-{
-    let longestSubstring = '';
-    let currentLeft = left;
-    let currentRight = right;
-    while (currentLeft >= 0 && currentRight < s.length)
-    {
-        if (s.charAt(currentLeft) === s.charAt(currentRight))
-        {
-            if (currentLeft === 0 || currentRight === s.length - 1)
-            {
-                longestSubstring = currentRight - currentLeft + 1 > longestSubstring.length ? s.slice(currentLeft, currentRight + 1) : longestSubstring;
-                break;
-            }
-            else
-            {
-                currentLeft--;
-                currentRight++;
-            }
-        }
-        else
-        {
-            longestSubstring = currentRight - currentLeft - 1 > longestSubstring.length ? s.slice((currentLeft + 1), currentRight) : longestSubstring;
-            break;
-        }
-    }
-    return longestSubstring;
-}
 // @lc code=end
