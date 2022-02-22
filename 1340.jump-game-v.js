@@ -5,61 +5,6 @@
  */
 
 // @lc code=start
-class QueueNode
-{
-    val;
-    next;
-
-    constructor(val)
-    {
-        this.val = val;
-        this.next = null;
-    }
-}
-
-class MyQueue
-{
-    fakeHead;
-    tail;
-
-    constructor()
-    {
-        this.fakeHead = new QueueNode(-1);
-        this.tail = this.fakeHead;
-    }
-
-    isEmpty()
-    {
-        return this.fakeHead.next === null;
-    }
-
-    shift()
-    {
-        if (!this.isEmpty())
-        {
-            const head = this.fakeHead.next;
-            const next = head.next;
-            this.fakeHead.next = next;
-            if (next === null)
-            {
-                this.tail = this.fakeHead;
-            }
-
-            return head.val;
-        }
-        else
-        {
-            throw new RangeError();
-        }
-    }
-
-    push(val)
-    {
-        const newNode = new QueueNode(val);
-        this.tail.next = newNode;
-        this.tail = newNode;
-    }
-}
 
 /**
  * @param {number[]} arr
@@ -68,140 +13,95 @@ class MyQueue
  */
 var maxJumps = function (arr, d)
 {
-    /**
-     * 每次跳跃的最长距离是 d
-     * 跳跃到的位置，中间不能有更高的“墙”
-     */
-
-    const leftJumpCache = new Map();
-    function findLeftJumpIndexes(i)
-    {
-        if (leftJumpCache.has(i))
-        {
-            return leftJumpCache.get(i);
-        }
-        let result = [];
-
-        if (i === 0 || arr[i - 1] >= arr[i])
-        {
-            return result;
-        }
-
-        let indexes = [];
-        let maxVal = arr[i - 1];
-        let maxValIndex = i - 1;
-
-        for (let j = 2; j <= d; j++)
-        {
-            if (i - j < 0 || arr[i - j] >= arr[i])
-            {
-                break;
-            }
-            if (arr[i - j] >= maxVal)
-            {
-                maxVal = arr[i - j];
-                maxValIndex = i - j;
-            }
-        }
-
-        for (let j = i - 1; j >= maxValIndex; j--)
-        {
-            indexes.push(j);
-        }
-
-        result = indexes;
-        leftJumpCache.set(i, result);
-        return result;
-    }
-
-    const rightJumpCache = new Map();
-    function findRightJumpIndexes(i)
-    {
-        if (rightJumpCache.has(i))
-        {
-            return rightJumpCache.get(i);
-        }
-        let result = [];
-
-        if (i === n - 1 || arr[i + 1] >= arr[i])
-        {
-            return result;
-        }
-
-        let indexes = [];
-        let maxVal = arr[i + 1];
-        let maxValIndex = i + 1;
-
-        for (let j = 2; j <= d; j++)
-        {
-            if (i + j > n-1 || arr[i + j] >= arr[i])
-            {
-                break;
-            }
-            if (arr[i + j] >= maxVal)
-            {
-                maxVal = arr[i + j];
-                maxValIndex = i + j;
-            }
-        }
-
-        for (let j = i + 1; j <= maxValIndex; j++)
-        {
-            indexes.push(j);
-        }
-
-        result = indexes;
-        rightJumpCache.set(i, result);
-        return result;
-    }
-
-    const queue = new MyQueue();
-    const indexToMaxSteps = new Map();
-
-    let maxIndexCount = -Infinity;
-
     const n = arr.length;
+    const cache = new Map();
+    /**
+     * 在 i 位置起跳，能经过的最多地点数量
+     */
+    function helper(i)
+    {
+        if (cache.has(i))
+        {
+            return cache.get(i);
+        }
+        let leftCount = 0;
+        let rightCount = 0;
+        if (i - 1 >= 0)
+        {
+            let max = 0;
+            let maxIndexes = [];
+            for (let dis = 1; dis <= d; dis++)
+            {
+                if (i - dis < 0 || arr[i - dis] >= arr[i])
+                {
+                    break;
+                }
+                if (arr[i - dis] > max)
+                {
+                    max = arr[i - dis];
+                }
+            }
+
+            for (let dis = 1; dis <= d; dis++)
+            {
+                if (i - dis < 0 || arr[i - dis] >= arr[i])
+                {
+                    break;
+                }
+                if (arr[i - dis] === max)
+                {
+                    maxIndexes.push(i - dis);
+                }
+            }
+            for (const maxIndex of maxIndexes)
+            {
+                leftCount = Math.max(leftCount, helper(maxIndex));
+            }
+        }
+        if (i + 1 < n)
+        {
+            let max = 0;
+            let maxIndexes = [];
+            for (let dis = 1; dis <= d; dis++)
+            {
+                if (i + dis >= n || arr[i + dis] >= arr[i])
+                {
+                    break;
+                }
+                if (arr[i + dis] > max)
+                {
+                    max = arr[i + dis];
+                }
+            }
+
+            for (let dis = 1; dis <= d; dis++)
+            {
+                if (i + dis >= n || arr[i + dis] >= arr[i])
+                {
+                    break;
+                }
+                if (arr[i + dis] === max)
+                {
+                    maxIndexes.push(i + dis);
+                }
+            }
+            for (const maxIndex of maxIndexes)
+            {
+                rightCount = Math.max(rightCount, helper(maxIndex));
+            }
+        }
+
+        const result = 1 + Math.max(leftCount, rightCount);
+        cache.set(i, result);
+        return result;
+    }
+
+    let max = 0;
     for (let i = 0; i < n; i++)
     {
-        queue.push([i, 1]);
-        let currentMaxIndexCount = -Infinity;
-
-        while (!queue.isEmpty())
-        {
-            const [index, step] = queue.shift();
-            currentMaxIndexCount = Math.max(currentMaxIndexCount, step);
-
-            const leftJumpIndexes = findLeftJumpIndexes(index);
-            const rightJumpIndexes = findRightJumpIndexes(index);
-
-            for (const leftJumpIndex of leftJumpIndexes)
-            {
-                if (indexToMaxSteps.has(leftJumpIndex))
-                {
-                    currentMaxIndexCount = Math.max(currentMaxIndexCount, step + indexToMaxSteps.get(leftJumpIndex));
-                }
-                else
-                {
-                    queue.push([leftJumpIndex, step + 1]);
-                }
-            }
-            for (const rightJumpIndex of rightJumpIndexes)
-            {
-                if (indexToMaxSteps.has(rightJumpIndex))
-                {
-                    currentMaxIndexCount = Math.max(currentMaxIndexCount, step + indexToMaxSteps.get(rightJumpIndex));
-                }
-                else
-                {
-                    queue.push([rightJumpIndex, step + 1]);
-                }
-            }
-        }
-
-        indexToMaxSteps.set(i, currentMaxIndexCount);
-        maxIndexCount = Math.max(maxIndexCount, currentMaxIndexCount);
+        max = Math.max(max, helper(i));
     }
 
-    return maxIndexCount;13
+    return max;
 };
 // @lc code=end
