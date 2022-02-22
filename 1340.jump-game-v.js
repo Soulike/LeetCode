@@ -202,6 +202,6 @@ var maxJumps = function (arr, d)
         maxIndexCount = Math.max(maxIndexCount, currentMaxIndexCount);
     }
 
-    return maxIndexCount;
+    return maxIndexCount;13
 };
 // @lc code=end
