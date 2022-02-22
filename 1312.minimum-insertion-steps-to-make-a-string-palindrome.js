@@ -11,41 +11,46 @@
  */
 var minInsertions = function (s)
 {
-    const cache = new Map();
-    function helper(left, right)
+    /**
+     * dp[i][j] 要使得 [i,j] 范围内的字符串成为回文，需要插入多少次
+     * 
+     * base case
+     * dp[i][i] = 0
+     * 
+     * dp[i][j] ,i!==j
+     * if s[i]===s[j]
+     *  dp[i][j] = j===i+1? 0 : dp[i+1][j-1]
+     * else
+     *  dp[i][j] = min(
+     * dp[i+1][j], // 把左边的插入到 j+1
+     * dp[i][j-1])  // 把右边的插入到 i-1
+     */
+
+    const n = s.length;
+    const dp = new Array(n);
+    for (let i = 0; i < n; i++)
     {
-        const cacheKey = `${left}-${right}`;
-        if (cache.has(cacheKey))
-        {
-            return cache.get(cacheKey);
-        }
-        const length = right - left + 1;
-        if (length < 2)
-        {
-            return 0;
-        }
-        while (left < right
-            && s.charAt(left) === s.charAt(right))
-        {
-            left++;
-            right--;
-        }
-
-        if (left >= right)
-        {
-            cache.set(cacheKey, 0);
-            return 0;
-        }
-
-        const result = 1 + Math.min(
-            helper(left + 1, right), // 把左边的字符插入到 right+1
-            helper(left, right - 1), // 把右边的字符插入到 left-1
-        );
-        cache.set(cacheKey, result);
-        return result;
+        dp[i] = new Array(n);
+        dp[i][i] = 0;
     }
 
-    const result = helper(0, s.length - 1);
-    return result;
+    for (let i = n - 2; i >= 0; i--)
+    {
+        for (let j = i + 1; j < n; j++)
+        {
+            if (s[i] === s[j])
+            {
+                dp[i][j] = j === i + 1 ? 0 : dp[i + 1][j - 1];
+            }
+            else
+            {
+                dp[i][j] = 1 + Math.min(
+                    dp[i + 1][j], // 把左边的插入到 j+1
+                    dp[i][j - 1]);  // 把右边的插入到 i-1
+            }
+        }
+    }
+
+    return dp[0][n - 1];
 };
 // @lc code=end
