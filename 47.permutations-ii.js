@@ -11,32 +11,38 @@
  */
 var permuteUnique = function (nums)
 {
-    nums.sort((a, b) => a - b);
-    const numsLength = nums.length;
-    if (numsLength === 0)
-    {
-        return [];
-    }
-    if (numsLength === 1)
-    {
-        return [nums];
-    }
+    const n = nums.length;
     const results = [];
-    let subResults = [];
-    for (let i = 0; i < numsLength; i++)
+    const usedNumberIndexes = new Set();
+
+    function backtrack()
     {
-        if (i !== 0 && nums[i] === nums[i - 1])
+        // 同一个数字不要再用第二次
+        const currentUsedNumbers = new Set();
+        for (let i = 0; i < n; i++)
         {
-            continue;
-        }
-        subResults = permuteUnique([...nums.slice(0, i), ...nums.slice(i + 1)]);
-        for (const subResult of subResults)
-        {
-            subResult.push(nums[i]);
-            results.push(subResult);
+            if (!usedNumberIndexes.has(i) && !currentUsedNumbers.has(nums[i]))
+            {
+                usedNumberIndexes.add(i);
+                currentUsedNumbers.add(nums[i]);
+
+                if (usedNumberIndexes.size === n)
+                {
+                    results.push(
+                        Array.from
+                            (usedNumberIndexes)
+                            .map(index => nums[index]));
+                }
+                else
+                {
+                    backtrack();
+                }
+                usedNumberIndexes.delete(i);
+            }
         }
     }
+
+    backtrack();
     return results;
 };
 // @lc code=end
-
