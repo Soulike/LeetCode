@@ -26,24 +26,40 @@ var canReach = function (s, minJump, maxJump)
      * dp[n-1] = true
      * 
      * dp[i] = s[i] === '0  && any(dp[i+minJump...i+maxJump])
+     * 
+     * 维护一个窗口，看 i+minJump...i+maxJump 里面有多少个 true
      */
 
     const dp = new Array(n);
     dp.fill(false);
     dp[n - 1] = true;
 
+    // i+minJump...i+maxJump 范围内有多少个 true？
+    let slideWindow = 0;
+
     for (let i = n - 2; i >= 0; i--)
     {
-        if(s[i] === '0')
+        // 窗口刚刚进入字符串内
+        if (i + minJump === n - 1)
         {
-            for (let j = minJump; j <= maxJump; j++)
+            slideWindow = 1;
+        }
+        // 向左滑动一下窗口
+        else if (i + minJump < n - 1)
+        {
+            if (i + maxJump + 1 < n && dp[i + maxJump + 1])
             {
-                if (i + j < n && dp[i + j])
-                {
-                    dp[i] = true;
-                    break;
-                }
+                slideWindow--;
             }
+            if (dp[i + minJump])
+            {
+                slideWindow++;
+            }
+        }
+
+        if (s[i] === '0')
+        {
+            dp[i] = slideWindow > 0;
         }
     }
 
