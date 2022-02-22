@@ -11,55 +11,45 @@
  */
 const longestPalindrome = function (s) 
 {
-    /**
-     * dp[i][j] s[i] 到 s[j] ，以 j 结尾的最长的回文字串长度
-     * 
-     * base case
-     * dp[i][i] = 1
-     * 
-     * dp[i][j] = 
-     * if dp[i+1][j-1] === 0 || s[i] !== s[j]
-     *  dp[i][j] = 0
-     * else
-     *  dp[i][j] = dp[i+1][j-1]+2
-     */
-
     const n = s.length;
-    const dp = new Array(n);
-    for (let i = 0; i < n; i++)
+    function getLongestPalindrome(centerLeft, centerRight)
     {
-        dp[i] = new Array(n);
-        dp[i].fill(0);
-        dp[i][i] = 1;
+        let left = centerLeft;
+        let right = centerRight;
+        while (left >= 0 && right <= n - 1)
+        {
+            if (s[left] !== s[right])
+            {
+                return s.slice(left + 1, right);
+            }
+            else
+            {
+                left--;
+                right++;
+            }
+        }
+
+        return s.slice(left + 1, right);
     }
 
-    let maxLen = 1;
-    let maxLenSubStr = s[0];
+    let maxSubstr = s[0];
 
-    for (let i = n - 2; i >= 0; i--)
+    for (let i = 0; i < n - 1; i++)
     {
-        for (let j = i + 1; j < n; j++)
-        {
-            if (j > i + 1)
-            {
-                if (dp[i + 1][j - 1] !== 0 && s[i]===s[j])
-                {
-                    dp[i][j] = dp[i + 1][j - 1] + 2;
-                }
-            }
-            else if (s[i] === s[j])    // j === i+1
-            {
-                dp[i][j] = 2;
-            }
+        const substr1 = getLongestPalindrome(i, i);
+        const substr2 = getLongestPalindrome(i, i + 1);
 
-            if (dp[i][j] > maxLen)
-            {
-                maxLen = dp[i][j];
-                maxLenSubStr = s.slice(i, j + 1);
-            }
+        if (substr1.length > maxSubstr.length)
+        {
+            maxSubstr = substr1;
+        }
+
+        if (substr2.length > maxSubstr.length)
+        {
+            maxSubstr = substr2;
         }
     }
 
-    return maxLenSubStr;
+    return maxSubstr;
 };
 // @lc code=end
