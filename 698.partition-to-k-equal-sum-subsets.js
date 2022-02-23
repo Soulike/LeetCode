@@ -12,88 +12,63 @@
  */
 var canPartitionKSubsets = function (nums, k)
 {
-    const sum = nums.reduce((prev, curr) => prev + curr);
-    const subsetSum = sum / k;
-    if (!Number.isInteger(subsetSum))
+    const numsSum = nums.reduce((prev, curr) => prev + curr);
+    const targetSum = numsSum / k;
+
+    if (!Number.isInteger(targetSum))
     {
         return false;
     }
 
-    const subsetIndexes = [];
-    let currentSubsetIndexes = [];
-    function backtrack(index, target)
+    const usedIndexes = new Set();
+    // 在使用的数字相同时，桶的装法肯定也是一样的，只是装的顺序不同，结果肯定是相同的
+    const usedIndexesToResultCache = [];
+
+    function backtrack(startIndex, leftBucketCount, currentBucketLeftRoom)
     {
-        if (target === 0)
-        {
-            subsetIndexes.push([...currentSubsetIndexes]);
-        }
-        else if (target > 0)
-        {
-            for (let i = index; i < nums.length; i++)
-            {
-                currentSubsetIndexes.push(i);
-                backtrack(i + 1, target - nums[i]);
-                currentSubsetIndexes.pop();
-            }
-        }
-    }
-
-    // 找到所有可以构成 target 的子集
-    backtrack(0, subsetSum);
-
-    return canCoverRangeWithoutOverlap(0, nums.length - 1, subsetIndexes);
-};
-
-/**
- * 确定 [rangeStart, rangeEnd] 范围内的所有坐标是否可以被 pointArrays 中的坐标点子集不重叠地完全覆盖
- * @param {number} rangeStart
- * @param {number} rangeEnd
- * @param {number[][]} pointArrays
- */
-function canCoverRangeWithoutOverlap(rangeStart, rangeEnd, pointArrays)
-{
-    const usedIndexSet = new Set();
-    const rangeSize = rangeEnd - rangeStart + 1;
-
-    function backtrack(pointArraysIndex)
-    {
-        if (usedIndexSet.size === rangeSize)
+        if (leftBucketCount === 0)  // 桶用完了
         {
             return true;
         }
-
-        OUT:
-        for (let i = pointArraysIndex; i < pointArrays.length; i++)
+        if (currentBucketLeftRoom === 0)    // 当前桶装满了
         {
-            // 合并 pointArrays[i]
-            for (const index of pointArrays[i])
-            {
-                // 重叠了，忽略
-                if (usedIndexSet.has(index))
-                {
-                    continue OUT;
-                }
-            }
-            for (const index of pointArrays[i])
-            {
-                usedIndexSet.add(index);
-            }
-
-            if (backtrack(i + 1))
-            {
-                return true;
-            }
-            // 撤销合并 pointArrays[i]
-            for (const index of pointArrays[i])
-            {
-                usedIndexSet.delete(index);
-            }
+            // 后面的桶能装满吗？
+            const result = backtrack(0, leftBucketCount - 1, targetSum);
+            usedIndexesToResultCache[convertIndexSetToNum(usedIndexes)] = result;
+            return result;
         }
 
+        if (usedIndexesToResultCache[convertIndexSetToNum(usedIndexes)] !== undefined)
+        {
+            return usedIndexesToResultCache[convertIndexSetToNum(usedIndexes)];
+        }
+
+        for (let i = startIndex; i < nums.length; i++)
+        {
+            if (!usedIndexes.has(i) && currentBucketLeftRoom >= nums[i])
+            {
+                usedIndexes.add(i);
+                if (backtrack(i, leftBucketCount, currentBucketLeftRoom - nums[i]))
+                {
+                    return true;
+                }
+                usedIndexes.delete(i);
+            }
+        }
         return false;
     }
 
-    const result = backtrack(0);
+    const result = backtrack(0,k, targetSum);
+    return result;
+};
+
+function convertIndexSetToNum(set)
+{
+    let result = 0;
+    for (const i of set)
+    {
+        result += 1 << i;
+    }
     return result;
 }
 
