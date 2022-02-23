@@ -12,35 +12,41 @@
 const partition = function (s)
 {
     /**
+     * dp[i][j] [i,j] 是否是回文
+     * 
      * base case 
      * dp[i][i] = true
-     * dp[i][i+1] = true
      * 
-     * 如果 s[i] === s[j-1]
-     * dp[i][j] = dp[i+1][j-1]
-     * 
-     * 如果 s[i] !== s[j-1]
-     * dp[i][j] = false
+     * dp[i][j] = 
+     * if j === i+1
+     *  dp[i][j] = s[i] === s[j]
+     * else if s[i] === s[j]
+     *  dp[i][j] = dp[i+1][j-1]
+     * else
+     *  dp[i][j] = false
+     *  
      */
 
-    /**
-     * dp[i][j] 从 i 到 j-1 的字符串是不是回文
-     */
-    const dp = new Array(s.length);
-    for (let i = 0; i < s.length; i++)
+    const n = s.length;
+    const dp = new Array(n);
+    for (let i = 0; i < n; i++)
     {
-        dp[i] = new Array(s.length + 1);
+        dp[i] = new Array(n);
+        dp[i].fill(false);
         dp[i][i] = true;
-        dp[i][i + 1] = true;
     }
 
-    for (let i = s.length - 2; i >= 0; i--)
+    for (let i = n - 2; i >= 0; i--)
     {
-        for (let j = i + 2; j <= s.length; j++)
+        for (let j = i + 1; j < n; j++)
         {
-            if (s[i] === s[j - 1])
+            if (j === i + 1)
             {
-                dp[i][j] = dp[i + 1][j - 1];
+                dp[i][j] = s[i] === s[j];
+            }
+            else if (s[i] === s[j])
+            {
+                dp[i][j] = dp[i + 1][j - 1]
             }
             else
             {
@@ -49,49 +55,37 @@ const partition = function (s)
         }
     }
 
-    // 以下转化成为图可达问题，找到所有从 0 开始到 s.length 结束的可达路径
 
-    /**
-     * @returns {number[][]} - 从 startIndex 开始，能到达 s.length 的路径，逆序
-     */
-    function getRoutes(startIndex)
+    function isPalindrome(left, right)
     {
-        /** @type {number[][]} */
-        const result = [];
-        for (let j = startIndex + 1; j <= s.length; j++)
+        return dp[left][right];
+    }
+
+    const result = [];
+    let current = [];
+
+    function backtrack(start)
+    {
+        if (start === s.length)
         {
-            if (dp[startIndex][j])
+            result.push([...current]);
+        }
+        else
+        {
+            for (let i = start + 1; i <= s.length; i++)
             {
-                if (j < s.length)
+                if (isPalindrome(start, i - 1))
                 {
-                    const restRoutes = getRoutes(j);
-                    for (const restRoute of restRoutes)
-                    {
-                        restRoute.push(startIndex);
-                        result.push(restRoute);
-                    }
-                }
-                else
-                {
-                    result.push([j, startIndex]);
+                    current.push(s.slice(start, i));
+                    backtrack(i);
+                    current.pop();
                 }
             }
         }
-        return result;
     }
-
-    const routes = getRoutes(0);
-    const result = [];
-    for (const route of routes)
-    {
-        const substrings = [];
-        for (let i = route.length - 2; i >= 0; i--)
-        {
-            substrings.push(s.slice(route[i + 1], route[i]));
-        }
-        result.push(substrings);
-    }
-
+    backtrack(0);
     return result;
 };
 // @lc code=end
+
+partition('cdd');
