@@ -16,88 +16,50 @@ var longestValidParentheses = function (s)
         return 0;
     }
 
-    let left = 0;
-    let right = 0;
-    let openLeftBracket = 0;
     let maxLength = 0;
 
-    while (s[left] !== '(' && right < s.length)
+    const stack = [];
+    for (let i = 0; i < s.length; i++)
     {
-        left++;
-        right++;
-    }
-
-    if (left === s.length)
-    {
-        return 0;
-    }
-
-    openLeftBracket = 1;
-
-    while (right < s.length - 1)
-    {
-        right++;
-        if (s[right] === '(')
+        if (stack.length === 0)
         {
-            openLeftBracket++;
+            stack.push(i);
         }
-        else if (s[right] === ')')
+        else if (s[i] === '(')
         {
-            openLeftBracket--;
+            stack.push(i);
         }
-
-        if (openLeftBracket === 0)
+        else
         {
-            maxLength = Math.max(maxLength, right - left + 1);
-        }
-        else if (openLeftBracket < 0)
-        {
-            left = right + 1;
-            right++;
-            while (s[left] !== '(' && right < s.length)
-            {
-                left++;
-                right++;
-            }
-            if (left < s.length)
-            {
-                openLeftBracket = 1;
-            }
-            else
-            {
-                openLeftBracket = 0;
-            }
-        }
-    }
-
-    if (openLeftBracket > 0)
-    {
-        const stack = [];
-        for (let i = left; i <= right; i++)
-        {
-            if (s[i] === '(')
-            {
-                stack.push(i);
-            }
-            else
+            if (s[stack[stack.length - 1]] === '(')
             {
                 stack.pop();
             }
+            else
+            {
+                stack.push(i);
+            }
         }
+    }
 
+    // 最后栈里剩下的都是无效括号，中间夹的都是有效括号的范围
+    if (stack.length === 0)
+    {
+        return s.length;
+    }
+    else
+    {
         maxLength = Math.max(maxLength,
-            right - stack[stack.length - 1],
-            stack[0] - left);
+            s.length - stack[stack.length - 1] - 1,
+            stack[0] - 0);
 
         for (let i = 1; i < stack.length; i++)
         {
             maxLength = Math.max(maxLength,
                 stack[i] - stack[i - 1] - 1);
         }
-    }
 
-    return maxLength;
+        return maxLength;
+    }
 };
 // @lc code=end
-
-longestValidParentheses('(()()(())((');
