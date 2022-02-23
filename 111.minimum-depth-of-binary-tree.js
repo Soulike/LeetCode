@@ -23,32 +23,25 @@ var minDepth = function (root)
     {
         return 0;
     }
-    let currentLayerNodes = [];
-    let prevLayerNodes = [root];
-    let currentLayer = 0;
-    while (true)
+    const nodes = [[root, 1]];
+    for (let i = 0; i < nodes.length; i++)
     {
-        currentLayer++;
-        for (const node of prevLayerNodes)
+        const [node, depth] = nodes[i];
+        if (node.left === null && node.right === null)
         {
-            if (node.left === null && node.right === null)
+            return depth;
+        }
+        else
+        {
+            if (node.left !== null)
             {
-                return currentLayer;
+                nodes.push([node.left, depth + 1]);
             }
-            else 
+            if (node.right !== null)
             {
-                if (node.left !== null)
-                {
-                    currentLayerNodes.push(node.left);
-                }
-                if (node.right !== null)
-                {
-                    currentLayerNodes.push(node.right);
-                }
+                nodes.push([node.right, depth + 1]);
             }
         }
-        prevLayerNodes = currentLayerNodes;
-        currentLayerNodes = [];
     }
 };
 // @lc code=end
