@@ -12,56 +12,53 @@
  */
 const generateParenthesis = function (n) 
 {
-    if (n === 0)
+    let openLeftCount = 0;
+
+    let results = [];
+    let current = [];
+    function backtrack()
     {
-        return [];
-    }
-    if (n === 1)
-    {
-        return ['()'];
-    }
-    /**@type {{parentheses: string, sum: number}[]} */
-    let parenthesesToNumber = [
-        { parentheses: '(', sum: -1 }
-    ];
-    const length = n * 2;
-    let newParenthesesToNumber = [];
-    for (let i = 1; i < length; i++)
-    {
-        /**@type {{parentheses: string, sum: number}[]} */
-        newParenthesesToNumber = [];
-        for (const { parentheses, sum } of parenthesesToNumber)
+        if (current.length > 2 * n)
         {
-            if (-sum < n)
-            {
-                newParenthesesToNumber.push({
-                    parentheses: parentheses + '(',
-                    sum: sum - 1
-                });
-            }
-            if (sum + 1 <= 0)
-            {
-                newParenthesesToNumber.push({
-                    parentheses: parentheses + ')',
-                    sum: sum + 1
-                });
-            }
+            return;
         }
-        parenthesesToNumber = newParenthesesToNumber;
-    }
 
-    /**@type Array<string> */
-    const result = [];
-
-    for (const { parentheses, sum } of parenthesesToNumber)
-    {
-        if (sum === 0)
+        if (current.length === 2 * n && openLeftCount === 0)
         {
-            result.push(parentheses);
+            results.push(current.join(''));
+        }
+        else
+        {
+            if (openLeftCount === 0)    // 只能放左括号
+            {
+                current.push('(');
+                openLeftCount++;
+                backtrack();
+                current.pop();
+                openLeftCount--;
+            }
+            else
+            {
+                if (openLeftCount < n)  // 还可以继续放左括号
+                {
+                    current.push('(');
+                    openLeftCount++;
+                    backtrack();
+                    current.pop();
+                    openLeftCount--;
+                }
+
+                current.push(')');
+                openLeftCount--;
+                backtrack();
+                current.pop();
+                openLeftCount++;
+            }
         }
     }
 
-    return result;
+    backtrack();
+
+    return results;
 };
 // @lc code=end
-
