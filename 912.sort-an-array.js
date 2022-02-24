@@ -11,54 +11,43 @@
  */
 const sortArray = function (nums)
 {
-    mergeSort(nums, 0, nums.length);
+    quickSort(nums);
     return nums;
 };
 
-function mergeSort(nums, left, right)
+function quickSort(nums)
 {
-    const LENGTH = right - left;
-    if (LENGTH < 2)
+    helper(0, nums.length - 1);
+
+    function helper(left, right)
     {
-        return nums;
-    }
-
-    const mergedNums = [];
-
-    const mid = Math.floor(left + LENGTH / 2);
-
-    mergeSort(nums, left, mid)
-    mergeSort(nums, mid, right);
-
-    let index1 = left;
-    let index2 = mid;
-
-    while (index1 < mid || index2 < right)
-    {
-        if (index1 === mid)
+        if (left >= right)
         {
-            mergedNums.push(nums[index2++]);
+            return;
         }
-        else if (index2 === right)
+
+        let leftIndex = left;
+        let rightIndex = right;
+        const comparedNum = nums[left];
+
+        while (leftIndex < rightIndex)
         {
-            mergedNums.push(nums[index1++]);
-        }
-        else
-        {
-            if (nums[index1] < nums[index2])
+            while (nums[rightIndex] >= comparedNum
+                && leftIndex < rightIndex)
             {
-                mergedNums.push(nums[index1++]);
+                rightIndex--;
             }
-            else
+            while (nums[leftIndex] <= comparedNum
+                && leftIndex < rightIndex)
             {
-                mergedNums.push(nums[index2++]);
+                leftIndex++;
             }
+            [nums[leftIndex], nums[rightIndex]] = [nums[rightIndex], nums[leftIndex]];
         }
-    }
-    for (let i = left; i < right; i++)
-    {
-        nums[i] = mergedNums[i - left];
+        [nums[left], nums[rightIndex]] = [nums[rightIndex], nums[left]];
+
+        helper(left, rightIndex - 1);
+        helper(rightIndex + 1, right);
     }
 }
 // @lc code=end
-
