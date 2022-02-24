@@ -16,109 +16,86 @@ function ListNode(val, next)
 
 // @lc code=start
 /**
- * @param {ListNode} head
- * @return {ListNode}
+ * @param {ListNode|null} head
+ * @return {ListNode|null}
  */
 const sortList = function (head) 
 {
-    const fakeHead = new ListNode(0, head);
-    listQuickSort(fakeHead, null);
-    return fakeHead.next;
+    if (head === null)
+    {
+        return null;
+    }
+    if (head.next === null)
+    {
+        return head;
+    }
+
+    const [head1, head2] = split(head);
+    return merge(
+        sortList(head1),
+        sortList(head2)
+    );
 };
 
-/**
- * 进行快排的范围 (`leftNode`, `rightNode`)
- * @param {ListNode} leftNode
- * @param {ListNode | null} rightNode
- * @return {void}
- */
-function listQuickSort(leftNode, rightNode)
+function split(head)
 {
-    const comparedNode = leftNode.next;
-    if (comparedNode === rightNode) // 没有结点，不需要排序
-    {
-        return;
-    }
-    if (comparedNode.next === rightNode)    // 只有一个结点，不需要排序
-    {
-        return;
-    }
+    let slow = head;
+    let fast = head;
 
-    const leftListHead = new ListNode(0, null);
-    let leftListTail = leftListHead;
-    const rightListHead = new ListNode(0, rightNode);
-
-    let beforeNode = comparedNode;
-    let currentNode = comparedNode.next;
-    while (currentNode !== rightNode)
+    while (true)
     {
-        if (currentNode.val < comparedNode.val)
+        fast = fast.next;
+        if (fast.next === null)
         {
-            pickNode(beforeNode);
-            putNode(leftListTail, currentNode);
-            leftListTail = currentNode;
+            break;
         }
-        else    // currentNode.val >= comparedNode.val
+        fast = fast.next;
+        if (fast.next === null)
         {
-            pickNode(beforeNode);
-            putNode(rightListHead, currentNode);
+            break;
         }
-        beforeNode = comparedNode;
-        currentNode = comparedNode.next;
+        slow = slow.next;
     }
 
-    if (leftListHead.next === null)
-    {
-        leftNode.next = comparedNode;
-        comparedNode.next = rightListHead.next;
-    }
-    else
-    {
-        leftNode.next = leftListHead.next;
-        leftListTail.next = comparedNode;
-        comparedNode.next = rightListHead.next;
-    }
-    listQuickSort(leftNode, comparedNode);
-    listQuickSort(comparedNode, rightNode);
+    const secondHead = slow.next;
+    slow.next = null;
+
+    return [head, secondHead];
 }
 
-/**
- * @param {ListNode} nodeBefore
- * @return {ListNode}
- */
-function pickNode(nodeBefore)
+function merge(head1, head2)
 {
-    const node = nodeBefore.next;
-    const nodeAfter = node.next;
-    nodeBefore.next = nodeAfter;
-    node.next = null;
-    return node;
-}
+    const fakeHead = new ListNode();
+    let currentNode = fakeHead;
+    let node1 = head1;
+    let node2 = head2;
 
-/**
- * @param {ListNode} nodeBefore
- * @param {ListNode} node
- * @return {void}
- */
-function putNode(nodeBefore, node)
-{
-    const nodeAfter = nodeBefore.next;
-    nodeBefore.next = node;
-    node.next = nodeAfter;
-}
-// @lc code=end
-
-function createLinkList(nums)
-{
-    const fakeHead = new ListNode(0, null)
-    let lastNode = fakeHead;
-    for (const num of nums)
+    while (node1 !== null && node2 !== null)
     {
-        const node = new ListNode(num, null);
-        lastNode.next = node;
-        lastNode = node;
+        if (node1.val < node2.val)
+        {
+            currentNode.next = node1;
+            node1 = node1.next;
+        }
+        else
+        {
+            currentNode.next = node2;
+            node2 = node2.next;
+        }
+
+        currentNode = currentNode.next;
+        currentNode.next = null;
     }
+
+    if (node1 !== null)
+    {
+        currentNode.next = node1;
+    }
+    else if (node2 !== null)
+    {
+        currentNode.next = node2;
+    }
+
     return fakeHead.next;
 }
-
-sortList(createLinkList([9,8,7,6,5,4,3,2,1]));
+// @lc code=end
