@@ -11,43 +11,76 @@
  */
 const sortArray = function (nums)
 {
-    quickSort(nums);
+    mergeSort(nums);
     return nums;
 };
 
-function quickSort(nums)
+function mergeSort(nums)
 {
     helper(0, nums.length - 1);
 
     function helper(left, right)
     {
-        if (left >= right)
+        if (left === right)
         {
             return;
         }
 
-        let leftIndex = left;
-        let rightIndex = right;
-        const comparedNum = nums[left];
+        const start1 = left;
+        const end1 = Math.floor((left + right) / 2);
+        const start2 = end1 + 1;
+        const end2 = right;
 
-        while (leftIndex < rightIndex)
+        helper(start1, end1);
+        helper(start2, end2);
+        merge(start1, end1, end2);
+    }
+
+    function merge(start1, end1, end2)
+    {
+        const n = end2 - start1 + 1;
+        const arr = new Array(n);
+        const start2 = end1 + 1;
+
+        let currentIndex = 0;
+        let currentIndex1 = start1;
+        let currentIndex2 = start2;
+
+        while (currentIndex1 <= end1 && currentIndex2 <= end2)
         {
-            while (nums[rightIndex] >= comparedNum
-                && leftIndex < rightIndex)
+            if (nums[currentIndex1] < nums[currentIndex2])
             {
-                rightIndex--;
+                arr[currentIndex] = nums[currentIndex1];
+                currentIndex1++
             }
-            while (nums[leftIndex] <= comparedNum
-                && leftIndex < rightIndex)
+            else
             {
-                leftIndex++;
+                arr[currentIndex] = nums[currentIndex2];
+                currentIndex2++;
             }
-            [nums[leftIndex], nums[rightIndex]] = [nums[rightIndex], nums[leftIndex]];
+            currentIndex++;
         }
-        [nums[left], nums[rightIndex]] = [nums[rightIndex], nums[left]];
 
-        helper(left, rightIndex - 1);
-        helper(rightIndex + 1, right);
+        while (currentIndex1 <= end1)
+        {
+            arr[currentIndex] = nums[currentIndex1];
+            currentIndex1++
+            currentIndex++;
+        }
+
+        while (currentIndex2 <= end2)
+        {
+            arr[currentIndex] = nums[currentIndex2];
+            currentIndex2++;
+            currentIndex++;
+        }
+
+        for (let i = 0; i < n; i++)
+        {
+            nums[start1 + i] = arr[i];
+        }
     }
 }
 // @lc code=end
+
+console.log(sortArray([3,2,1]))
