@@ -11,21 +11,54 @@
  */
 const nextPermutation = function (nums) 
 {
-    let i = nums.length - 2;
-    while (i >= 0 && nums[i + 1] <= nums[i])
+    /**
+     * 1. 从高位到低位，递减序列中的数字肯定不能交换，越交换数越大
+     * 2. 被交换的数字越低位越好
+     * 3. 交换之后，被交换高位后的低位必须是最小的数
+     * 
+     * 1. 从 n-1 开始，查找递增序列，确定第一个非递增数字下标 i
+     * 2. 从 n-1 开始，查找第一个下标 j，使得 nums[j] > nums[i]
+     * 3. 交换 nums[i] 和 nums[j]
+     * 4. n-1 到 i+1 范围的数字从小到大排序
+     */
+
+    const n = nums.length;
+    let i = n - 2;
+    while (i >= 0)
     {
+        if (nums[i] < nums[i + 1])
+        {
+            break;
+        }
         i--;
     }
-    if (i >= 0)
+
+    if (i === -1)
     {
-        let j = nums.length - 1;
-        while (j >= 0 && nums[j] <= nums[i])
-        {
-            j--;
-        }
-        swap(nums, i, j);
+        nums.sort((a, b) => a - b);
+        return;
     }
-    reverse(nums, i + 1, nums.length -1);
+
+    let j = n - 1;
+    while (j >= 0)
+    {
+        if (nums[j] > nums[i])
+        {
+            swap(nums, i, j);
+            break;
+        }
+        j--;
+    }
+
+    let left = i + 1;
+    let right = n - 1;
+
+    while (right > left)
+    {
+        swap(nums, left, right);
+        left++;
+        right--;
+    }
 };
 
 /**
@@ -41,24 +74,4 @@ function swap(nums, index1, index2)
         [nums[index1], nums[index2]] = [nums[index2], nums[index1]];
     }
 }
-
-/**
- * 
- * @param {number[]} nums 
- * @param {number} left
- * @param {number} right
- */
-function reverse(nums, left, right)
-{
-    if (left !== right)
-    {
-        const length = right - left + 1;
-        for (let i = left; i < left + length/2; i++)
-        {
-            swap(nums, i, right - i+left);
-        }
-    }
-}
 // @lc code=end
-
-console.log(nextPermutation([1, 2, 3, 4, 5, 6, 4, 3, 2, 1]))
