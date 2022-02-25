@@ -30,72 +30,83 @@ const sortList = function (head)
         return head;
     }
 
-    const [head1, head2] = split(head);
-    return merge(
-        sortList(head1),
-        sortList(head2)
-    );
+    const [newHead] = listQuickSort(head);
+    return newHead;
 };
 
-function split(head)
+function listQuickSort(head)
 {
-    let slow = head;
-    let fast = head;
-
-    while (true)
+    if (head === null)
     {
-        fast = fast.next;
-        if (fast.next === null)
-        {
-            break;
-        }
-        fast = fast.next;
-        if (fast.next === null)
-        {
-            break;
-        }
-        slow = slow.next;
+        return [null, null];
+    }
+    if (head.next === null)
+    {
+        return [head, head];
     }
 
-    const secondHead = slow.next;
-    slow.next = null;
+    const comparedVal = head.val;
+    const largerFakeHead = new ListNode();
+    const lessFakeHead = new ListNode();
 
-    return [head, secondHead];
-}
-
-function merge(head1, head2)
-{
-    const fakeHead = new ListNode();
-    let currentNode = fakeHead;
-    let node1 = head1;
-    let node2 = head2;
-
-    while (node1 !== null && node2 !== null)
+    let largerCurrentNode = largerFakeHead;
+    let lessCurrentNode = lessFakeHead;
+    let currentNode = head.next;
+    head.next = null;
+    while (currentNode !== null)
     {
-        if (node1.val < node2.val)
+        if (currentNode.val < comparedVal)
         {
-            currentNode.next = node1;
-            node1 = node1.next;
+            lessCurrentNode.next = currentNode;
+            currentNode = currentNode.next;
+            lessCurrentNode = lessCurrentNode.next;
+            lessCurrentNode.next = null;
         }
         else
         {
-            currentNode.next = node2;
-            node2 = node2.next;
+            largerCurrentNode.next = currentNode;
+            currentNode = currentNode.next;
+            largerCurrentNode = largerCurrentNode.next;
+            largerCurrentNode.next = null;
         }
-
-        currentNode = currentNode.next;
-        currentNode.next = null;
     }
 
-    if (node1 !== null)
+    const [head1, tail1] = listQuickSort(lessFakeHead.next);
+    const [head2, tail2] = listQuickSort(largerFakeHead.next);
+
+    let newHead, newTail;
+
+    if (head1 !== null)
     {
-        currentNode.next = node1;
+        tail1.next = head;
+        newHead = head1;
     }
-    else if (node2 !== null)
+    else
     {
-        currentNode.next = node2;
+        newHead = head;
     }
 
-    return fakeHead.next;
+    if (head2 !== null)
+    {
+        head.next = head2;
+        newTail = tail2;
+    }
+    else
+    {
+        newTail = head;
+    }
+
+    return [newHead, newTail];
 }
 // @lc code=end
+
+const _4 = new ListNode(4);
+const _2 = new ListNode(2);
+const _1 = new ListNode(1);
+const _3 = new ListNode(3);
+
+_3.next = _2;
+_2.next = _1;
+
+const result = sortList(_3);
+result;
