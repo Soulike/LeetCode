@@ -35,7 +35,7 @@ const nextPermutation = function (nums)
 
     if (i === -1)
     {
-        nums.sort((a, b) => a - b);
+        nums.reverse();
         return;
     }
 
@@ -53,12 +53,7 @@ const nextPermutation = function (nums)
     let left = i + 1;
     let right = n - 1;
 
-    while (right > left)
-    {
-        swap(nums, left, right);
-        left++;
-        right--;
-    }
+    reverse(nums, left, right);
 };
 
 /**
@@ -72,6 +67,16 @@ function swap(nums, index1, index2)
     if (index1 !== index2)
     {
         [nums[index1], nums[index2]] = [nums[index2], nums[index1]];
+    }
+}
+
+function reverse(nums,left, right)
+{
+    while (right > left)
+    {
+        swap(nums, left, right);
+        left++;
+        right--;
     }
 }
 // @lc code=end
