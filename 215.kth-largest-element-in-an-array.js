@@ -12,48 +12,40 @@
  */
 const findKthLargest = function (nums, k) 
 {
-    return helper(nums, k, 0, nums.length);
+    function quickSelect(start, end)
+    {
+        const comparedNum = nums[start];
+        let left = start;
+        let right = end;
+
+        while (left < right)
+        {
+            while (nums[right] <= comparedNum && left < right)
+            {
+                right--;
+            }
+            while (nums[left] >= comparedNum && left < right)
+            {
+                left++;
+            }
+
+            [nums[left], nums[right]] = [nums[right], nums[left]];
+        }
+        [nums[right], nums[start]] = [nums[start], nums[right]];
+        if (right + 1 === k)
+        {
+            return nums[right];
+        }
+        else if (right + 1 > k)
+        {
+            return quickSelect(start, right - 1);
+        }
+        else
+        {
+            return quickSelect(right + 1, end);
+        }
+    }
+
+    return quickSelect(0, nums.length - 1);
 };
-
-/**
- * 排序范围 [`left`, `right`)
- * @param {number[]} nums
- * @param {number} k
- * @param {number} left
- * @param {number} right 
- * @return {number}
- */
-function helper(nums, k, left, right)
-{
-    const comparedNum = nums[left];
-    let leftIndex = left;
-    let rightIndex = right - 1;
-
-    while (leftIndex < rightIndex)
-    {
-        while (nums[rightIndex] <= comparedNum && leftIndex < rightIndex)
-        {
-            rightIndex--;
-        }
-        while (nums[leftIndex] >= comparedNum && leftIndex < rightIndex)
-        {
-            leftIndex++;
-        }
-        [nums[leftIndex], nums[rightIndex]] = [nums[rightIndex], nums[leftIndex]];
-    }
-    [nums[left], nums[rightIndex]] = [nums[rightIndex], nums[left]];
-
-    if (rightIndex === k - 1)
-    {
-        return nums[rightIndex];
-    }
-    else if (rightIndex > k - 1)
-    {
-        return helper(nums, k, left, rightIndex);
-    }
-    else
-    {
-        return helper(nums, k, rightIndex + 1, right);
-    }
-}
 // @lc code=end
