@@ -11,35 +11,32 @@
  */
 var removeCoveredIntervals = function (intervals)
 {
-    if (intervals.length === 1)
-    {
-        return 1;
-    }
+    /**
+     * 区间按照 start 从小到大排序，如果 start 相同，end 按照从大到小排序
+     */
 
-    // 按照 start 升序排序，如果 start 相同，按照 end 降序排序
-    intervals.sort(([start1, end1], [start2, end2]) =>
+    intervals.sort(([s1, e1], [s2, e2]) =>
     {
-        if (start1 === start2)
+        if (s1 !== s2)
         {
-            return end2 - end1;
+            return s1 - s2;
         }
         else
         {
-            return start1 - start2;
+            return e2 - e1;
         }
     });
 
     let count = 0;
-    let right = -1; // 当前见过的最大的 end
+    let maxEnd = -1;
 
-    for (const [_, end] of intervals)
+    for (const [, end] of intervals)
     {
-        if (end > right)    // 见到了更大的，是新区间
+        if (end > maxEnd)
         {
             count++;
-            right = end;
+            maxEnd = end;
         }
-        // 没见到更大的，start 也一定大于等于之前的，所以会被合并
     }
 
     return count;
