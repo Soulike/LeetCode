@@ -11,32 +11,38 @@
  */
 const merge = function (intervals) 
 {
-    const intervalsLength = intervals.length;
-    if (intervalsLength < 2)
+    intervals.sort(([s1, e1], [s2, e2]) =>
     {
-        return intervals;
-    }
-    intervals.sort((a, b) => a[0] - b[0]);
-    /**@type {number[][]} */
-    const result = [intervals[0]];
-    let beforeEnd = 0;
-    let afterStart = 0;
-    let afterEnd = 0;
-    for (let i = 1; i < intervalsLength; i++)
-    {
-        beforeEnd = result[result.length - 1][1];
-        afterStart = intervals[i][0];
-        afterEnd = intervals[i][1];
-        if (afterStart <= beforeEnd)
+        if (s1 !== s2)
         {
-            result[result.length - 1][1] = Math.max(beforeEnd, afterEnd);
+            return s1 - s2;
         }
         else
         {
-            result.push(intervals[i]);
+            return e1 - e2;
+        }
+    });
+
+    const results = [];
+    let currentStart = intervals[0][0];
+    let currentEnd = intervals[0][1];
+
+    for (const [start, end] of intervals)
+    {
+        if (start > currentEnd)
+        {
+            results.push([currentStart, currentEnd]);
+            currentStart = start;
+            currentEnd = end;
+        }
+        else
+        {
+            currentEnd = Math.max(currentEnd, end);
         }
     }
-    return result;
+
+    results.push([currentStart, currentEnd]);
+    return results;
 };
 // @lc code=end
 
