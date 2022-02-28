@@ -45,7 +45,7 @@ var calculate = function (s)
                         }
                         else
                         {
-                            stack.push(Math.floor(digit / prevDigit));
+                            stack.push(Math.floor(prevDigit / digit));
                         }
                     }
                     else
@@ -62,22 +62,20 @@ var calculate = function (s)
         }
     }
 
-    while (stack.length > 1)
+    let result = stack[0];
+    for (let i = 1; i < stack.length-1; i+=2)
     {
-        const [digit1, operator, digit2] = [
-            stack.pop(), stack.pop(), stack.pop()
-        ];
-        if (operator === '+')
+        if (stack[i] === '+')
         {
-            stack.push(digit1 + digit2);
+            result += stack[i + 1];
         }
         else
         {
-            stack.push(Math.floor(digit1 / digit2));
+            result -= stack[i + 1];
         }
     }
 
-    return stack[0];
+    return result;
 };
 
 function getNextDigit(s, left)
@@ -87,7 +85,7 @@ function getNextDigit(s, left)
     for (let i = left; i <= s.length; i++)
     {
         nextStartIndex = i;
-        if (i<s.length && isDigit(s[i]))
+        if (i < s.length && isDigit(s[i]))
         {
             result *= 10;
             result += Number.parseInt(s[i]);
@@ -107,5 +105,3 @@ function isDigit(c)
         && c.charCodeAt(0) <= '9'.charCodeAt(0);
 }
 // @lc code=end
-
-calculate('3+2*2');
