@@ -21,7 +21,7 @@ var isPossible = function (nums)
      *          numToFreq[num]--;
      *          nextNeededNum[num]--;
      *          nextNeededNum[num+1]++;
-     *      // 可以形成新的序列
+     *      // 可以形成新的列
      *      else if numToFreq[num+1] > 0 && numToFreq[num+2] > 0
      *          numToFreq[num]--;
      *          numToFreq[num+1]--;
