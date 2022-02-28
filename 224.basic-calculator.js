@@ -105,10 +105,10 @@ function getNextDigit(s, left)
 {
     let result = 0;
     let nextStartIndex = left + 1;
-    for (let i = left; i < s.length; i++)
+    for (let i = left; i <= s.length; i++)
     {
         nextStartIndex = i;
-        if (isDigit(s[i]))
+        if (i < s.length && isDigit(s[i]))
         {
             result *= 10;
             result += Number.parseInt(s[i]);
