@@ -12,29 +12,27 @@
 var minAddToMakeValid = function (s)
 {
     let addCount = 0;
-    let stack = [];
+    let leftBracketCount = 0;
+
     for (const c of s)
     {
         if (c === '(')
         {
-            stack.push(c);
+            leftBracketCount++;
         }
-        else if (c === ')')
+        else
         {
-            if (stack.length === 0 
-                || stack[stack.length - 1] !== '(')
+            if (leftBracketCount === 0)
             {
                 addCount++;
             }
             else
             {
-                stack.pop();
+                leftBracketCount--;
             }
         }
     }
 
-    addCount += stack.length;
-
-    return addCount;
+    return addCount + leftBracketCount;
 };
 // @lc code=end
