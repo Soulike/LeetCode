@@ -11,64 +11,36 @@
  */
 var minInsertions = function (s)
 {
-    const stack = [];
     let addCount = 0;
+    let rightNeeded = 0;
 
     for (let i = 0; i < s.length; i++)
     {
         if (s[i] === '(')
         {
-            if (stack.length === 0)
-            {
-                stack.push('(');
-            }
-            else if (stack[stack.length - 1] === ')')
+            // 之前有左括号没配对完，补一个右括号
+            if (rightNeeded % 2 === 1)
             {
                 addCount++;
-                stack.pop();
-                stack.pop();
-                stack.push('(');
+                rightNeeded--;
             }
-            else
-            {
-                stack.push('(');
-            }
+            rightNeeded += 2;
         }
         else
         {
-            if (stack.length === 0)
+            // 之前没有未配对完成的左括号，补一个左括号
+            if (rightNeeded === 0)
             {
                 addCount++;
-                stack.push('(');
-                stack.push(')');
-            }
-            else if (stack[stack.length - 1] === ')')
-            {
-                stack.pop();
-                stack.pop();
+                rightNeeded = 1;
             }
             else
             {
-                stack.push(')');
+                rightNeeded--;
             }
         }
     }
 
-    while (stack.length > 0)
-    {
-        if (stack[stack.length - 1] === '(')
-        {
-            addCount += 2;
-            stack.pop();
-        }
-        else
-        {
-            addCount += 1;
-            stack.pop();
-            stack.pop();
-        }
-    }
-
-    return addCount;
+    return addCount + rightNeeded;
 };
 // @lc code=end
