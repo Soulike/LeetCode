@@ -12,74 +12,85 @@
  */
 var isMatch = function (s, p)
 {
-    const cache = new Map();
     /**
-     * 从 s 的 i 位置和 p 的 j 位置开始，之后能否全部匹配？
-     * @param {number} i 
-     * @param {number} j 
+     * dp[i][j] 从 s 的 i 位置和 p 的 j 位置开始，之后能否全部匹配？
+     * 
+     * m = s.length
+     * n = p.length
+     * 
+     * base case 
+     * dp[m][n] = true
+     * 
+     * dp[i][j] = 当前位置匹配，而且后面的也匹配
+     * }
      */
-    function helper(i, j)
+
+    const m = s.length;
+    const n = p.length;
+
+    const dp = new Array(m + 1);
+    for (let i = 0; i < m + 1; i++)
     {
-        const cacheKey = `${i}-${j}`;
-        if (cache.has(cacheKey))
+        dp[i] = new Array(n + 1);
+        if (i === m)
         {
-            return cache.get(cacheKey);
+            dp[i].fill(false);
         }
-        if (i === s.length && j === p.length)
-        {
-            return true;
-        }
-        if (j === p.length)
-        {
-            return false;
-        }
-
-        if (i === s.length)
-        {
-            // 下一个不是*号
-            if (j === p.length - 1 || p[j + 1] !== '*')
-            {
-                return false;
-            }
-            else    // 下一个是 * 号
-            {
-                return helper(i, j + 2);
-            }
-        }
-
-        let result;
-
-        // 下一个不是*号
-        if (j === p.length - 1 || p[j + 1] !== '*')
-        {
-            if (p[j] === '.' || p[j] === s[i])
-            {
-                result = helper(i + 1, j + 1);
-            }
-            else
-            {
-                result = false;
-            }
-        }
-        else    // 下一个是 * 号
-        {
-            if (p[j] === '.' || p[j] === s[i])
-            {
-                result = helper(i, j + 2) // 匹配 0 次
-                    || helper(i + 1, j);    // 匹配多次
-            }
-            else
-            {
-                result = helper(i, j + 2); // 匹配 0 次
-            }
-        }
-
-        cache.set(cacheKey, result);
-        return result;
+        dp[i][n] = false;
     }
 
-    return helper(0, 0);
+    dp[m][n] = true;
+
+    for (let i = m; i >= 0; i--)
+    {
+        for (let j = n - 1; j >= 0; j--)
+        {
+            if (p[j] === '*')
+            {
+                continue;
+            }
+            // 不是星号
+            if (j === n - 1 || p[j + 1] !== '*')
+            {
+                if (i === m)    // 字符串用完了，绝对不匹配
+                {
+                    dp[i][j] = false;
+                }
+                else
+                {
+                    if (p[j] === '.' || s[i] === p[j])
+                    {
+                        dp[i][j] = dp[i + 1][j + 1];
+                    }
+                    else
+                    {
+                        dp[i][j] = false;
+                    }
+                }
+            }
+            // 是星号
+            else
+            {
+                if (i === m)     // 字符串用完了，绝对不匹配
+                {
+                    dp[i][j] = dp[i][j + 2];    // 不匹配
+                }
+                else
+                {
+                    if (p[j] === '.' || s[i] === p[j])
+                    {
+                        dp[i][j] = dp[i][j + 2]    // 不匹配
+                            || dp[i + 1][j]; // 匹配一次或者多次
+                    }
+                    else
+                    {
+                        dp[i][j] = dp[i][j + 2];    // 不匹配
+                    }
+                }
+            }
+        }
+    }
+
+    return dp[0][0];
 };
 // @lc code=end
-
-console.log(isMatch('a', 'a*'));
