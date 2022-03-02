@@ -15,9 +15,19 @@ const subsetsWithDup = function (nums)
     let currentSubSet = [];
     const subSets = [];
 
-    function backtrack(index, prevIncluded)
+    function backtrack(index)
     {
-        
+        subSets.push([...currentSubSet]);
+
+        for (let i = index; i < nums.length; i++)
+        {
+            if (i === index || nums[i - 1] !== nums[i])
+            {
+                currentSubSet.push(nums[i]);
+                backtrack(i + 1);
+                currentSubSet.pop();
+            }
+        }
     }
 
     backtrack(0);
