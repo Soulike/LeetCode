@@ -11,50 +11,17 @@
  */
 const subsetsWithDup = function (nums) 
 {
-    nums.sort();
-    /**@type {number[][]} */
-    const results = []; // 总的结果
-    /**@type {number[][]} */
-    let lastResults = [[]];       // 上一轮的结果
-    /**@type {number[][]} */
-    let currentResults = [[]];    // 当前轮的结果
-    let lastAddedNum = NaN;     // 上一轮添加进集合的数字
+    nums.sort((a, b) => a - b);
+    let currentSubSet = [];
+    const subSets = [];
 
-    const NUMS_LEN = nums.length;
-    for (let i = 0; i < NUMS_LEN; i++)
+    function backtrack(index, prevIncluded)
     {
-        // 不重复地添加单个数字
-        if (i === 0 || nums[i] !== nums[i-1])
-        {
-            currentResults.push([nums[i]]);
-        }
-
-        // 如果当前数字和上一个数字相同，只在上一轮末尾与当前相同的序列后添加当前数字
-        if (nums[i] === lastAddedNum)
-        {
-            lastResults.forEach(lastResult =>
-            {
-                if (lastResult[lastResult.length - 1] === nums[i])
-                {
-                    currentResults.push([...lastResult, nums[i]]);
-                }
-            });
-        }
-        else    // 不相同，正常的排列组合
-        {
-            results.forEach(result =>
-            {
-                if (result.length !== 0)
-                {
-                    currentResults.push([...result, nums[i]]);
-                }
-            });
-            lastAddedNum = nums[i];
-        }
-        results.push(...currentResults);
-        lastResults = currentResults;
-        currentResults = [];
+        
     }
-    return results;
+
+    backtrack(0);
+
+    return subSets;
 };
 // @lc code=end

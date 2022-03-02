@@ -16,19 +16,13 @@ const subsets = function (nums)
 
     function backtrack(index)
     {
-        if (index === nums.length)
-        {
-            subSets.push([...currentSubSet]);
-        }
-        else
-        {
-            // 要当前这个数字
-            currentSubSet.push(nums[index]);
-            backtrack(index + 1);
-            currentSubSet.pop();
+        subSets.push([...currentSubSet]);
 
-            // 不要当前这个数字
-            backtrack(index + 1);
+        for (let i = index; i < nums.length; i++)
+        {
+            currentSubSet.push(nums[i]);
+            backtrack(i + 1);
+            currentSubSet.pop();
         }
     }
 
