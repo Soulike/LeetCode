@@ -13,20 +13,25 @@
 const combinationSum = function (candidates, target) 
 {
     const results = [];
-    let currentComb = [];
-    function backtrack(candidateIndex, target)
+    const current = [];
+
+    function backtrack(startIndex, target)
     {
         if (target === 0)
         {
-            results.push([...currentComb]);
+            results.push([...current]);
         }
-        else if (target > 0)
+        else if (target < 0)
         {
-            for (let i = candidateIndex; i < candidates.length; i++)
+            return;
+        }
+        else
+        {
+            for (let i = startIndex; i < candidates.length; i++)
             {
-                currentComb.push(candidates[i]);
+                current.push(candidates[i]);
                 backtrack(i, target - candidates[i]);
-                currentComb.pop();
+                current.pop();
             }
         }
     }
