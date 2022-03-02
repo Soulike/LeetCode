@@ -20,44 +20,42 @@ var postorderTraversal = function (root)
 {
     const result = [];
 
-    /**@type {TreeNode[]} */
     const stack = [];
 
-    traverseLeft(root, stack);
+    function traverseLeft(root)
+    {
+        let currentNode = root;
+        while (currentNode !== null)
+        {
+            // 前序遍历
+            stack.push(currentNode);
+            currentNode = currentNode.left;
+        }
+    }
 
-    let visited = null;
+    traverseLeft(root);
+
+    let visited = new TreeNode();
 
     while (stack.length > 0)
     {
-        // 中序遍历代码
         const top = stack[stack.length - 1];
-        if (top.right !== visited && top.right !== null)
+
+        if ((top.left === null || top.left === visited)
+            && top.right !== visited)
         {
-            traverseLeft(top.right, stack);
+            // 中序遍历代码
+            traverseLeft(top.right);
         }
-        else
+
+        if (top.right === null || top.right === visited)
         {
             visited = stack.pop();
-            // 后续遍历代码
+            // 后序遍历代码
             result.push(top.val);
         }
     }
 
     return result;
 };
-
-/**
- * @param {TreeNode} root
- * @param {TreeNode[]} stack 
- */
-function traverseLeft(root, stack)
-{
-    let currentNode = root;
-    while (currentNode !== null)
-    {
-        // 前序遍历代码
-        stack.push(currentNode);
-        currentNode = currentNode.left;
-    }
-}
 // @lc code=end

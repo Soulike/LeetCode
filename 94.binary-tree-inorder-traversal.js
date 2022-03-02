@@ -17,43 +17,48 @@
  * @param {TreeNode} root
  * @return {number[]}
  */
-var inorderTraversal = function(root) {
-    const inorder = [];
+var inorderTraversal = function (root)
+{
+    const result = [];
 
     const stack = [];
-    let visited = new TreeNode();
 
     function traverseLeft(root)
     {
-        while (root !== null)
+        let currentNode = root;
+        while (currentNode !== null)
         {
-            // 先序遍历
-            stack.push(root);
-            root = root.left;
+            // 前序遍历
+            stack.push(currentNode);
+            currentNode = currentNode.left;
         }
     }
 
     traverseLeft(root);
 
+    let visited = new TreeNode();
+
     while (stack.length > 0)
     {
         const top = stack[stack.length - 1];
+
         if ((top.left === null || top.left === visited)
             && top.right !== visited)
         {
-            // 中序遍历
-            inorder.push(top.val);
+            // 中序遍历代码
+            result.push(top.val);
             traverseLeft(top.right);
         }
 
         if (top.right === null || top.right === visited)
         {
-            // 后序遍历
             visited = stack.pop();
+            // 后序遍历代码
+
         }
     }
 
-    return inorder;
+    return result;
 };
 // @lc code=end
 

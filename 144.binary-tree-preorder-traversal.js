@@ -16,42 +16,45 @@ function TreeNode(val, left, right)
  */
 var preorderTraversal = function (root)
 {
-    const preorder = [];
+    const result = [];
 
     const stack = [];
-    let visited = new TreeNode();
 
     function traverseLeft(root)
     {
-        while (root !== null)
+        let currentNode = root;
+        while (currentNode !== null)
         {
-            // 先序遍历
-            preorder.push(root.val);
-
-            stack.push(root);
-            root = root.left;
+            // 前序遍历
+            result.push(currentNode.val);
+            stack.push(currentNode);
+            currentNode = currentNode.left;
         }
     }
 
     traverseLeft(root);
 
+    let visited = new TreeNode();
+
     while (stack.length > 0)
     {
         const top = stack[stack.length - 1];
+
         if ((top.left === null || top.left === visited)
             && top.right !== visited)
         {
-            // 中序遍历
+            // 中序遍历代码
             traverseLeft(top.right);
         }
 
         if (top.right === null || top.right === visited)
         {
-            // 后序遍历
             visited = stack.pop();
+            // 后序遍历代码
+           
         }
     }
 
-    return preorder;
+    return result;
 };
 // @lc code=end
