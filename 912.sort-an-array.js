@@ -11,50 +11,29 @@
  */
 const sortArray = function (nums)
 {
-    quickSort(nums);
+    shellSort(nums);
     return nums;
 };
 
-function quickSort(nums)
+function shellSort(nums)
 {
-    function helper(left, right)
+    let gap = Math.max(1, Math.floor(nums.length / 2));
+
+    for (; gap >= 1; gap = Math.floor(gap / 2))
     {
-        if (left >= right)
+        for (let i = gap; i < nums.length; i++)
         {
-            return;
-        }
-
-        const leftCopy = left;
-        const rightCopy = right;
-        const randomIndex = left + Math.round(Math.random() * (right - left));
-
-        [nums[leftCopy], nums[randomIndex]] = [nums[randomIndex], nums[leftCopy]];
-        const comparedNum = nums[leftCopy];
-
-        while (left < right)
-        {
-            while (nums[right] >= comparedNum && left < right)
+            const num = nums[i];
+            let slot = i - gap;
+            for (; slot >= 0 && nums[slot] > num; slot -= gap)
             {
-                right--;
+                nums[slot + gap] = nums[slot];
             }
-
-            while (nums[left] <= comparedNum && left < right)
-            {
-                left++;
-            }
-
-            [nums[left], nums[right]] = [nums[right], nums[left]];
+            nums[slot + gap] = num;
         }
-
-        [nums[leftCopy], nums[right]] = [nums[right], nums[leftCopy]];
-
-        helper(leftCopy, right - 1);
-        helper(right + 1, rightCopy);
     }
-
-    helper(0, nums.length - 1);
 }
 
 // @lc code=end
 
-console.log(sortArray([3,5,8,7,5]));
+console.log(sortArray([5, 1, 1, 2, 0, 0]));
