@@ -22,7 +22,7 @@ var peopleIndexes = function (favoriteCompanies)
         {
             for (let j = 0; j < favoriteCompaniesSets.length; j++)
             {
-                if (i !== j)
+                if (i !== j && !excluded.has(j))
                 {
                     if (isSubset(favoriteCompaniesSets[i], favoriteCompaniesSets[j]))
                     {
@@ -37,7 +37,6 @@ var peopleIndexes = function (favoriteCompanies)
             if (!excluded.has(i))
             {
                 result.push(i);
-                excluded.add(i);
             }
         }
     }
