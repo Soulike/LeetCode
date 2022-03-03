@@ -11,63 +11,19 @@
  */
 const grayCode = function (n)
 {
-    if (n === 0)
+    let k = 1;
+    let current = [0, 1];
+    let currentBit = 2;
+    while (k < n)
     {
-        return [0];
-    }
-    const SIZE = 2 ** n;
-
-    /**@type Set<number> */
-    const result = new Set();
-    /**@type number[] */
-    let lastSeq = new Array(n);
-    for (let i = 0; i < n; i++)
-    {
-        lastSeq[i] = 0;
-    }
-    result.add(seqToNum(lastSeq));
-    let lastChangeIndex = -1;
-    let currentNum = 0;
-    while (result.size !== SIZE)
-    {
-        for (let i = 0; i < n; i++)
+        const currentLength = current.length;
+        for (let i = currentLength-1; i >= 0; i--)
         {
-            if (i !== lastChangeIndex)
-            {
-                lastSeq[i] = (lastSeq[i] + 1) % 2;
-                currentNum = seqToNum(lastSeq);
-                if (!result.has(currentNum))
-                {
-                    result.add(currentNum);
-                    lastChangeIndex = i;
-                    break;
-                }
-                else
-                {
-                    lastSeq[i] = (lastSeq[i] + 1) % 2;
-                }
-            }
-        }    
-    }
-    return Array.from(result);
-};
-
-/**
- * @param {number[]} seq
- * @return {number}
- */
-function seqToNum(seq)
-{
-    let sum = 0;
-    const LEN = seq.length;
-    for (let i = 0; i < LEN; i++)
-    {
-        if(seq[i] === 1)
-        {
-            sum += 2 ** i;
+            current.push(current[i] + currentBit);
         }
+        k++;
+        currentBit <<= 1;
     }
-    return sum;
-}
+    return current;
+};
 // @lc code=end
-
