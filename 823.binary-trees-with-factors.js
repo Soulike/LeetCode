@@ -11,28 +11,40 @@
  */
 const numFactoredBinaryTrees = function (arr)
 {
-    const LENGTH = arr.length;
-    arr.sort((a, b) => a - b);
-    const numberSet = new Set(arr);
-    /** @type {Map<number, number>} */
-    const numberToBinaryTreeCount = new Map();
-    for (let i = 0; i < LENGTH; i++)
+    const MOD = 10 ** 9 + 7;
+    const set = new Set(arr);
+
+    const cache = new Map();
+    /**
+     * 以 rootNum 为根，能组成多少要求的二叉树
+     * @param {number} rootNum 
+     */
+    function helper(rootNum)
     {
-        const rootNumber = arr[i];
-        numberToBinaryTreeCount.set(rootNumber, 1);
-        for (let j = 0; j < i; j++)
+        if (cache.has(rootNum))
         {
-            const leafNumber = arr[j];
-            const anotherLeafNumber = rootNumber / leafNumber;
-            if (Number.isInteger(anotherLeafNumber) && numberSet.has(anotherLeafNumber))
+            return cache.get(rootNum);
+        }
+        let result = 1;
+        for (const num of arr)
+        {
+            const num2 = rootNum / num;
+            if (Number.isInteger(num2)
+                && set.has(num2))
             {
-                const count = numberToBinaryTreeCount.get(leafNumber) * numberToBinaryTreeCount.get(anotherLeafNumber);
-                numberToBinaryTreeCount.set(rootNumber,
-                numberToBinaryTreeCount.get(rootNumber) + count);
+                result += helper(num) * helper(num2);
             }
         }
+
+        cache.set(rootNum, result);
+        return result;
     }
-    const binaryTreeCount = Array.from(numberToBinaryTreeCount.values()).reduce((prev, curr) => (prev + curr)%(10**9+7));
-    return binaryTreeCount;
+
+    let result = 0;
+    for (const num of arr)
+    {
+        result += helper(num);
+    }
+    return result % MOD;
 };
 // @lc code=end
