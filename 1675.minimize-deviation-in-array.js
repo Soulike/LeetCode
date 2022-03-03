@@ -184,31 +184,31 @@ class Heap
  */
 var minimumDeviation = function (nums)
 {
-    let minNum = Infinity;
+    let min = Infinity;
     for (let i = 0; i < nums.length; i++)
     {
         if (isOdd(nums[i]))
         {
             nums[i] *= 2;
         }
-        minNum = Math.min(minNum, nums[i]);
+        min = Math.min(min, nums[i]);
     }
 
-    // 最大堆
-    const heap = new Heap((a, b) => b - a, nums);
+    const maxHeap = new Heap((a, b) => b - a, nums);
 
-    let maxNum = heap.getRoot();
-    let minDiff = maxNum - minNum;
-    while (isEven(maxNum))
+    let max = maxHeap.getRoot();
+    let minDiff = max - min;
+
+    while (isEven(max))
     {
-        heap.deleteRoot();
-        heap.add(maxNum / 2);
-        minNum = Math.min(maxNum / 2, minNum);
-        maxNum = heap.getRoot();
-        minDiff = Math.min(minDiff, maxNum - minNum);
+        minDiff = Math.min(minDiff, max - min);
+        maxHeap.deleteRoot();
+        maxHeap.add(max / 2);
+        min = Math.min(min, max / 2);
+        max = maxHeap.getRoot();
     }
 
-    return Math.min(minDiff, maxNum - minNum);
+    return Math.min(minDiff, max - min);
 };
 
 function isOdd(num)
@@ -221,5 +221,3 @@ function isEven(num)
     return !isOdd(num);
 }
 // @lc code=end
-
-console.log(minimumDeviation([399, 908, 648, 357, 693, 502, 331, 649, 596, 698]))
