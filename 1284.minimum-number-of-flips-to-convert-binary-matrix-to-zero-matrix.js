@@ -164,15 +164,16 @@ function serializeMatrix(matrix)
     const m = matrix.length;
     const n = matrix[0].length;
 
-    const result = [];
+    let result = 0;
     for (let i = 0; i < m; i++)
     {
         for (let j = 0; j < n; j++)
         {
-            result.push(matrix[i][j]);
+            result <<= 1;
+            result += matrix[i][j];
         }
     }
 
-    return result.join('');
+    return result;
 }
 // @lc code=end
