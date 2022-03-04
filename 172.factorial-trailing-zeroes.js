@@ -11,15 +11,17 @@
  */
 var trailingZeroes = function (n)
 {
-    let result = 0;
-    let divisor = 5;
-    while (divisor <= n)
+    let count = 0;
+    let exp = 1;
+    while (true)
     {
-        result += Math.floor(n / divisor);
-        divisor *= 5;
+        const currentCount = Math.floor(n / 5 ** exp);
+        if (currentCount === 0)
+        {
+            return count;
+        }
+        count += currentCount;
+        exp++;
     }
-    return result;
 };
 // @lc code=end
-
-trailingZeroes(5960)
