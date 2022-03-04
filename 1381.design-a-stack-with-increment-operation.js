@@ -12,11 +12,14 @@ class CustomStack
 {
     stack;
     top;
+    increments; // 当前这个位置，应该相加多少？
 
     constructor(maxSize)
     {
         this.stack = new Array(maxSize);
         this.top = 0;
+        this.increments = new Array(maxSize);
+        this.increments.fill(0);
     }
 
     /**
@@ -42,7 +45,16 @@ class CustomStack
             return -1;
         }
         this.top--;
-        return this.stack[this.top];
+        const result = this.stack[this.top] + this.increments[this.top];
+
+        if (this.top !== 0)
+        {
+            // 发生 pop，向下传递
+            this.increments[this.top - 1] += this.increments[this.top];
+        }
+        this.increments[this.top] = 0;
+
+        return result;
     }
 
     /**
@@ -52,17 +64,15 @@ class CustomStack
      */
     increment(k, val)
     {
-        for (let i = 0; i < Math.min(k, this.top); i++)
-        {
-            this.stack[i] += val;
-        }
+        // 注意需要确认栈顶和 k-1 谁更小
+        this.increments[Math.min(k - 1, this.top - 1)] += val;
     }
 }
 
 
 
 
-/** 
+/**
  * Your CustomStack object will be instantiated and called as such:
  * var obj = new CustomStack(maxSize)
  * obj.push(x)
