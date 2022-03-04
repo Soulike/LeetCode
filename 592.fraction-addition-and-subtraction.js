@@ -64,6 +64,12 @@ var fractionAddition = function (expression)
         if (nextOperatorIndex === expression.length)
         {
             const [numerator, dominator] = stack[0];
+            if (dominator < 0)
+            {
+                numerator *= -1;
+                dominator *= -1;
+            }
+            
             return numerator < 0
                 ? `-${-1 * numerator}/${dominator}`
                 : `${numerator}/${dominator}`;
@@ -80,11 +86,6 @@ var fractionAddition = function (expression)
 function addFracs([b, a], [d, c])
 {
     const result = [b * c + a * d, a * c];
-    if (result[1] < 0)  // 保持符号在分子上
-    {
-        result[1] *= -1;
-        result[0] *= -1;
-    }
     const gcd = getGCD(Math.abs(result[0]), result[1]);
     result[0] /= gcd;
     result[1] /= gcd;
@@ -94,11 +95,6 @@ function addFracs([b, a], [d, c])
 function minusFracs([b, a], [d, c])
 {
     const result = [b * c - a * d, a * c];
-    if (result[1] < 0)
-    {
-        result[1] *= -1;
-        result[0] *= -1;
-    }
     const gcd = getGCD(Math.abs(result[0]), result[1]);
     result[0] /= gcd;
     result[1] /= gcd;
@@ -110,11 +106,6 @@ function minusFracs([b, a], [d, c])
  */
 function getGCD(a, b)
 {
-    if (b > a)
-    {
-        [a, b] = [b, a];
-    }
-
     if (a === 0)
     {
         return b;
