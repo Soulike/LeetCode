@@ -37,8 +37,13 @@ var minFallingPathSum = function (grid)
     const m = grid.length;
     const n = grid[0].length;
 
-    let prevDp = grid[m - 1];
+    let prevDp = new Array(m);
     let dp = new Array(m);
+
+    for (let j = 0; j < n; j++)
+    {
+        prevDp[j] = grid[m - 1][j];
+    }
 
     for (let i = m - 2; i >= 0; i--)
     {
@@ -54,8 +59,7 @@ var minFallingPathSum = function (grid)
                 dp[j] = grid[i][j] + minRestSum;
             }
         }
-        prevDp = dp;
-        dp = new Array(m);
+        [prevDp, dp] = [dp, prevDp];
     }
 
     return Math.min(...prevDp);
