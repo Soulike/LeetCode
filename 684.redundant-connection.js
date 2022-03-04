@@ -12,54 +12,35 @@
 var findRedundantConnection = function (edges)
 {
     const n = edges.length;
-    const connectDegree = new Array(n + 1);
-    connectDegree.fill(0);
-    const nodeToConnectedNodes = new Map();
+    const parents = new Array(n + 1);
+    for (let i = 1; i < n + 1; i++)
+    {
+        parents[i] = i;
+    }
+
+    function union(a, b)
+    {
+        parents[find(a)] = find(b);
+    }
+
+    function find(a)
+    {
+        while (a !== parents[a])
+        {
+            a = parents[a];
+        }
+        return a;
+    }
 
     for (const [a, b] of edges)
     {
-        connectDegree[a]++;
-        connectDegree[b]++;
-
-        const aConnected = nodeToConnectedNodes.get(a) ?? [];
-        aConnected.push(b);
-        nodeToConnectedNodes.set(a, aConnected);
-
-        const bConnected = nodeToConnectedNodes.get(b) ?? [];
-        bConnected.push(a);
-        nodeToConnectedNodes.set(b, bConnected);
-
-    }
-
-    let found = true;
-    while (found)
-    {
-        found = false;
-        for (let i = 1; i < n + 1; i++)
-        {
-            if (connectDegree[i] === 1)
-            {
-                found = true;
-                connectDegree[i] = 0;
-
-                const connectedNodes = nodeToConnectedNodes.get(i);
-                for (const node of connectedNodes)
-                {
-                    if (connectDegree[node] > 0)
-                    {
-                        connectDegree[node]--;
-                    }
-                }
-            }
-        }
-    }
-
-    for (let i = n - 1; i >= 0; i--)
-    {
-        const [a, b] = edges[i];
-        if (connectDegree[a] !== 0 && connectDegree[b] !== 0)
+        if (find(a) === find(b))
         {
             return [a, b];
+        }
+        else
+        {
+            union(a, b);
         }
     }
 };
