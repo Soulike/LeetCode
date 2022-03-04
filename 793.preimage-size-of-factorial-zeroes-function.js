@@ -11,50 +11,56 @@
  */
 var preimageSizeFZF = function (k)
 {
-    // 因为 trailingZeroes() 是单调递增的，所以可以用二分查找
     let left = 0;
     let right = Number.MAX_SAFE_INTEGER;
 
-    while (true)
+    while (left < right)
     {
-        if (left > right)
-        {
-            return 0;
-        }
-
         const mid = left + Math.floor((right - left) / 2);
-        const zeroCount = trailingZeroes(mid);
+        const midVal = trailingZeroes(mid);
 
-        if (zeroCount === k)
+        if (midVal === k)
         {
             return 5;
         }
-        else if (zeroCount < k)
-        {
-            left = mid + 1;
-        }
-        else
+        else if (midVal > k)
         {
             right = mid - 1;
         }
+        else
+        {
+            left = mid + 1;
+        }
     }
+
+    return 0;
+    
 };
 
+
+const cache = new Map();
 /**
  * @param {number} n
  * @return {number}
  */
 function trailingZeroes(n)
 {
-    let result = 0;
-    let divisor = 5;
-    while (divisor <= n)
+    if (cache.has(n))
     {
-        result += Math.floor(n / divisor);
-        divisor *= 5;
+        return cache.get(n);
     }
-    return result;
+    let count = 0;
+    let exp = 1;
+    while (true)
+    {
+        const currentCount = Math.floor(n / 5 ** exp);
+        if (currentCount === 0)
+        {
+            cache.set(n, count);
+            return count;
+        }
+        count += currentCount;
+        exp++;
+    }
 };
 // @lc code=end
-
-preimageSizeFZF(10 ** 9);
