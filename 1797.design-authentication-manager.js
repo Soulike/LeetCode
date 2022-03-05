@@ -5,18 +5,48 @@
  */
 
 // @lc code=start
+
+class ListNode
+{
+    /**
+     * 
+     * @param {string} token 
+     * @param {number} expireTime 
+     * @param {ListNode | null} prev 
+     * @param {ListNode | null} next 
+     */
+    constructor(token, expireTime, prev, next)
+    {
+        this.token = token;
+        this.expireTime = expireTime;
+        this.prev = prev;
+        this.next = next;
+    }
+}
+
 /**
  * @param {number} timeToLive
  */
 class AuthenticationManager
 {
     timeToLive;
-    tokenToExpireTime;
+    tokenToNode;
+    listHead;
 
+    /**
+     * 
+     * @param {number} timeToLive 
+     */
     constructor(timeToLive)
     {
         this.timeToLive = timeToLive;
-        this.tokenToExpireTime = new Map();
+        this.tokenToNode = new Map();
+        this.listHead = new ListNode('',-Infinity, null, null);
+
+        const fakeTail = new ListNode('',Infinity, null, null);
+
+        this.listHead.next = fakeTail;
+        fakeTail.prev = this.listHead;
     }
     /**
      * @param {string} tokenId
@@ -27,7 +57,7 @@ class AuthenticationManager
     {
         this.#cleanExpiredTokens(currentTime);
 
-        this.tokenToExpireTime.set(tokenId, currentTime + this.timeToLive);
+        this.#addToken(tokenId, currentTime);
     }
     /**
      * @param {string} tokenId
@@ -38,9 +68,10 @@ class AuthenticationManager
     {
         this.#cleanExpiredTokens(currentTime);
 
-        if (this.tokenToExpireTime.has(tokenId))
+        if (this.tokenToNode.has(tokenId))
         {
-            this.tokenToExpireTime.set(tokenId, currentTime + this.timeToLive);
+            this.#deleteToken(tokenId);
+            this.#addToken(tokenId, currentTime);
         }
     }
     /**
@@ -50,25 +81,95 @@ class AuthenticationManager
     countUnexpiredTokens(currentTime)
     {
         this.#cleanExpiredTokens(currentTime);
-
-        return this.tokenToExpireTime.size;
+        return this.tokenToNode.size;
     }
 
+    /**
+     * 
+     * @param {number} currentTime 
+     */
     #cleanExpiredTokens(currentTime)
     {
-        const expiredTokens = [];
-        for (const [tokenId, expireTime] of this.tokenToExpireTime)
+        let currentNode = this.listHead.next;
+
+        while (currentNode.expireTime <= currentTime)
         {
-            if (currentTime >= expireTime)
-            {
-                expiredTokens.push(tokenId);
-            }
+            currentNode = currentNode.next;
         }
 
-        for (const tokenId of expiredTokens)
+        if (currentNode.next === null)  // 全部过期了
         {
-            this.tokenToExpireTime.delete(tokenId);
+            this.listHead.next = currentNode;
+            currentNode.prev = this.listHead;
+            this.tokenToNode.clear();
         }
+        else
+        {
+            this.#deleteTokensBefore(currentNode.token);
+        }
+    }
+
+    /**
+     * 
+     * @param {string} token 
+     */
+    #deleteTokensBefore(token)
+    {
+        const node = this.tokenToNode.get(token);
+        
+        let currentNode = this.listHead.next;
+
+        while (currentNode !== node)
+        {
+            this.tokenToNode.delete(currentNode.token);
+            currentNode = currentNode.next;
+        }
+
+        this.listHead.next = node;
+        node.prev = this.listHead;
+    }
+
+    /**
+     * 
+     * @param {string} token 
+     */
+    #deleteToken(token)
+    {
+        const node = this.tokenToNode.get(token);
+        const prevNode = node.prev;
+        const nextNode = node.next;
+
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+
+        this.tokenToNode.delete(token);
+    }
+
+    /**
+     * 
+     * @param {string} token 
+     * @param {number} currentTime 
+     */
+    #addToken(token, currentTime)
+    {
+        const expireTime = currentTime + this.timeToLive;
+        const newNode = new ListNode(token, expireTime, null, null);
+        this.tokenToNode.set(token, newNode);
+
+        let currentNode = this.listHead;
+        while (currentNode.expireTime < expireTime)
+        {
+            currentNode = currentNode.next;
+        }
+
+        const prevNode = currentNode.prev;
+        const nextNode = currentNode;
+
+        prevNode.next = newNode;
+        newNode.prev = prevNode;
+
+        newNode.next = nextNode;
+        nextNode.prev = newNode;
     }
 }
 
