@@ -24,25 +24,17 @@ class TreeNode
  */
 const generateTrees = function (n)
 {
-    const cache = new Map();
-    return helper(1, n, cache);
+    return helper(1, n);
 };
 
 /**
  * 生成 [min, max] 范围的所有二叉搜索树
  * @param {number} min 
  * @param {number} max 
- * @param {Map<string, TreeNode[]>} cache
  * @returns {TreeNode[]}
  */
-function helper(min, max, cache)
+function helper(min, max)
 {
-    const cachedTrees = cache.get(`${min}-${max}`);
-    if (cachedTrees !== undefined)
-    {
-        return cachedTrees;
-    }
-
     const trees = [];
     if (min === max)
     {
@@ -52,8 +44,8 @@ function helper(min, max, cache)
     {
         for (let i = min; i <= max; i++)
         {
-            const leftTrees = i === min ? [null] : helper(min, i - 1, cache);
-            const rightTrees = i === max ? [null] : helper(i + 1, max, cache);
+            const leftTrees = i === min ? [null] : helper(min, i - 1);
+            const rightTrees = i === max ? [null] : helper(i + 1, max);
 
             for (const leftTree of leftTrees)
             {
@@ -65,7 +57,6 @@ function helper(min, max, cache)
             }
         }
     }
-    cache.set(`${min}-${max}`, trees);
     return trees;
 }
 // @lc code=end
