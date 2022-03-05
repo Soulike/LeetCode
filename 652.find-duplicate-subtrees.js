@@ -19,47 +19,68 @@
  */
 var findDuplicateSubtrees = function (root)
 {
+    const preOrderToRoot = new Map();
     const duplicates = new Set();
-    const dfsResultToRoot = new Map();
-    function helper(root)
+
+    function findDuplicate(root)
     {
         if (root === null)
         {
             return;
         }
-        helper(root.left);
-        helper(root.right);
 
-        const preorder = preorderTranverse(root);
-        const dfsResult = `${preorder}`;
-        if (dfsResultToRoot.has(dfsResult))
+        const preOrder = getPreOrder(root);
+        if (preOrderToRoot.has(preOrder))
         {
-            duplicates.add(dfsResultToRoot.get(dfsResult));
+            duplicates.add(preOrderToRoot.get(preOrder));
         }
         else
         {
-            dfsResultToRoot.set(dfsResult, root);
+            preOrderToRoot.set(preOrder, root);
         }
+
+
+        findDuplicate(root.left);
+        findDuplicate(root.right);
     }
 
-    const preorderCache = new Map();
-    function preorderTranverse(root)
-    {
-        if (preorderCache.has(root))
-        {
-            return preorderCache.get(root);
-        }
-        if (root === null)
-        {
-            return 'n';
-        }
-        const result = `${root.val},${preorderTranverse(root.left)},${preorderTranverse(root.right)}`;
-        preorderCache.set(root, result);
-        return result;
-    }
+    findDuplicate(root);
 
-    helper(root);
     return [...duplicates];
 };
-// @lc code=end
 
+function getPreOrder(root)
+{
+    const cache = new Map();
+    function helper(root)
+    {
+        if (cache.has(root))
+        {
+            return cache.get(root);
+        }
+        const result = [];
+
+        function preorderDFS(root)
+        {
+            if (root === null)
+            {
+                result.push('#');
+            }
+            else
+            {
+                result.push(`${root.val}`);
+                preorderDFS(root.left);
+                preorderDFS(root.right);
+            }
+        }
+
+        preorderDFS(root);
+
+        const ret = result.join(',');
+        cache.set(root, ret);
+        return ret;
+    }
+
+    return helper(root);
+}
+// @lc code=end
