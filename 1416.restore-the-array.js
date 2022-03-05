@@ -14,56 +14,57 @@ var numberOfArrays = function (s, k)
 {
     const MOD = 10 ** 9 + 7;
 
-    const cache = new Map();
-    function dfs(startIndex)
+    /**
+     * dp[i] 以 i 开头的字符串，有多少种可能性
+     * 
+     * 以 i 为开始，向后 splitIndex 位置插入逗号。如果 s[i:splitIndex] < k，dp[i] += dp[splitIndex+1]
+     * 
+     * 唯一一种特殊情况是 splitIndex 是最后一个字符。这时 dp[i]++;
+     */
+
+    const dp = new Array(s.length);
+    dp.fill(0);
+    dp[s.length - 1] = s[s.length - 1] === '0'
+        ? 0
+        : Number.parseInt(s[s.length - 1]) <= k
+            ? 1
+            : 0;
+    
+    for (let i = s.length - 2; i >= 0; i--)
     {
-        if (cache.has(startIndex))
+        if (s[i] === '0')
         {
-            return cache.get(startIndex);
+            dp[i] = 0;
         }
-        if (s[startIndex] === '0')
+        else
         {
-            return 0;
-        }
-        if (startIndex === s.length - 1)
-        {
-            return Number.parseInt(s[startIndex]) <= k
-                ? 1
-                : 0;
-        }
-
-        let splitIndex = startIndex;
-        let currentNum = 0;
-        let count = 0;
-
-        while (splitIndex < s.length)
-        {
-            currentNum *= 10;
-            currentNum += Number.parseInt(s[splitIndex]);
-            if (currentNum > k)
+            let num = 0;
+            let splitIndex = i;
+            while (splitIndex < s.length)
             {
-                break;
+                num *= 10;
+                num += Number.parseInt(s[splitIndex]);
+                if (num > k)
+                {
+                    break;
+                }
+                
+                if (splitIndex === s.length - 1)
+                {
+                    dp[i]++;
+                }
+                else
+                {
+                    dp[i] += dp[splitIndex + 1];
+                }
+                dp[i] %= MOD;
+                splitIndex++;
             }
-
-            if (splitIndex < s.length - 1)
-            {
-                count += dfs(splitIndex + 1);
-            }
-            else    // 逗号放在最后，整个数字就是一种可能性
-            {
-                count++;
-            }
-            count %= MOD;
-            splitIndex++;
         }
-
-        cache.set(startIndex, count);
-        return count;
     }
 
-    const result = dfs(0);
-    return result;
+    return dp[0] % MOD;
 };
 // @lc code=end
 
-numberOfArrays('1317',2000);
+numberOfArrays('1000', 1);
