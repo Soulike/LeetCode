@@ -13,7 +13,7 @@ var deleteAndEarn = function (nums)
 {
     const numToCount = new Map();
     let maxNum = -Infinity;
-    let minNum = Infinity
+    let minNum = Infinity;
 
     for (const num of nums)
     {
@@ -37,24 +37,20 @@ var deleteAndEarn = function (nums)
      * 
      */
 
-    const dp = new Array(maxNum + 1);
-    for (let i = 0; i < dp.length; i++)
+    let prevDp = [
+        0,
+        numToCount.get(minNum) * minNum
+    ];
+    let dp = [0, 0];
+
+    for (let i = minNum + 1; i <= maxNum; i++)
     {
-        dp[i] = new Array(2);
-        dp[i].fill(0);
+        dp[0] = Math.max(prevDp[0], prevDp[1]);
+        dp[1] = prevDp[0] + (numToCount.get(i) ?? 0) * i;
+
+        [dp, prevDp] = [prevDp, dp];
     }
 
-    dp[minNum][0] = 0;
-    dp[minNum][1] = numToCount.get(minNum) * minNum;
-
-    for (let i = 1; i <= maxNum; i++)
-    {
-        dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);
-        dp[i][1] = dp[i - 1][0] + (numToCount.get(i) ?? 0) * i
-    }
-
-    return Math.max(dp[maxNum][0], dp[maxNum][1]);
+    return Math.max(prevDp[0], prevDp[1]);
 };
 // @lc code=end
-
-console.log(deleteAndEarn([12, 32, 93, 17, 100, 72, 40, 71, 37, 92, 58, 34, 29, 78, 11, 84, 77, 90, 92, 35, 12, 5, 27, 92, 91, 23, 65, 91, 85, 14, 42, 28, 80, 85, 38, 71, 62, 82, 66, 3, 33, 33, 55, 60, 48, 78, 63, 11, 20, 51, 78, 42, 37, 21, 100, 13, 60, 57, 91, 53, 49, 15, 45, 19, 51, 2, 96, 22, 32, 2, 46, 62, 58, 11, 29, 6, 74, 38, 70, 97, 4, 22, 76, 19, 1, 90, 63, 55, 64, 44, 90, 51, 36, 16, 65, 95, 64, 59, 53, 93]));
