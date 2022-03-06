@@ -12,21 +12,22 @@
  */
 var corpFlightBookings = function (bookings, n)
 {
-    bookings.sort(([, end1,], [, end2,]) => end1 - end2);
+    const result = new Array(n + 1);
+    const diffs = new Array(n + 1);
+    diffs.fill(0);
 
-    const result = new Array(n + 2);
-    result.fill(0);
-    for (const [start, end, seatCount] of bookings)
+    for (const [start, end, count] of bookings)
     {
-        result[start] += seatCount;
-        result[end + 1] -= seatCount;
+        diffs[start - 1] += count;
+        diffs[end] -= count;
     }
 
-    for (let i = 1; i < n + 2; i++)
+    diffs.reduce((prev, curr, i) =>
     {
-        result[i] += result[i - 1];
-    }
+        result[i] = prev + curr;
+        return prev + curr;
+    }, 0);
 
-    return result.slice(1, -1);
+    return result.slice(0, -1);
 };
 // @lc code=end
