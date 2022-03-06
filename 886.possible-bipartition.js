@@ -12,57 +12,65 @@
  */
 var possibleBipartition = function (n, dislikes)
 {
-    const personToDislikes = new Map();
-    for (let person = 1; person <= n; person++)
+    const graph = new Array(n);
+    for (let i = 0; i < graph.length; i++)
     {
-        personToDislikes.set(person, []);
+        graph[i] = [];
+    }
+    for (const [a, b] of dislikes)
+    {
+        graph[a - 1].push(b - 1);
+        graph[b - 1].push(a - 1);
     }
 
-    for (const [person, personDislikes] of dislikes)
-    {
-        personToDislikes.get(person).push(personDislikes);
-    }
+    return isBipartite(graph);
+};
 
-    // 当前子图的涂色情况
-    const personToColor = new Map();
-    const visitedPersons = new Set();
+/**
+ * @param {number[][]} graph8
+ * @return {boolean}
+ */
+function isBipartite(graph)
+{
+    const n = graph.length;
+    const colors = new Array(n);
+    const NO_COLOR = 0;
+    const COLOR_1 = 1;
+    const COLOR_2 = 2;
+    colors.fill(NO_COLOR);
 
-    function traverse(person, expectedColor)
+    function canFinishPaint(i, color)
     {
-        visitedPersons.add(person);
-        const personCurrentColor = personToColor.get(person);
-        if (personCurrentColor === undefined)
+        if (colors[i] !== NO_COLOR)
         {
-            personToColor.set(person, expectedColor);
-
-            const dislikePersons = personToDislikes.get(person);
-            for (const person of dislikePersons)
+            return colors[i] === color;
+        }
+        else
+        {
+            colors[i] = color;
+            const connectedNodes = graph[i];
+            for (const node of connectedNodes)
             {
-                if (!traverse(person, !expectedColor))
+                if (!canFinishPaint(node, color === COLOR_1 ? COLOR_2 : COLOR_1))
                 {
                     return false;
                 }
             }
             return true;
         }
-        else
-        {
-            return personCurrentColor === expectedColor;
-        }
     }
 
-    for (let person = 1; person <= n; person++)
+    for (let i = 0; i < n; i++)
     {
-        if (!visitedPersons.has(person))
+        if (colors[i] === NO_COLOR)
         {
-            // 新子图，重新开始涂色
-            personToColor.clear();
-            if (!traverse(person, false))
+            if (!canFinishPaint(i, COLOR_1))
             {
                 return false;
             }
         }
     }
+
     return true;
 };
 // @lc code=end
