@@ -33,39 +33,14 @@
  */
 class NestedIterator
 {
-    #list;
-    #index;
+    nestedList;
     /**
     * @constructor
     * @param {NestedInteger[]} nestedList
     */
     constructor(nestedList)
     {
-        this.#list = this.#flatten(nestedList);
-        this.#index = 0;
-    }
-
-    #flatten(nestedList)
-    {
-        let result = [];
-
-        function helper(list)
-        {
-            for (const item of list)
-            {
-                if (item.isInteger())
-                {
-                    result.push(item.getInteger());
-                }
-                else
-                {
-                    helper(item.getList());
-                }
-            }
-        }
-
-        helper(nestedList);
-        return result;
+        this.nestedList = Array.from(nestedList);
     }
 
     /**
@@ -74,7 +49,21 @@ class NestedIterator
      */
     hasNext()
     {
-        return this.#index < this.#list.length
+        if (this.nestedList.length === 0)
+        {
+            return false;
+        }
+
+        while (!this.nestedList[0].isInteger())
+        {
+            const list = this.nestedList.shift();
+            this.nestedList.unshift(...list.getList());
+            if (this.nestedList.length === 0)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -83,12 +72,9 @@ class NestedIterator
      */
     next()
     {
-        return this.#list[this.#index++];
+        return this.nestedList.shift().getInteger();
     }
 }
-
-
-
 
 /**
  * Your NestedIterator will be called like this:
