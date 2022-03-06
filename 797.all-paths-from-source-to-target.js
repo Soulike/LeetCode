@@ -14,25 +14,25 @@ var allPathsSourceTarget = function (graph)
     const START = 0;
     const TARGET = graph.length - 1;
 
-    let currentPath = [];
+    let currentPath = [START];
     let paths = [];
 
     function helper(start)
     {
-        currentPath.push(start);
         if (start === TARGET)
         {
             paths.push(Array.from(currentPath));
         }
         else
         {
-            const tos = graph[start];
-            for (const to of tos)
+            const nodes = graph[start];
+            for (const node of nodes)
             {
-                helper(to);
+                currentPath.push(node);
+                helper(node);
+                currentPath.pop();
             }
         }
-        currentPath.pop();
     }
 
     helper(START);
