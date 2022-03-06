@@ -22,20 +22,16 @@ var deleteDuplicates = function (head)
     {
         return null;
     }
-    
+
     let slow = head;
     let fast = head;
 
     while (fast !== null)
     {
-        if (fast.next === null)
+        if (fast.val !== slow.val)
         {
-            slow.val = fast.val;
-        }
-        else if (fast.val !== fast.next.val)
-        {
-            slow.val = fast.val;
             slow = slow.next;
+            slow.val = fast.val;
         }
         fast = fast.next;
     }
