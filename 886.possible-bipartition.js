@@ -27,7 +27,7 @@ var possibleBipartition = function (n, dislikes)
 };
 
 /**
- * @param {number[][]} graph8
+ * @param {number[][]} graph
  * @return {boolean}
  */
 function isBipartite(graph)
