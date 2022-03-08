@@ -19,16 +19,20 @@ var minIncrementForUnique = function (nums)
     {
         if (nums[i] === nums[i - 1])
         {
+            const originalNum = nums[i];
             let num = nums[i];
             let j = i;
             while (j < nums.length && nums[j] <= num)
             {
+                if (nums[j] === num)
+                {
+                    num++;
+                }
                 nums[j] = nums[j + 1];
-                num++;
                 j++;
             }
             nums[j - 1] = num;
-            step += j - i;
+            step += num - originalNum;
             i--;
         }
     }
@@ -36,3 +40,5 @@ var minIncrementForUnique = function (nums)
     return step;
 };
 // @lc code=end
+
+minIncrementForUnique([3, 2, 1, 2, 1, 7])
