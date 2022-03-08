@@ -19,13 +19,21 @@
  */
 const hasCycle = function (head) 
 {
+    /**
+     * 如果没有结点，返回 false
+     * 快慢指针，如果快指针到达 null 返回 false
+     * 如果快慢指针相遇，返回 true
+     */
+
     if (head === null)
     {
         return false;
     }
-    let fast = head;
+
     let slow = head;
-    while (true)
+    let fast = head;
+
+    while (fast !== null)
     {
         fast = fast.next;
         if (fast === null)
@@ -33,22 +41,15 @@ const hasCycle = function (head)
             return false;
         }
         fast = fast.next;
-        if (fast === null)
-        {
-            return false;
-        }
-
         slow = slow.next;
-        if (slow === null)
-        {
-            return false;
-        }
-        
-        if (fast === slow)
+
+        if (slow === fast)
         {
             return true;
         }
     }
+
+    return false;
 };
 // @lc code=end
 
