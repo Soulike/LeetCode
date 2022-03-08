@@ -19,12 +19,20 @@
  */
 const detectCycle = function (head) 
 {
+    /**
+     * 如果没有结点，返回 null
+     * 快慢指针，如果快指针到达 null，返回 null
+     * 如果快慢指针相等，慢指针返回 head，两个指针同速度前进，直到相遇，返回相遇的结点
+     */
+
     if (head === null)
     {
         return null;
     }
-    let fast = head;
+
     let slow = head;
+    let fast = head;
+
     while (true)
     {
         fast = fast.next;
@@ -39,27 +47,28 @@ const detectCycle = function (head)
         }
 
         slow = slow.next;
-        if (slow === null)
-        {
-            return null;
-        }
 
         if (fast === slow)
         {
             break;
         }
     }
-    let pointer = head;
-    while (true)
+
+    // 特殊情况，整个链表就是个环
+    if (slow === head)
     {
-        // 先进行比较，因为 head 可能就是环的起点
-        if (pointer === slow)
-        {
-            return pointer;
-        }
-        pointer = pointer.next;
+        return head;
+    }
+
+    slow = head;
+
+    while (fast !== slow)
+    {
+        fast = fast.next;
         slow = slow.next;
     }
+
+    return slow;
 };
 // @lc code=end
 
