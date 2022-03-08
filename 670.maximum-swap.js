@@ -14,21 +14,34 @@ var maximumSwap = function (num)
     /**
      * 拆分数字，0-n 低位到高位
      * 
-     * for i from n-1 to 1
-     * 在 [0-i] 范围内寻找最大值，如果最大值就是 nums[i]，继续循环
-     * 如果最大值不是 nums[i]，交换，重组数字并返回
+     * 划分 0-9 的桶
+     * 
+     * 遍历 nums，记录每个数字出现的最低位位置，放进桶里
+     * 
+     * 从桶 9 遍历到 0，每次比较桶里的位置与当前的最高位，如果桶里的位置小，那么就应该发生交换
      */
 
     const nums = splitNum(num);
     const n = nums.length;
 
-    for (let i = n - 1; i >= 1; i--)
+    const numToLowestIndex = new Array(10);
+
+    for (let i = n - 1; i >= 0; i--)
     {
-        const maxIndex = findMaxIndex(nums, 0, i);
-        if (nums[maxIndex] !== nums[i])
+        numToLowestIndex[nums[i]] = i;
+    }
+
+    OUT:
+    for (let i = n - 1; i >= 0; i--)
+    {
+        for (let j = 9; j >= 0; j--)
         {
-            [nums[maxIndex], nums[i]] = [nums[i], nums[maxIndex]];
-            break;
+            if (numToLowestIndex[j] < i
+                && j > nums[i])
+            {
+                [nums[numToLowestIndex[j]], nums[i]] = [nums[i], nums[numToLowestIndex[j]]];
+                break OUT;
+            }
         }
     }
 
@@ -71,21 +84,6 @@ function joinNum(nums)
     }
     return result;
 }
-
-function findMaxIndex(nums, left, right)
-{
-    let maxIndex = left;
-    let max = nums[left];
-
-    for (let i = left + 1; i <= right; i++)
-    {
-        if (nums[i] > max)
-        {
-            max = nums[i];
-            maxIndex = i;
-        }
-    }
-
-    return maxIndex;
-}
 // @lc code=end
+
+maximumSwap(9973)
