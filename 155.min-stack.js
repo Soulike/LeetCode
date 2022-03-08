@@ -8,13 +8,14 @@
 
 class MinStack
 {
+    /**
+     * @type {[number, number][]} - [val, minValWhenPushed]
+     */
     stack;
-    minValStack;
 
     constructor()
     {
         this.stack = [];
-        this.minValStack = [];
     }
 
     /**
@@ -23,11 +24,14 @@ class MinStack
      */
     push(val)
     {
-        this.stack.push(val);
-        if (this.minValStack.length === 0
-            || this.minValStack[this.minValStack.length - 1] >= val)
+        if(this.stack.length === 0)
         {
-            this.minValStack.push(val);
+            this.stack.push([val, val]);
+        }
+        else
+        {
+            const top = this.stack[this.stack.length - 1];
+            this.stack.push([val, Math.min(val, top[1])]);
         }
     }
 
@@ -36,11 +40,7 @@ class MinStack
      */
     pop()
     {
-        const poppedVal = this.stack.pop();
-        if (this.minValStack[this.minValStack.length - 1] === poppedVal)
-        {
-            this.minValStack.pop();
-        }
+        this.stack.pop()
     }
 
     /**
@@ -48,7 +48,7 @@ class MinStack
      */
     top()
     {
-        return this.stack[this.stack.length - 1];
+        return this.stack[this.stack.length - 1][0];
     }
 
     /**
@@ -56,7 +56,7 @@ class MinStack
      */
     getMin()
     {
-        return this.minValStack[this.minValStack.length - 1];
+        return this.stack[this.stack.length - 1][1];
     }
 }
 /**
