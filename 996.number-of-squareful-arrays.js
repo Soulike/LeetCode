@@ -109,8 +109,28 @@ function getNumToCount(nums)
  */
 function canConstituteSquare(a, b)
 {
-    return Number.isInteger((a + b) ** 0.5);
+    let left = 0;
+    let right = 2 ** 31 - 1;
+    const num = a + b;
+
+    while (left <= right)
+    {
+        const mid = left + Math.floor((right - left) / 2);
+        const current = mid * mid;
+        if (current === num)
+        {
+            return true;
+        }
+        else if (current > num)
+        {
+            right = mid - 1;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+    }
+
+    return false;
 }
 // @lc code=end
-
-console.log(numSquarefulPerms([5, 11, 5, 4, 5]));
