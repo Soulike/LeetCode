@@ -12,57 +12,56 @@
  */
 const loudAndRich = function (richer, quiet)
 {
-    const PERSON_AMOUNT = quiet.length;
-    /** @type {boolean[][]} */
-    const reachableGraph = new Array(PERSON_AMOUNT);
-    for (let i = 0; i < PERSON_AMOUNT; i++)
-    {
-        reachableGraph[i] = new Array(PERSON_AMOUNT);
-        reachableGraph[i].fill(false);
-        reachableGraph[i][i] = true;
-    }
+    /**
+     * answer[x] = y 
+     * y 是和 x 一样有钱或比 x 更有钱的人里面最不安静的
+     * 
+     * 统计 i->[] 对于人 i，比 i 更有钱的人有哪些
+     * dp(i) 对于人 i，一样有钱或比 i 更有钱的人里面最不安静的是谁？
+     */
 
+    const n = quiet.length;
+    const result = new Array(n);
+    
+    const personToRichers = new Map();
     for (const [a, b] of richer)
     {
-        reachableGraph[b][a] = true;
+        const bRichers = (personToRichers.get(b) ?? []);
+        bRichers.push(a);
+        personToRichers.set(b, bRichers);
     }
 
-    let hasNewEdge = true;
-    while (hasNewEdge)
+    function dp(i)
     {
-        hasNewEdge = false;
-        for (let i = 0; i < PERSON_AMOUNT; i++)
+        if (result[i] !== undefined)
         {
-            for (let j = 0; j < PERSON_AMOUNT; j++)
+            return result[i];
+        }
+
+        const iRichers = personToRichers.get(i) ?? [];
+        if (iRichers.length === 0)
+        {
+            result[i] = i;
+            return i;
+        }
+        else
+        {
+            result[i] = i;
+            for (const iRicher of iRichers)
             {
-                if (reachableGraph[i][j])
-                {
-                    for (let k = 0; k < PERSON_AMOUNT; k++)
-                    {
-                        if (reachableGraph[j][k] && !reachableGraph[i][k])
-                        {
-                            hasNewEdge = true;
-                            reachableGraph[i][k] = true;
-                        }
-                    }
-                }
+                result[i] = quiet[result[i]] > quiet[dp(iRicher)]
+                    ? dp(iRicher)
+                    : result[i];
             }
+            return result[i];
         }
     }
 
-    const result = new Array(PERSON_AMOUNT);
-    for (let i = 0; i < PERSON_AMOUNT; i++)
+    for (let i = 0; i < n; i++)
     {
-        let minQuiet = Number.POSITIVE_INFINITY;
-        for (let j = 0; j < PERSON_AMOUNT; j++)
-        {
-            if (reachableGraph[i][j] && quiet[j] < minQuiet)
-            {
-                result[i] = j;
-                minQuiet = quiet[j];
-            }
-        }
+        dp(i);
     }
+
     return result;
 };
 // @lc code=end
