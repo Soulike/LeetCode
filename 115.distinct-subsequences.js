@@ -26,23 +26,24 @@ var numDistinct = function (s, t)
      *     dp[i][j] = dp[i+1][j+1] + dp[i+1][j]
      * else
      *     dp[i][j] = dp[i+1][j]
+     * 
+     * 内存优化
+     * base case
+     * prevDp[j] = 0 if s.length-i < t.length - j  // s 不够用了
+     * prevDp[t.length] = 1  // t 用完了
+     * 
+     * 
+     * if s[i] === t[j]
+     *     dp[j] = prevDp[j+1] + prevDp[j]
+     * else
+     *     dp[j] = prevDp[j]
      */
 
-    const dp = new Array(s.length + 1);
-    for (let i = 0; i <= s.length; i++)
-    {
-        dp[i] = new Array(t.length + 1);
-        for (let j = 0; j < i - s.length + t.length; j++)
-        {
-            dp[i][j] = 0;
-        }
+    let prevDp = new Array(t.length + 1);
+    let dp = new Array(t.length + 1);
 
-        if (i === s.length)
-        {
-            dp[i].fill(0);
-        }
-        dp[i][t.length] = 1;
-    }
+    prevDp.fill(0);
+    prevDp[t.length] = 1;
 
     for (let i = s.length - 1; i >= 0; i--)
     {
@@ -50,17 +51,17 @@ var numDistinct = function (s, t)
         {
             if (s[i] === t[j])
             {
-                dp[i][j] = dp[i + 1][j + 1] + dp[i + 1][j];
+                dp[j] = prevDp[j + 1] + prevDp[j]
             }
             else
             {
-                dp[i][j] = dp[i + 1][j];
+                dp[j] = prevDp[j]
             }
         }
+        [prevDp, dp] = [dp, prevDp];
+        prevDp[t.length] = 1;
     }
 
-    return dp[0][0];
+    return prevDp[0];
 };
 // @lc code=end
-
-numDistinct('babgbag', 'bag');
