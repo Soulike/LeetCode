@@ -23,59 +23,47 @@ function ListNode(val, next)
  * }
  */
 /**
- * @param {ListNode} head
- * @return {ListNode}
+ * @param {ListNode|null} head
+ * @return {ListNode|null}
  */
 const deleteDuplicates = function (head) 
 {
-    if (head === null || head.next === null)
+    if (head === null)
     {
-        return head;
+        return null;
     }
 
-    const fakeHead = new ListNode(0, head);
+    /**
+     * tail 新组成的链表的尾部
+     * p1 p2 
+     * p1 每到一个结点，p2 都向右看是否有重复
+     * 如果没有重复，p1 添加到新链表
+     * 如果有重复，p2 前进到第一个不同值的结点，p1=p2 继续
+     */
 
-    if (fakeHead.next === null)
+    const fakeHead = new ListNode();
+    let tail = fakeHead;
+    let p1 = head;
+    let p2 = head;
+
+    while (p1 !== null)
     {
-        return head;
-    }
-
-    let prev = fakeHead;
-    let left = fakeHead.next;
-
-    let right = left.next;
-    while (right !== null)
-    {
-        if (left.val !== right.val)
+        while (p2 !== null && p2.val === p1.val)
         {
-            prev = left;
-            left = right;
-            right = right.next;
+            p2 = p2.next;
         }
-        else    // left.val === right.val
+
+        if (p2 === p1.next)
         {
-            while (true)
-            {
-                if (right === null) // 找到最后都相同
-                {
-                    prev.next = null;
-                    break;
-                }
-                else
-                {
-                    if (right.val !== left.val)
-                    {
-                        prev.next = right;
-                        left = right;
-                        right = left.next;
-                        break;
-                    }
-                    right = right.next;
-                }
-            }
+            p1.next = null;
+            tail.next = p1;
+            tail = p1;
         }
+        
+        p1 = p2;
     }
-    return fakeHead.next
+
+    return fakeHead.next;
 };
 // @lc code=end
 
