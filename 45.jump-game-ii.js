@@ -11,33 +11,40 @@
  */
 const jump = function (nums)
 {
-    function helper(start)
+    if (nums.length === 1)
     {
-        if (start >= nums.length - 1)
-        {
-            return 0;
-        }
-
-        const maxReachIndex = nums[start] + start;
-
-        if (maxReachIndex >= nums.length - 1)
-        {
-            return 1;
-        }
-
-        let nextMaxReach = -1;
-        let nextIndex = -1;
-        for (let i = start + 1; i <= maxReachIndex; i++)
-        {
-            if (i + nums[i] > nextMaxReach)
-            {
-                nextMaxReach = i + nums[i];
-                nextIndex = i;
-            }
-        }
-        return 1 + helper(nextIndex);
+        return 0;
     }
+    
+    const destIndex = nums.length - 1;
 
-    return helper(0);
+    /**
+     * 贪心策略，每次选择下一个地点时，选可以跳得最远的
+     */
+
+    let currIndex = 0;
+    let jumpCount = 0;
+    while (true)
+    {
+        if (currIndex + nums[currIndex] >= destIndex)
+        {
+            return jumpCount + 1;
+        }
+        else
+        {
+            let max = 0;
+            let maxIndex = 0;
+            for (let i = currIndex + 1; i <= currIndex + nums[currIndex]; i++)
+            {
+                if (i + nums[i] > max)
+                {
+                    max = i + nums[i];
+                    maxIndex = i;
+                }
+            }
+            currIndex = maxIndex;
+            jumpCount++;
+        }
+    }
 };
 // @lc code=end
