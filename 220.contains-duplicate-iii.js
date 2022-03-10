@@ -13,55 +13,52 @@
  */
 var containsNearbyAlmostDuplicate = function (nums, k, t)
 {
-    if (k >= nums.length - 1)
-    {
-        for (let i = 0; i < nums.length; i++)
-        {
-            for (let j = i + 1; j < nums.length; j++)
-            {
-                if (Math.abs(nums[i] - nums[j]) <= t)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 下标差距小于等于 k
-     * 值差距小于等于 t
-     */
-
-    // k < nums.length - 1，至少有一个窗口
+    const buckets = {};
 
     let left = 0;
     let right = k;
 
-    for (let i = 0; i <= k; i++)
+    for (let i = 0; i <= k && i < nums.length; i++)
     {
-        for (let j = i + 1; j <= k; j++)
+        const bucketIndex = getBucketIndex(nums[i], t + 1);
+        if (bucketIndex in buckets
+            || ((bucketIndex - 1) in buckets
+                && Math.abs(buckets[bucketIndex - 1] - nums[i]) <= t)
+            || ((bucketIndex + 1) in buckets
+                && Math.abs(buckets[bucketIndex + 1] - nums[i]) <= t)
+        )
         {
-            if (Math.abs(nums[i] - nums[j]) <= t)
-            {
-                return true;
-            }
+            return true;
         }
+        buckets[bucketIndex] = nums[i];
     }
 
-    while (right <= nums.length - 2)
+    while (right <= nums.length - 1)
     {
+        const leftBucketIndex = getBucketIndex(nums[left], t + 1);
+        delete buckets[leftBucketIndex];
+
         left++;
         right++;
-        for (let i = left; i < right; i++)
+
+        const rightBucketIndex = getBucketIndex(nums[right], t + 1);
+        if (rightBucketIndex in buckets
+            || ((rightBucketIndex - 1) in buckets
+                && Math.abs(buckets[rightBucketIndex - 1] - nums[right]) <= t)
+            || ((rightBucketIndex + 1) in buckets
+                && Math.abs(buckets[rightBucketIndex + 1] - nums[right]) <= t)
+        )
         {
-            if (Math.abs(nums[i] - nums[right]) <= t)
-            {
-                return true;
-            }
+            return true;
         }
+        buckets[rightBucketIndex] = nums[right];
     }
 
     return false;
 };
+
+function getBucketIndex(num, bucketSize)
+{
+    return Math.floor(num / bucketSize);
+}
 // @lc code=end
