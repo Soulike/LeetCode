@@ -12,93 +12,75 @@
  */
 var findMedianSortedArrays = function (nums1, nums2)
 {
-    const n = nums1.length + nums2.length;
-
-    const result = findKthAndBeforeKth(nums1, nums2, Math.floor(n / 2) + 1);
-
-    if (n % 2)
+    const cache = new Map();
+    function findKth(k)
     {
-        return result[0];
-    }
-    else
-    {
-        return (result[0] + result[1]) / 2;
-    }
-};
-
-function findKthAndBeforeKth(num1, num2, k)
-{
-    if (num1.length === 0)
-    {
-        return [num2[k - 1], num2[k - 2]];
-    }
-
-    if (num2.length === 0)
-    {
-        return [num1[k - 1], num1[k - 2]];
-    }
-
-    let index1 = num1.length - 1;
-    let index2 = num2.length - 1;
-
-    if (num1.length > k)
-    {
-        index1 = k - 1;
-    }
-
-    if (num2.length > k)
-    {
-        index2 = k - 1;
-    }
-
-    while (index1 + 1 + index2 + 1 > k)
-    {
-        if (index1 >= 0 && index2 >= 0)
+        if (cache.has(k))
         {
-            if (num1[index1] > num2[index2])
+            return cache.get(k);
+        }
+
+        let index1 = Math.min(nums1.length - 1, k - 1);
+        let index2 = Math.min(nums2.length - 1, k - 1);
+
+        while (index1 + 1 + index2 + 1 > k)
+        {
+            const currentK = index1 + 1 + index2 + 1;
+            // 两个数组都还有数字剩下
+            if (index1 >= 0 && index2 >= 0)
             {
+                cache.set(currentK, Math.max(nums1[index1], nums2[index2]));
+                if (nums1[index1] > nums2[index2])
+                {
+                    index1--;
+                }
+                else
+                {
+                    index2--;
+                }
+            }
+            else if (index1 >= 0)
+            {
+                cache.set(currentK, nums1[index1]);
                 index1--;
+            }
+            else if (index2 >= 0)
+            {
+                cache.set(currentK, nums2[index2]);
+                index2--;
             }
             else
             {
-                index2--;
+                // 不可能
             }
+        }
+
+        let result;
+        if (index1 >= 0 && index2 >= 0)
+        {
+            result = Math.max(nums1[index1], nums2[index2]);
         }
         else if (index1 >= 0)
         {
-            index1--;
+            result = nums1[index1];
         }
         else if (index2 >= 0)
         {
-            index2--;
+            result = nums2[index2];
         }
-        
+        cache.set(k, result);
+        return result;
     }
 
-    if (index1 === -1)
+    const n = nums1.length + nums2.length;
+
+    if (n % 2)
     {
-        return [num2[index2], num2[index2 - 1]];
-    }
-    if (index2 === -1)
-    {
-        return [num1[index1], num1[index1 - 1]];
+        return findKth(Math.floor(n / 2) + 1);
     }
     else
     {
-        if (num1[index1] > num2[index2])
-        {
-            return [
-                num1[index1],
-                Math.max(num1[index1 - 1] ?? 0, num2[index2])
-            ]
-        }
-        else
-        {
-            return [
-                num2[index2],
-                Math.max(num2[index2 - 1] ?? 0, num1[index1])
-            ]
-        }
+        return (findKth(n / 2 + 1) + findKth(n / 2)) / 2;
     }
-}
+};
 // @lc code=end
