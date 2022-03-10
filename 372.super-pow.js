@@ -17,18 +17,17 @@ var superPow = function (a, b)
         return 1;
     }
 
-    if (b.length === 1)
+    function helper(bLeft, bRight)
     {
-        return pow(a, b[0]);
+        if (bRight - bLeft + 1 === 1)
+        {
+            return pow(a, b[bLeft]);
+        }
+
+        return (pow(helper(bLeft, bRight - 1), 10) * pow(a, b[bRight])) % 1337;
     }
-    else
-    {
-        const n = b.pop();
-        return (pow(a, n)
-            * pow(
-                superPow(a, b),
-                10)) % 1337;
-    }
+
+    return helper(0, b.length - 1);
 };
 
 /**
@@ -59,3 +58,5 @@ function pow(a, n)
     }
 }
 // @lc code=end
+
+console.log(superPow(2, [1, 0, 0]));
