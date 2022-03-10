@@ -12,64 +12,83 @@
  */
 var isMatch = function (s, p)
 {
-    const cache = new Map();
     /**
+     * m = s.length
+     * n = p.length
+     * dp[i][j]
      * s[i:] 和 p[j:] 可以匹配吗？
-     * @param {number} i 
-     * @param {number} j 
+     * 
+     * base case
+     * dp[m][n] = true
+     * 
+     * dp[0...m-1][n] = false
+     * 
+     * if i === m  
+     *      if p[j] === '*'
+     *          dp[i][j] = dp[i][j+1]
+     *      else
+     *          dp[i][j] = false
+     * 
+     * else if p[j] === *
+     *      dp[i][j] = dp[i+1][j] || dp[i][j+1]
+     * else 
+     *    if s[i] === p[j] || p[j] === ?
+     *      dp[i][j] = dp[i+1][j+1]
+     *    else
+     *      dp[i][j] = false
+     * 
      */
-    function dp(i, j)
+
+    const m = s.length;
+    const n = p.length;
+
+    const dp = new Array(m + 1);
+    for (let i = 0; i < m + 1; i++)
     {
-        const cacheKey = `${i}-${j}`;
-        if (cache.has(cacheKey))
+        dp[i] = new Array(n + 1);
+        dp[i][n] = false;
+    }
+
+    dp[m][n] = true;
+
+    for (let i = m; i >= 0; i--)
+    {
+        for (let j = n - 1; j >= 0; j--)
         {
-            return cache.get(cacheKey);
-        }
-        if (i === s.length)
-        {
-            if (j === p.length)
+            if (i === m)
             {
-                cache.set(cacheKey, true);
-                return true;
+                if (p[j] !== '*')
+                {
+                    dp[i][j] = false;
+                }
+                else
+                {
+                    dp[i][j] = dp[i][j + 1];
+                }
             }
-            else if (j < p.length)
+            else
             {
                 if (p[j] === '*')
                 {
-                    return dp(i, j + 1);
+                    dp[i][j] = dp[i + 1][j] || dp[i][j + 1];
                 }
                 else
                 {
-                    cache.set(cacheKey, false);
-                    return false;
+                    if (s[i] === p[j] || p[j] === '?')
+                    {
+                        dp[i][j] = dp[i + 1][j + 1];
+                    }
+                    else
+                    {
+                        dp[i][j] = false;
+                    }
                 }
             }
-        }
-        else if (i < s.length)
-        {
-            let result;
-            if (p[j] === '*')
-            {
-                result = dp(i, j + 1) // 不匹配
-                    || dp(i + 1, j);    // 匹配一次或者多次
-            }
-            else 
-            {
-                if (s[i] === p[j] || p[j] === '?')
-                {
-                    result = dp(i + 1, j + 1);
-                }
-                else
-                {
-                    result = false;
-                }
-            }
-            cache.set(cacheKey, result);
-            return result;
         }
     }
 
-    const result = dp(0, 0);
-    return result;
+    return dp[0][0];
 };
 // @lc code=end
+
+isMatch('','*****')
