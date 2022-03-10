@@ -12,41 +12,38 @@
 const canJump = function (nums) 
 {
     const destIndex = nums.length - 1;
-    
+
     /**
-     * dp[i] 在 i 位置是否能到达终点
-     * 
-     * dp[i] = i+nums[i] >= destIndex || dp[i+1...nums[i]]
-     * 
-     * base case
-     * dp[destIndex] = true
+     * 贪心策略，每次选择下一个地点时，选可以跳得最远的
      */
 
-    const dp = new Array(nums.length);
-    dp.fill(false);
-    dp[destIndex] = true;
-
-    for (let i = destIndex - 1; i >= 0; i--)
+    let currIndex = 0;
+    while (true)
     {
-        if (i + nums[i] >= destIndex)
+        if (currIndex + nums[currIndex] >= destIndex)
         {
-            dp[i] = true;
+            return true;
+        }
+        else if (nums[currIndex] === 0)
+        {
+            return false;
         }
         else
         {
-            for (let j = nums[i]; j >= 1; j--)
+            let max = 0;
+            let maxIndex = 0;
+            for (let i = currIndex + 1; i <= currIndex + nums[currIndex]; i++)
             {
-                if (dp[i + j])
+                if (i + nums[i] > max)
                 {
-                    dp[i] = true;
-                    break;
+                    max = i + nums[i];
+                    maxIndex = i;
                 }
             }
+            currIndex = maxIndex;
         }
     }
-
-    return dp[0];
 };
 // @lc code=end
 
-console.log(canJump([2, 3, 1, 1, 4]));
+console.log(canJump([0,1]));
