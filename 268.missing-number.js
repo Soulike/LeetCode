@@ -12,16 +12,16 @@
 var missingNumber = function (nums)
 {
     const n = nums.length;
-    let sum = 0
-    for (let i = 0; i <= n;i++)
+
+    let result = 0;
+    for (let i = 0; i < n; i++)
     {
-        sum += i;
-        if (i !== n)
-        {
-            const num = nums[i];
-            sum -= num;
-        }
+        result ^= i;
+        result ^= nums[i];
     }
-    return sum;
+
+    result ^= n;
+
+    return result;
 };
 // @lc code=end
