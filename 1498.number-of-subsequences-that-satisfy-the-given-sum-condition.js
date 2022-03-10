@@ -28,6 +28,8 @@ var numSubseq = function (nums, target)
         }
         else
         {
+            // 对于 nums[left+1:right]，有多少种子序列，前面加上 nums[left] 就是所有子序列
+            // 不会发生重复，因为 left 不会被重复取到
             count += mod2Pow(right - left);
             count %= MOD;
             left++;
