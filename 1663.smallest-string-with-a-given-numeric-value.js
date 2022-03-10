@@ -13,21 +13,21 @@
 var getSmallestString = function (n, k)
 {
     const result = new Array(n);
-    result.fill(1);
+    result.fill('a');
     let currentSum = n;
-    
+
     const diff = k - currentSum;
     const zCount = Math.floor(diff / 25);
     const beforeZLeft = diff % 25;
 
     const left = n - zCount;
-    result.fill(26, left);
+    result.fill('z', left);
     if (left - 1 >= 0)
     {
-        result[left - 1] += beforeZLeft;
+        result[left - 1] = getLetterFromOffset(1 + beforeZLeft);
     }
 
-    return result.map(offset => getLetterFromOffset(offset)).join('');
+    return result.join('');
 };
 
 function getLetterFromOffset(offset)
