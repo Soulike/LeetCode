@@ -19,7 +19,7 @@ const merge = function (intervals)
         }
         else
         {
-            return e1 - e2;
+            return e2 - e1;
         }
     });
 
