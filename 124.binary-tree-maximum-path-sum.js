@@ -4,6 +4,12 @@
  * [124] Binary Tree Maximum Path Sum
  */
 
+function TreeNode(val, left, right)
+{
+    this.val = (val === undefined ? 0 : val);
+    this.left = (left === undefined ? null : left);
+    this.right = (right === undefined ? null : right);
+}
 // @lc code=start
 /**
  * Definition for a binary tree node.
@@ -19,31 +25,43 @@
  */
 var maxPathSum = function (root)
 {
-    let maxSum = Number.NEGATIVE_INFINITY;
+    let maxRouteLength = -Infinity;
+
     /**
-     * 比较 root 的左右子树最大路径之和，并返回大的那个
-     */
-    function maxSideSum(root)
+    * @param {TreeNode|null} root 
+    * @returns {[number, number, number]} - [通过 root 的最大路径和，通过 root 左子树的最大路径和，通过 root 右子树的最大路径和]
+    */
+    function helper(root)
     {
         if (root === null)
         {
-            return 0;
+            return [-Infinity, -Infinity, -Infinity];
         }
-        const leftSideMaxSum = Math.max(maxSideSum(root.left), 0);
-        const rightSideMaxSum = Math.max(maxSideSum(root.right), 0);
 
-        // 看看以 root 为根结点能得到的最大路径值
-        maxSum = Math.max(maxSum, root.val + leftSideMaxSum + rightSideMaxSum);
+        const leftChildInfo = helper(root.left);
+        const rightChildInfo = helper(root.right);
 
-        const sideSum = Math.max(leftSideMaxSum, rightSideMaxSum);
+        const currentMaxRouteLength = Math.max(root.val
+            + Math.max(leftChildInfo[1], leftChildInfo[2], 0)
+            + Math.max(rightChildInfo[1], rightChildInfo[2], 0), root.val);
 
-        const result = root.val + sideSum;
-        return result;
+        maxRouteLength = Math.max(currentMaxRouteLength, maxRouteLength);
+
+        const leftSideMaxRouteLength = Math.max(root.val + Math.max(leftChildInfo[1], leftChildInfo[2], 0), root.val);
+        const rightSideMaxRouteLength = Math.max(root.val + Math.max(rightChildInfo[1], rightChildInfo[2], 0), root.val);
+
+        return [currentMaxRouteLength, leftSideMaxRouteLength, rightSideMaxRouteLength];
     }
 
+    helper(root);
 
-    maxSideSum(root);
-    return maxSum;
+    return maxRouteLength;
 };
 // @lc code=end
 
+const _1 = new TreeNode(1);
+const _2 = new TreeNode(2);
+
+_1.left = _2;
+
+console.log(maxPathSum(_1));
