@@ -11,35 +11,27 @@
  */
 var scoreOfParentheses = function (s)
 {
-    /** @type {('('|number)[]} */
-    const stack = [];
+    /**
+     * 我们只需要在遇到 '()' 时知道外面包裹了几层括号即可知道最终的分数
+     */
+    let score = 0;
+    let layer = 0;
 
-    for (const c of s)
+    for (let i = 0; i < s.length; i++)
     {
-        if (c === '(')
+        if (s[i] === '(')
         {
-            stack.push('(');
+            layer++;
         }
         else
         {
-            if (stack[stack.length - 1] === '(')
+            layer--;
+            if (s[i - 1] === '(')
             {
-                stack.pop();
-                stack.push(1);
-            }
-            else
-            {
-                let currentScore = 0;
-                while (stack[stack.length - 1] !== '(')
-                {
-                    currentScore += stack.pop();
-                }
-                stack.pop();
-                stack.push(currentScore * 2);
+                score += 2 ** layer;
             }
         }
     }
-
-    return stack.reduce((prev, curr) => prev+curr);
+    return score;
 };
 // @lc code=end
