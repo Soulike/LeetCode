@@ -31,8 +31,7 @@ var reformat = function (s)
     }
 
     const result = [];
-    const longer = letters.length > numbers.length ? letters : numbers;
-    const shorter = letters.length <= numbers.length ? letters : numbers;
+    const [longer,shorter] = letters.length > numbers.length ? [letters, numbers] : [numbers, letters];
     let longerIndex = 0;
     let shorterIndex = 0;
     for (let i = 0; i < s.length; i++)
