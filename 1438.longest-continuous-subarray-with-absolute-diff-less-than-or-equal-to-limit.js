@@ -49,28 +49,20 @@ var longestSubarray = function (nums, limit)
         }
         increaseQueue.push(nums[right]);
 
-        if (Math.abs(increaseQueue[0] - decreaseQueue[0]) <= limit)
+        while (Math.abs(increaseQueue[0] - decreaseQueue[0]) > limit)
         {
-            maxLength = Math.max(right - left + 1, maxLength);
-            right++;
-        }
-        else
-        {
-            while (Math.abs(increaseQueue[0] - decreaseQueue[0]) > limit)
+            if (increaseQueue[0] === nums[left])
             {
-                if (increaseQueue[0] === nums[left])
-                {
-                    increaseQueue.shift();
-                }
-                if (decreaseQueue[0] === nums[left])
-                {
-                    decreaseQueue.shift();
-                }
-                left++;
+                increaseQueue.shift();
             }
-            maxLength = Math.max(right - left + 1, maxLength);
-            right++;
+            if (decreaseQueue[0] === nums[left])
+            {
+                decreaseQueue.shift();
+            }
+            left++;
         }
+        maxLength = Math.max(right - left + 1, maxLength);
+        right++;
     }
 
     return maxLength;
