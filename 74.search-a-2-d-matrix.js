@@ -12,90 +12,79 @@
  */
 const searchMatrix = function (matrix, target) 
 {
-    const m = matrix.length;
-    if (m < 1)
+    const row = rowBinarySearch(matrix, target);
+    if (row === null)
     {
         return false;
     }
-    const n = matrix[0].length;
-    if (n < 1)
-    {
-        return false;
-    }
-    return arrayBinarySearch(matrix, 0, m - 1, target);
+    return binarySearch(row, target);
 };
 
 /**
- * @param {number[]} array
- * @param {number} left
- * @param {number} right
- * @param {number} target
- * @return {boolean}
+ * @param {number[][]} matrix 
+ * @param {number} target 
+ * @returns {number[] | null}
  */
-function binarySearch(array, left, right, target)
+function rowBinarySearch(matrix, target)
 {
-    if (left > right || left === right && array[left] !== target)
+    let startRowIndex = 0;
+    let endRowIndex = matrix.length - 1;
+    const colCount = matrix[0].length;
+
+    while (startRowIndex <= endRowIndex)
     {
-        return false;
+        const midRowIndex = startRowIndex + Math.floor((endRowIndex - startRowIndex) / 2);
+        const midRow = matrix[midRowIndex];
+        const min = midRow[0];
+        const max = midRow[colCount - 1];
+        if (min <= target
+            && max >= target)
+        {
+            return midRow;
+        }
+        else if (min > target)
+        {
+            endRowIndex = midRowIndex - 1;
+        }
+        else if (max < target)
+        {
+            startRowIndex = midRowIndex + 1;
+        }
     }
-    const mid = Math.floor((left + right) / 2);
-    const midValue = array[mid];
-    if (target === midValue)
-    {
-        return true;
-    }
-    else if (target > midValue)
-    {
-        return binarySearch(array, mid + 1, right, target);
-    }
-    else    // target < midValue
-    {
-        return binarySearch(array, left, mid - 1, target);
-    }
+
+    return null;
 }
 
 /**
- * @param {number[][]} array
- * @param {number} left
- * @param {number} right
- * @param {number} target
- * @return {boolean}
+ * 
+ * @param {number[]} array 
+ * @param {number} target 
+ * @returns {boolean}
  */
-function arrayBinarySearch(array, left, right, target)
+function binarySearch(array, target)
 {
-    if (left > right)
+    let startIndex = 0;
+    let endIndex = array.length - 1;
+
+    while (startIndex <= endIndex)
     {
-        return false;
-    }
-    const n = array[left].length;
-    if(left === right)
-    {
-        if (target < array[left][0] || target > array[left][n-1])
+        const midIndex = startIndex + Math.floor((endIndex - startIndex) / 2);
+        const midVal = array[midIndex];
+
+        if (midVal === target)
         {
-            return false;
+            return true;
         }
-        else
+        else if (midVal < target)
         {
-            return binarySearch(array[left], 0, n - 1, target);
+            startIndex = midIndex + 1;
         }
-    }
-    else    // left < right
-    {
-        const mid = Math.floor((left + right) / 2);
-        const midMinValue = array[mid][0];
-        const midMaxValue = array[mid][n - 1];
-        if (target < midMinValue)
+        else if (midVal > target)
         {
-            return arrayBinarySearch(array, left, mid - 1, target);
-        }
-        else if (target > midMaxValue)
-        {
-            return arrayBinarySearch(array, mid + 1, right, target);
-        }
-        else
-        {
-            return binarySearch(array[mid], 0, n - 1, target);   
+            endIndex = midIndex - 1;
         }
     }
+
+    return false;
 }
 // @lc code=end
