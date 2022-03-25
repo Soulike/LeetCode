@@ -23,14 +23,22 @@ var twoCitySchedCost = function (costs)
 
     for (let i = 0; i < n; i++)
     {
+        const iDiff = costs[i][0] - costs[i][1];
+        let minJDiff = Infinity;
+        let minDiffJ = -1;
         for (let j = n; j < 2 * n; j++)
         {
-            if (costs[i][0] - costs[i][1] > costs[j][0] - costs[j][1])
+            const jDiff = costs[j][0] - costs[j][1];
+            if (iDiff > jDiff
+                && jDiff < minJDiff)
             {
-                [costs[i], costs[j]] = [costs[j], costs[i]];
-                i--;
-                break;
+                minDiffJ = j;
+                minJDiff = jDiff;
             }
+        }
+        if (minDiffJ !== -1)
+        {
+            [costs[i], costs[minDiffJ]] = [costs[minDiffJ], costs[i]];
         }
     }
 
@@ -47,5 +55,3 @@ var twoCitySchedCost = function (costs)
     return cost;
 };
 // @lc code=end
-
-console.log(twoCitySchedCost([[515, 563], [451, 713], [537, 709], [343, 819], [855, 779], [457, 60], [650, 359], [631, 42]]));
