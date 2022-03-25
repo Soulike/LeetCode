@@ -21,26 +21,7 @@ var twoCitySchedCost = function (costs)
 
     const n = costs.length / 2;
 
-    for (let i = 0; i < n; i++)
-    {
-        const iDiff = costs[i][0] - costs[i][1];
-        let minJDiff = Infinity;
-        let minDiffJ = -1;
-        for (let j = n; j < 2 * n; j++)
-        {
-            const jDiff = costs[j][0] - costs[j][1];
-            if (iDiff > jDiff
-                && jDiff < minJDiff)
-            {
-                minDiffJ = j;
-                minJDiff = jDiff;
-            }
-        }
-        if (minDiffJ !== -1)
-        {
-            [costs[i], costs[minDiffJ]] = [costs[minDiffJ], costs[i]];
-        }
-    }
+    costs.sort((a, b) => (a[0] - a[1]) - (b[0] - b[1]));
 
     let cost = 0;
     for (let i = 0; i < n; i++)
