@@ -15,7 +15,7 @@ var nextGreaterElement = function (n)
      * 从末尾向前，查找第一个非递增位置 i
      * 从末尾到 i，查找第一个大于 nums[i] 的数字位置 j
      * 交换 i 和 j
-     * 排序 i 到末尾
+     * 排序 i 到末尾为从小到大（可以直接翻转得到）
      */
 
     const nums = splitNumber(n);
@@ -42,7 +42,7 @@ var nextGreaterElement = function (n)
         }
     }
 
-    quickSort(nums, nonIncreaseIndex + 1, nums.length - 1);
+    reverse(nums, nonIncreaseIndex + 1, nums.length - 1);
 
     return joinNumber(nums);
 };
@@ -53,42 +53,14 @@ var nextGreaterElement = function (n)
  * @param {number} left 
  * @param {number} right 
  */
-function quickSort(nums, left, right)
+function reverse(nums, left, right)
 {
-    if (left >= right)
+    while (left < right)
     {
-        return;
+        [nums[left], nums[right]] = [nums[right], nums[left]];
+        left++;
+        right--;
     }
-
-    const randomIndex = left + Math.floor(Math.random() * (right - left + 1));
-
-    [nums[randomIndex], nums[left]] = [nums[left], nums[randomIndex]];
-
-    const pivot = nums[left];
-    let leftIndex = left;
-    let rightIndex = right;
-
-    while (leftIndex < rightIndex)
-    {
-        while (nums[rightIndex] >= pivot
-            && leftIndex < rightIndex)
-        {
-            rightIndex--;
-        }
-
-        while (nums[leftIndex] <= pivot
-            && leftIndex < rightIndex)
-        {
-            leftIndex++;
-        }
-
-        [nums[leftIndex], nums[rightIndex]] = [nums[rightIndex], nums[leftIndex]];
-    }
-
-    [nums[left], nums[rightIndex]] = [nums[rightIndex], nums[left]];
-
-    quickSort(nums, left, rightIndex - 1);
-    quickSort(nums, rightIndex + 1, right);
 }
 
 /**
