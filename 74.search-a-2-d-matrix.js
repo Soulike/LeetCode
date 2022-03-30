@@ -12,64 +12,38 @@
  */
 const searchMatrix = function (matrix, target) 
 {
-    const row = rowBinarySearch(matrix, target);
-    if (row === null)
-    {
-        return false;
-    }
-    return binarySearch(row, target);
+    return matrixBinarySearch(matrix, target);
 };
 
 /**
- * @param {number[][]} matrix 
- * @param {number} target 
- * @returns {number[] | null}
- */
-function rowBinarySearch(matrix, target)
-{
-    let startRowIndex = 0;
-    let endRowIndex = matrix.length - 1;
-    const colCount = matrix[0].length;
-
-    while (startRowIndex <= endRowIndex)
-    {
-        const midRowIndex = startRowIndex + Math.floor((endRowIndex - startRowIndex) / 2);
-        const midRow = matrix[midRowIndex];
-        const min = midRow[0];
-        const max = midRow[colCount - 1];
-        if (min <= target
-            && max >= target)
-        {
-            return midRow;
-        }
-        else if (min > target)
-        {
-            endRowIndex = midRowIndex - 1;
-        }
-        else if (max < target)
-        {
-            startRowIndex = midRowIndex + 1;
-        }
-    }
-
-    return null;
-}
-
-/**
  * 
- * @param {number[]} array 
+ * @param {number[][]} matrix 
  * @param {number} target 
  * @returns {boolean}
  */
-function binarySearch(array, target)
+function matrixBinarySearch(matrix, target)
 {
+    const m = matrix.length;
+    const n = matrix[0].length;
+    /**
+     * @param {number} index 
+     * @returns {number}
+     */
+    function getMatrixValue(index)
+    {
+        const y = index % n;
+        const x = (index - y) / n;
+
+        return matrix[x][y];
+    }
+
     let startIndex = 0;
-    let endIndex = array.length - 1;
+    let endIndex = m * n - 1;
 
     while (startIndex <= endIndex)
     {
         const midIndex = startIndex + Math.floor((endIndex - startIndex) / 2);
-        const midVal = array[midIndex];
+        const midVal = getMatrixValue(midIndex);
 
         if (midVal === target)
         {
