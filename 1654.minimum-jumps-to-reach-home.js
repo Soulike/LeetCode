@@ -15,6 +15,7 @@
 var minimumJumps = function (forbidden, a, b, x)
 {
     const forbiddenSet = new Set(forbidden);
+    const MAX = 2000 + a + b;
 
     const cache = new Map();
     const visited = new Set();
@@ -37,7 +38,7 @@ var minimumJumps = function (forbidden, a, b, x)
             return 0;
         }
 
-        if (start > 6000
+        if (start > MAX
             || start < 0
             || forbiddenSet.has(start)
             || visited.has(cacheKey))
