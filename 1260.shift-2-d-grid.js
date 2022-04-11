@@ -22,19 +22,39 @@ var shiftGrid = function (grid, k)
         return grid;
     }
 
-    const flattenGrid = grid.flat();
-    const resultFlattenGrid = [...flattenGrid.slice(-k), ...flattenGrid.slice(0, -k)];
-
-    for (let i = 0; i < size; i++)
+    const newGrid = new Array(m);
+    for (let i = 0; i < m; i++)
     {
-        const col = i % n;
-        const row = (i - col) / n;
-
-        grid[row][col] = resultFlattenGrid[i];
+        newGrid[i] = new Array(n);
     }
 
-    return grid;
+    for (let i = 0; i < m; i++)
+    {
+        for (let j = 0; j < n; j++)
+        {
+            const [shiftedRowIndex, shiftedColIndex] = getShiftedIndex(i, j, k, size, n);
+            newGrid[shiftedRowIndex][shiftedColIndex] = grid[i][j];
+        }
+    }
+
+    return newGrid;
 };
 
-
+/**
+ * 得到 (i,j) 偏移 k 个位置后的坐标
+ * @param {number} i 
+ * @param {number} j 
+ * @param {number} k 
+ * @param {number} size - 大小
+ * @param {number} n - 列数
+ * @returns {[number, number]}
+ */
+function getShiftedIndex(i, j, k, size, n)
+{
+    const flattenIndex = i * n + j;
+    const shiftedFlattenIndex = (flattenIndex + k) % size;
+    const shiftedColIndex = shiftedFlattenIndex % n;
+    const shiftedRowIndex = (shiftedFlattenIndex - shiftedColIndex) / n;
+    return [shiftedRowIndex, shiftedColIndex];
+}
 // @lc code=end
