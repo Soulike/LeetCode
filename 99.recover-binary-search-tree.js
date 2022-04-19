@@ -18,157 +18,59 @@ function TreeNode(val, left, right)
  */
 const recoverTree = function (root)
 {
-    if (root.left === null && root.right === null)
-    {
-        return;
-    }
-    else if (root.left !== null && root.right === null)
-    {
-        const maxNodeInLeftTree = getMaxNodeInTree(root.left);
-        if (maxNodeInLeftTree.val > root.val)
-        {
-            [root.val, maxNodeInLeftTree.val] = [maxNodeInLeftTree.val, root.val];
-        }
-        else
-        {
-            recoverTree(root.left);
-        }
-    }
-    else if (root.left === null && root.right !== null)
-    {
-        const minNodeInRightTree = getMinNodeInTree(root.right);
-        if (minNodeInRightTree.val < root.val)
-        {
-            [root.val, minNodeInRightTree.val] = [minNodeInRightTree.val, root.val];
-        }
-        else
-        {
-            recoverTree(root.right);
-        }
-    }
-    else
-    {
-        const maxNodeInLeftTree = getMaxNodeInTree(root.left);
-        const minNodeInRightTree = getMinNodeInTree(root.right);
+    /**
+     * 因为 BST 中序遍历是从小到大的顺序，所以在中序遍历过程中查看每两个相邻结点是否符合从小到大，找到两个不符合，交换它们即可。
+     */
+    /** 
+     * 第一个被错误放置的结点
+     * @type {null|TreeNode}
+     */
+    let firstNode = null;
+    /**
+     * 第二个被错误放置的结点
+     * @type {null|TreeNode}
+     */
+    let secondNode = null;
+    /**
+     * 被比较的结点
+     * @type {null|TreeNode}
+     */
+    let prevNode = null;
 
-        if (maxNodeInLeftTree.val > root.val && minNodeInRightTree.val < root.val)
+    function inorderTraverse(root)
+    {
+        if (root === null)
         {
-            [maxNodeInLeftTree.val, minNodeInRightTree.val] = [minNodeInRightTree.val, maxNodeInLeftTree.val]
+            return;
         }
-        else if (maxNodeInLeftTree.val > root.val)
+
+        inorderTraverse(root.left);
+        
+        if (prevNode === null)
         {
-            [root.val, maxNodeInLeftTree.val] = [maxNodeInLeftTree.val, root.val];
-        }
-        else if (minNodeInRightTree.val < root.val)
-        {
-            [root.val, minNodeInRightTree.val] = [minNodeInRightTree.val, root.val];
+            prevNode = root;
         }
         else
         {
-            recoverTree(root.left);
-            recoverTree(root.right);
+            if (prevNode.val >= root.val)
+            {
+                if (firstNode === null)
+                {
+                    firstNode = prevNode;
+                }
+                secondNode = root;
+            }
+            prevNode = root;
         }
+
+        inorderTraverse(root.right);
     }
+
+    inorderTraverse(root);
+
+    [firstNode.val, secondNode.val] = [secondNode.val, firstNode.val];
+
+    return root;
 };
-
-/**
- * @param {TreeNode} root
- * @return {TreeNode}
- */
-function getMaxNodeInTree(root)
-{
-    if (root.left === null && root.right === null)
-    {
-        return root;
-    }
-    else if (root.left !== null && root.right === null)
-    {
-        const maxNodeInLeftTree = getMaxNodeInTree(root.left);
-        return maxNodeInLeftTree.val > root.val ? maxNodeInLeftTree : root;
-    }
-    else if (root.left === null && root.right !== null)
-    {
-        const maxNodeInRightTree = getMaxNodeInTree(root.right);
-        return maxNodeInRightTree.val > root.val ? maxNodeInRightTree : root;
-    }
-    else
-    {
-        const maxNodeInLeftTree = getMaxNodeInTree(root.left);
-        const maxNodeInRightTree = getMaxNodeInTree(root.right);
-
-        if (maxNodeInLeftTree.val > maxNodeInRightTree.val)
-        {
-            if (root.val > maxNodeInLeftTree.val)
-            {
-                return root;
-            }
-            else
-            {
-                return maxNodeInLeftTree;
-            }
-        }
-        else
-        {
-            if (root.val > maxNodeInRightTree.val)
-            {
-                return root;
-            }
-            else
-            {
-                return maxNodeInRightTree;
-            }
-        }
-    }
-}
-
-/**
- * @param {TreeNode} root
- * @return {TreeNode}
- */
-function getMinNodeInTree(root)
-{
-    if (root.left === null && root.right === null)
-    {
-        return root;
-    }
-    else if (root.left !== null && root.right === null)
-    {
-        const minNodeInLeftTree = getMinNodeInTree(root.left);
-        return minNodeInLeftTree.val < root.val ? minNodeInLeftTree : root;
-    }
-    else if (root.left === null && root.right !== null)
-    {
-        const minNodeInRightTree = getMinNodeInTree(root.right);
-        return minNodeInRightTree.val < root.val ? minNodeInRightTree : root;
-    }
-    else
-    {
-        const minNodeInLeftTree = getMinNodeInTree(root.left);
-        const minNodeInRightTree = getMinNodeInTree(root.right);
-
-        if (minNodeInLeftTree.val < minNodeInRightTree.val)
-        {
-            if (root.val < minNodeInLeftTree.val)
-            {
-                return root;
-            }
-            else
-            {
-                return minNodeInLeftTree;
-            }
-        }
-        else
-        {
-            if (root.val < minNodeInRightTree.val)
-            {
-                return root;
-            }
-            else
-            {
-                return minNodeInRightTree;
-            }
-        }
-    }
-}
 // @lc code=end
 
