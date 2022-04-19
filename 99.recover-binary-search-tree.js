@@ -58,6 +58,7 @@ const recoverTree = function (root)
                 {
                     firstNode = prevNode;
                 }
+                // 这里没有 else 是因为，可能 prev 和 root 就正好是错误的两个结点
                 secondNode = root;
             }
             prevNode = root;
