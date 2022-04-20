@@ -6,28 +6,31 @@
 
 // @lc code=start
 /**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
+ * 
+ * @param {number} val 
+ * @param {TreeNode} left 
+ * @param {TreeNode} right 
  */
+function TreeNode(val, left, right)
+{
+    this.val = (val === undefined ? 0 : val);
+    this.left = (left === undefined ? null : left);
+    this.right = (right === undefined ? null : right);
+}
 class BSTIterator
 {
-    #iterator;
-    #value;
-    #done;
-    
+    /**
+     * @type {TreeNode[]}
+     */
+    #stack;
+
     /**
      * @param {TreeNode} root
      */
     constructor(root)
     {
-        this.#iterator = this.#getInorderIterator(root);
-        const {value, done} = this.#iterator.next();
-        this.#value = value;
-        this.#done = done;
+        this.#stack = [];
+        this.#pushLeft(root);
     }
 
     /**
@@ -35,11 +38,9 @@ class BSTIterator
      */
     next()
     {
-        const originalValue = this.#value;
-        const {value, done} = this.#iterator.next();
-        this.#value = value;
-        this.#done = done;
-        return originalValue;
+        const topNode = this.#stack.pop();
+        this.#pushLeft(topNode.right);
+        return topNode.val;
     }
 
     /**
@@ -47,23 +48,20 @@ class BSTIterator
      */
     hasNext()
     {
-        return !this.#done;
+        return this.#stack.length > 0;
     }
 
     /**
-     * 
-     * @param {TreeNode} root 
+     * @param {TreeNode|null} root 
      */
-    *#getInorderIterator(root)
+    #pushLeft(root)
     {
-        if (root === null)
+        let currentNode = root;
+        while (currentNode !== null)
         {
-            return;
+            this.#stack.push(currentNode);
+            currentNode = currentNode.left;
         }
-
-        yield* this.#getInorderIterator(root.left);
-        yield root.val;
-        yield* this.#getInorderIterator(root.right);
     }
 }
 
