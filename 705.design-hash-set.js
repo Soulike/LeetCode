@@ -10,15 +10,12 @@ class LinkedListNode
     /** @type {number} */
     value;
     /** @type {LinkedListNode|null} */
-    prev;
-    /** @type {LinkedListNode|null} */
     next;
 
     /** @param {number} value */
     constructor(value)
     {
         this.value = value;
-        this.prev = null;
         this.next = null;
     }
 }
@@ -27,7 +24,7 @@ class MyHashSet
 {
     /** @type {LinkedListNode[]} */
     #container;
-    static #MOD = 1000;
+    static #MOD = 1009;
 
     constructor()
     {
@@ -52,12 +49,6 @@ class MyHashSet
 
             const newNode = new LinkedListNode(key);
             head.next = newNode;
-            newNode.prev = head;
-
-            if (next !== null)
-            {
-                next.prev = newNode;
-            }
             newNode.next = next;
         }
     }
@@ -68,17 +59,13 @@ class MyHashSet
      */
     remove(key)
     {
-        const removedNode = this.#getKeyNode(key);
-        if (removedNode !== null)
+        const removedNodeInfo = this.#getKeyNode(key);
+        if (removedNodeInfo !== null)
         {
-            const prev = removedNode.prev;
+            const [prevNode, removedNode] = removedNodeInfo;
             const next = removedNode.next;
 
-            prev.next = next;
-            if (next !== null)
-            {
-                next.prev = prev;
-            }
+            prevNode.next = next;
         }
     }
 
@@ -93,22 +80,24 @@ class MyHashSet
 
     /**
      * @param {number} key
-     * @return {LinkedListNode|null}
+     * @return {[LinkedListNode,LinkedListNode]|null} - [prev, wantedNode]
      */
     #getKeyNode(key)
     {
         const head = this.#container[key % MyHashSet.#MOD];
 
+        let prevNode = head;
         /** @type {LinkedListNode|null} */
-        let currentNode = head;
+        let currentNode = head.next;
         while (currentNode !== null)
         {
             if (currentNode.value === key)
             {
-                return currentNode;
+                return [prevNode, currentNode];
             }
             else
             {
+                prevNode = currentNode;
                 currentNode = currentNode.next;
             }
         }
