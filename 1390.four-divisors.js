@@ -24,15 +24,24 @@ var sumFourDivisors = function (nums)
             return divisorSumCache.get(num);
         }
 
+        const sumSqrt = Math.floor(Math.sqrt(num));
         let divisorCount = 0;
-        let divisorSum = num + 1;
-        for (let i = 2; i < num; i++)
+        let divisorSum = 0;
+        for (let i = 1; i <= sumSqrt; i++)
         {
-            if (num % i === 0)
+            const divisor2 = num / i;
+            if (Number.isInteger(divisor2))
             {
                 divisorCount++;
                 divisorSum += i;
-                if (divisorCount > 2)
+
+                if (divisor2 !== i)
+                {
+                    divisorCount++;
+                    divisorSum += divisor2;
+                }
+
+                if (divisorCount > 4)
                 {
                     divisorSumCache.set(num, 0);
                     return 0;
@@ -40,7 +49,7 @@ var sumFourDivisors = function (nums)
             }
         }
 
-        const result = divisorCount === 2 ? divisorSum : 0;
+        const result = divisorCount === 4 ? divisorSum : 0;
         divisorSumCache.set(num, result);
         return result;
     }
@@ -55,4 +64,3 @@ var sumFourDivisors = function (nums)
     return sum;
 };
 // @lc code=end
-
