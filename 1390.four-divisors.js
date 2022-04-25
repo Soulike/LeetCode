@@ -24,32 +24,34 @@ var sumFourDivisors = function (nums)
             return divisorSumCache.get(num);
         }
 
-        const sumSqrt = Math.floor(Math.sqrt(num));
-        let divisorCount = 0;
-        let divisorSum = 0;
-        for (let i = 1; i <= sumSqrt; i++)
+        const sumSqrt = Math.sqrt(num);
+        if (Number.isInteger(sumSqrt))
+        {
+            divisorSumCache.set(num, 0);
+            return 0;
+        }
+
+        let found = false;
+        let divisorSum = num + 1;
+        // 只需要找到一对因子即可
+        for (let i = 2; i < sumSqrt; i++)
         {
             const divisor2 = num / i;
             if (Number.isInteger(divisor2))
             {
-                divisorCount++;
-                divisorSum += i;
-
-                if (divisor2 !== i)
-                {
-                    divisorCount++;
-                    divisorSum += divisor2;
-                }
-
-                if (divisorCount > 4)
+                if (found)
                 {
                     divisorSumCache.set(num, 0);
                     return 0;
                 }
+
+                found = true;
+                divisorSum += i;
+                divisorSum += divisor2;
             }
         }
 
-        const result = divisorCount === 4 ? divisorSum : 0;
+        const result = found ? divisorSum : 0;
         divisorSumCache.set(num, result);
         return result;
     }
@@ -64,3 +66,5 @@ var sumFourDivisors = function (nums)
     return sum;
 };
 // @lc code=end
+
+sumFourDivisors([21, 4, 7]);
