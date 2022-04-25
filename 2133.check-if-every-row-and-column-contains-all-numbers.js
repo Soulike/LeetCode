@@ -14,13 +14,35 @@ var checkValid = function (matrix)
     const n = matrix.length;
 
     /**
+     * 287. Find the Duplicate Number
      * @param {number} i 
      * @returns {boolean}
      */
     function checkRowValid(i)
     {
-        const set = new Set(matrix[i]);
-        return set.size === n;
+        const arr = matrix[i];
+
+        let result = true;
+        for (let i = 0; i < n; i++)
+        {
+            const index = Math.abs(arr[i]) - 1;
+            if (arr[index] < 0)
+            {
+                result = false;
+                break;
+            }
+            else
+            {
+                arr[index] *= -1;
+            }
+        }
+
+        for (let i = 0; i < n; i++)
+        {
+            arr[i] = Math.abs(arr[i]);
+        }
+
+        return result;
     }
 
     /**
@@ -29,12 +51,27 @@ var checkValid = function (matrix)
      */
     function checkColumnValid(j)
     {
-        const set = new Set();
+        let result = true;
         for (let i = 0; i < n; i++)
         {
-            set.add(matrix[i][j]);
+            const index = Math.abs(matrix[i][j]) - 1;
+            if (matrix[index][j] < 0)
+            {
+                result = false;
+                break;
+            }
+            else
+            {
+                matrix[index][j] *= -1;
+            }
         }
-        return set.size === n;
+
+        for (let i = 0; i < n; i++)
+        {
+            matrix[i][j] = Math.abs(matrix[i][j]);
+        }
+
+        return result;
     }
 
     for (let i = 0; i < n; i++)
