@@ -14,7 +14,7 @@ class SegmentTreeNode
     /** @type {SegmentTreeNode|null} */
     rightChild;
 
-    /** @type {number} */
+    /** @param {number} value */
     constructor(value)
     {
         this.value = value;
@@ -25,36 +25,41 @@ class SegmentTreeNode
 
 class SegmentTree
 {
-    /** @type {number[]} */
-    values;
     /** @type {SegmentTreeNode} */
-    root;
+    #root;
+    /** @type {number} */
+    #size;
 
     /**
      * @param {number[]} values
      */
     constructor(values)
     {
-        this.values = values;
-        this.root = this.#build(0, values.length - 1);
+        this.#root = this.#build(values, 0, values.length - 1);
+        this.#size = values.length;
     }
 
     /**
+     * 构造 values 在 [leftIndex, rightIndex] 区间内的线段树，并返回根节点
+     * @param {number[]} values;
      * @param {number} leftIndex 
      * @param {number} rightIndex 
      * @returns {SegmentTreeNode}
      */
-    #build(leftIndex, rightIndex)
+    #build(values, leftIndex, rightIndex)
     {
         if (leftIndex === rightIndex)
         {
-            return new SegmentTreeNode(this.values[leftIndex]);
+            return new SegmentTreeNode(values[leftIndex]);
         }
 
-        const mid = leftIndex + Math.floor((rightIndex - leftIndex) / 2);
+        const midIndex = leftIndex + Math.floor((rightIndex - leftIndex) / 2);
 
-        const leftChild = this.#build(leftIndex, mid);
-        const rightChild = this.#build(mid + 1, rightIndex);
+        // 左子树包含 [leftIndex, midIndex]，右子树包含 [midIndex+1, rightIndex]
+        const leftChild = this.#build(values, leftIndex, midIndex);
+        const rightChild = this.#build(values, midIndex + 1, rightIndex);
+
+        // 根据子树的值做合并，可以根据需要替换
         const value = leftChild.value + rightChild.value;
 
         const root = new SegmentTreeNode(value);
@@ -63,6 +68,8 @@ class SegmentTree
         return root;
     }
 
+
+
     /**
      * @param {number} leftIndex 
      * @param {number} rightIndex 
@@ -70,20 +77,26 @@ class SegmentTree
      */
     query(leftIndex, rightIndex)
     {
-        return this.#queryHelper(leftIndex, rightIndex, this.root, 0, this.values.length - 1);
+        return this.#queryHelper(leftIndex, rightIndex, this.#root, 0, this.#size - 1);
     }
 
     /**
-     * @param {number} leftIndex 
-     * @param {number} rightIndex 
-     * @param {SegmentTreeNode} currentNode
-     * @param {number} currentNodeLeftIndex 
-     * @param {number} currentNodeRightIndex 
+     * @param {number} leftIndex - 要查找的区间左边界
+     * @param {number} rightIndex - 要查找的区间右边界
+     * @param {SegmentTreeNode} currentNode - 要查找的区间所在结点
+     * @param {number} currentNodeLeftIndex - 区间所在结点包含区间的左边界
+     * @param {number} currentNodeRightIndex - 区间所在结点包含区间的右边界
      * @returns {number}
      */
     #queryHelper(leftIndex, rightIndex,
         currentNode, currentNodeLeftIndex, currentNodeRightIndex)
     {
+        if (currentNodeLeftIndex > leftIndex
+            || currentNodeRightIndex < rightIndex)
+        {
+            throw new RangeError();
+        }
+
         if (leftIndex === currentNodeLeftIndex
             && rightIndex === currentNodeRightIndex)
         {
@@ -120,39 +133,43 @@ class SegmentTree
      */
     set(index, value)
     {
-        this.#setHelper(index, value, this.root, 0, this.values.length - 1);
+        this.#setHelper(index, value, this.#root, 0, this.#size - 1);
     }
 
     /**
      * 
      * @param {number} index 
      * @param {number} value 
-     * @param {SegmentTreeNode} currentNode
-     * @param {number} currentNodeLeftIndex 
-     * @param {number} currentNodeRightIndex 
+     * @param {SegmentTreeNode} currentNode - `index` 所在区间所在结点
+     * @param {number} currentNodeLeftIndex - `index` 所在区间所在结点的左边界
+     * @param {number} currentNodeRightIndex - `index` 所在区间所在结点的右边界
+     * @returns {number} - 设置之前的原始值
      */
     #setHelper(index, value,
         currentNode, currentNodeLeftIndex, currentNodeRightIndex)
     {
-        const originalValue = this.values[index];
+        let originalValue;
         if (currentNodeLeftIndex === currentNodeRightIndex)
         {
+            originalValue = currentNode.value;
             currentNode.value = value;
-            this.values[index] = value;
         }
         else
         {
             const currentNodeMidIndex = currentNodeLeftIndex + Math.floor((currentNodeRightIndex - currentNodeLeftIndex) / 2);
-            if (index <= currentNodeMidIndex)
+
+            if (index <= currentNodeMidIndex)   // 在左子结点
             {
-                this.#setHelper(index, value, currentNode.leftChild, currentNodeLeftIndex, currentNodeMidIndex);
+                originalValue = this.#setHelper(index, value, currentNode.leftChild, currentNodeLeftIndex, currentNodeMidIndex);
             }
-            else
+            else    // 在右子结点
             {
-                this.#setHelper(index, value, currentNode.rightChild, currentNodeMidIndex + 1, currentNodeRightIndex);
+                originalValue = this.#setHelper(index, value, currentNode.rightChild, currentNodeMidIndex + 1, currentNodeRightIndex);
             }
+            // 计算当前结点的新值，根据需要替换
             currentNode.value = currentNode.value - originalValue + value;
         }
+        return originalValue;
     }
 }
 
