@@ -40,6 +40,26 @@ class SegmentTree
     }
 
     /**
+     * @param {number} leftIndex 
+     * @param {number} rightIndex 
+     * @returns {number}
+     */
+    query(leftIndex, rightIndex)
+    {
+        return this.#queryHelper(leftIndex, rightIndex, this.#root, 0, this.#size - 1);
+    }
+
+    /**
+     * 
+     * @param {number} index 
+     * @param {number} value 
+     */
+    set(index, value)
+    {
+        this.#setHelper(index, value, this.#root, 0, this.#size - 1);
+    }
+
+    /**
      * 构造 values 在 [leftIndex, rightIndex] 区间内的线段树，并返回根节点
      * @param {number[]} values;
      * @param {number} leftIndex 
@@ -59,8 +79,7 @@ class SegmentTree
         const leftChild = this.#build(values, leftIndex, midIndex);
         const rightChild = this.#build(values, midIndex + 1, rightIndex);
 
-        // 根据子树的值做合并，可以根据需要替换
-        const value = leftChild.value + rightChild.value;
+        const value = this.#merge(leftChild.value, rightChild.value);
 
         const root = new SegmentTreeNode(value);
         root.leftChild = leftChild;
@@ -68,16 +87,15 @@ class SegmentTree
         return root;
     }
 
-
-
     /**
-     * @param {number} leftIndex 
-     * @param {number} rightIndex 
+     * 决定父结点的值如何由子结点得到
+     * @param {number} leftChildValue 
+     * @param {number} rightChildValue 
      * @returns {number}
      */
-    query(leftIndex, rightIndex)
+    #merge(leftChildValue, rightChildValue)
     {
-        return this.#queryHelper(leftIndex, rightIndex, this.#root, 0, this.#size - 1);
+        return leftChildValue + rightChildValue;
     }
 
     /**
@@ -130,16 +148,6 @@ class SegmentTree
      * 
      * @param {number} index 
      * @param {number} value 
-     */
-    set(index, value)
-    {
-        this.#setHelper(index, value, this.#root, 0, this.#size - 1);
-    }
-
-    /**
-     * 
-     * @param {number} index 
-     * @param {number} value 
      * @param {SegmentTreeNode} currentNode - `index` 所在区间所在结点
      * @param {number} currentNodeLeftIndex - `index` 所在区间所在结点的左边界
      * @param {number} currentNodeRightIndex - `index` 所在区间所在结点的右边界
@@ -167,7 +175,7 @@ class SegmentTree
                 originalValue = this.#setHelper(index, value, currentNode.rightChild, currentNodeMidIndex + 1, currentNodeRightIndex);
             }
             // 计算当前结点的新值，根据需要替换
-            currentNode.value = currentNode.value - originalValue + value;
+            currentNode.value = this.#merge(currentNode.leftChild.value, currentNode.rightChild.value);
         }
         return originalValue;
     }
