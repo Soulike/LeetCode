@@ -36,7 +36,8 @@ var preorder = function (root)
         const topNode = nodeStack.pop();
         result.push(topNode.val);
 
-        for (let i = topNode.children.length - 1; i >= 0; i--)
+        const {children} = topNode;
+        for (let i = children.length - 1; i >= 0; i--)
         {
             const child = topNode.children[i];
             nodeStack.push(child);
