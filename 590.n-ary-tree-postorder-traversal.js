@@ -3,15 +3,20 @@
  *
  * [590] N-ary Tree Postorder Traversal
  */
+class Node
+{
+    /**
+     * @param {number} val 
+     * @param {Node[]} children 
+     */
+    constructor(val, children)
+    {
+        this.val = val;
+        this.children = children;
+    }
+}
 
 // @lc code=start
-/**
- * // Definition for a Node.
- * function Node(val,children) {
- *    this.val = val;
- *    this.children = children;
- * };
- */
 
 /**
  * @param {Node|null} root
@@ -19,25 +24,28 @@
  */
 var postorder = function (root)
 {
-    const result = [];
-
-    /** @param {Node|null} root*/
-    function helper(root)
+    if (root === null)
     {
-        if (root === null)
-        {
-            return;
-        }
-
-        for (const child of root.children)
-        {
-            helper(child);
-        }
-
-        result.push(root.val);
+        return [];
     }
 
-    helper(root);
+    /** @type {Node[]} */
+    const nodeStack = [];
+    nodeStack.push(root);
+
+    /** @type {number[]} */
+    const result = [];
+
+    while (nodeStack.length > 0)
+    {
+        const topNode = nodeStack.pop();
+        result.unshift(topNode.val);
+
+        for (const child of topNode.children)
+        {
+            nodeStack.push(child);
+        }
+    }
 
     return result;
 };
