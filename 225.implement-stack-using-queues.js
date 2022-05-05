@@ -11,9 +11,13 @@ class MyStack
     /** @type {number[]} */
     queue;
 
+    /** @type {number[]} */
+    tempQueue;
+
     constructor()
     {
         this.queue = [];
+        this.tempQueue = [];
     }
 
     /**
@@ -30,14 +34,14 @@ class MyStack
      */
     pop()
     {
-        const n = this.queue.length;
-
-        for (let i = 0; i < n - 1; i++)
+        while (this.queue.length > 1)
         {
-            this.queue.push(this.queue.shift());
+            this.tempQueue.push(this.queue.shift());
         }
 
-        return this.queue.shift();
+        const top = this.queue.shift();
+        [this.queue, this.tempQueue] = [this.tempQueue, this.queue];
+        return top;
     }
 
     /**
@@ -45,17 +49,8 @@ class MyStack
      */
     top()
     {
-        const n = this.queue.length;
-
-        for (let i = 0; i < n - 1; i++)
-        {
-            this.queue.push(this.queue.shift());
-        }
-
-        const top = this.queue[0];
-
-        this.queue.push(this.queue.shift());
-
+        const top = this.pop();
+        this.queue.push(top);
         return top;
     }
 
