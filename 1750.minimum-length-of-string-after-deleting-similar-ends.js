@@ -21,20 +21,20 @@ var minimumLength = function (s)
     let leftLetter = s[left];
 
     while (true)
-    {
-        if (left === right)
-        {
-            return 1;
-        }
-        
+    {   
         if (s[left] !== s[right])
         {
             return right - left + 1;
+        }
+        if (left === right)
+        {
+            return 1;
         }
 
         while (s[left] === leftLetter)
         {
             left++;
+            // s[left:right+1] 区间全都是相同的字母，全部被消除 
             if (left === right + 1)
             {
                 return 0;
@@ -44,10 +44,6 @@ var minimumLength = function (s)
         while (s[right] === leftLetter)
         {
             right--;
-            if (left === right + 1)
-            {
-                return 0;
-            }
         }
 
         leftLetter = s[left];
