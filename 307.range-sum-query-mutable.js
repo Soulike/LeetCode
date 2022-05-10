@@ -5,179 +5,168 @@
  */
 
 // @lc code=start
-class SegmentTreeNode
-{
-    /** @type {number} */
-    value;
-    /** @type {SegmentTreeNode|null} */
-    leftChild;
-    /** @type {SegmentTreeNode|null} */
-    rightChild;
-
-    /** @param {number} value */
-    constructor(value)
-    {
-        this.value = value;
-        this.leftChild = null;
-        this.rightChild = null;
-    }
-}
 
 class SegmentTree
 {
-    /** @type {SegmentTreeNode} */
-    #root;
-    /** @type {number} */
-    #size;
+    #container;
+    #numsLength;
 
     /**
-     * @param {number[]} values
+     * @param {number[]} nums 
      */
-    constructor(values)
+    constructor(nums)
     {
-        this.#root = this.#build(values, 0, values.length - 1);
-        this.#size = values.length;
+        const k = nums.length;
+        const size = 2 ** (Math.ceil(Math.log2(k)) + 1) - 1;
+        this.#container = new Array(size);
+        this.#numsLength = k;
+
+        this.#build(nums, 0, nums.length - 1, 0);
     }
 
     /**
-     * @param {number} leftIndex 
-     * @param {number} rightIndex 
-     * @returns {number}
+     * `#container[rootIndex]` 当中的数字代表原数组 `[rootStartIndex, rootEndIndex]` 区间 merge 后的结果
+     * @param {number[]} nums
+     * @param {number} rootStartIndex 
+     * @param {number} rootEndIndex 
+     * @param {number} rootIndex 
      */
-    query(leftIndex, rightIndex)
+    #build(nums, rootStartIndex, rootEndIndex, rootIndex)
     {
-        return this.#queryHelper(leftIndex, rightIndex, this.#root, 0, this.#size - 1);
-    }
-
-    /**
-     * 
-     * @param {number} index 
-     * @param {number} value 
-     */
-    set(index, value)
-    {
-        this.#setHelper(index, value, this.#root, 0, this.#size - 1);
-    }
-
-    /**
-     * 构造 values 在 [leftIndex, rightIndex] 区间内的线段树，并返回根节点
-     * @param {number[]} values;
-     * @param {number} leftIndex 
-     * @param {number} rightIndex 
-     * @returns {SegmentTreeNode}
-     */
-    #build(values, leftIndex, rightIndex)
-    {
-        if (leftIndex === rightIndex)
+        if (rootStartIndex === rootEndIndex)
         {
-            return new SegmentTreeNode(values[leftIndex]);
-        }
-
-        const midIndex = leftIndex + Math.floor((rightIndex - leftIndex) / 2);
-
-        // 左子树包含 [leftIndex, midIndex]，右子树包含 [midIndex+1, rightIndex]
-        const leftChild = this.#build(values, leftIndex, midIndex);
-        const rightChild = this.#build(values, midIndex + 1, rightIndex);
-
-        const value = this.#merge(leftChild.value, rightChild.value);
-
-        const root = new SegmentTreeNode(value);
-        root.leftChild = leftChild;
-        root.rightChild = rightChild;
-        return root;
-    }
-
-    /**
-     * 决定父结点的值如何由子结点得到
-     * @param {number} leftChildValue 
-     * @param {number} rightChildValue 
-     * @returns {number}
-     */
-    #merge(leftChildValue, rightChildValue)
-    {
-        return leftChildValue + rightChildValue;
-    }
-
-    /**
-     * @param {number} leftIndex - 要查找的区间左边界
-     * @param {number} rightIndex - 要查找的区间右边界
-     * @param {SegmentTreeNode} currentNode - 要查找的区间所在结点
-     * @param {number} currentNodeLeftIndex - 区间所在结点包含区间的左边界
-     * @param {number} currentNodeRightIndex - 区间所在结点包含区间的右边界
-     * @returns {number}
-     */
-    #queryHelper(leftIndex, rightIndex,
-        currentNode, currentNodeLeftIndex, currentNodeRightIndex)
-    {
-        if (currentNodeLeftIndex > leftIndex
-            || currentNodeRightIndex < rightIndex)
-        {
-            throw new RangeError();
-        }
-
-        if (leftIndex === currentNodeLeftIndex
-            && rightIndex === currentNodeRightIndex)
-        {
-            return currentNode.value;
-        }
-
-        const currentNodeMidIndex = currentNodeLeftIndex + Math.floor((currentNodeRightIndex - currentNodeLeftIndex) / 2);
-
-        // 在左半边
-        if (rightIndex <= currentNodeMidIndex)
-        {
-            return this.#queryHelper(leftIndex, rightIndex, currentNode.leftChild, currentNodeLeftIndex, currentNodeMidIndex);
-        }
-
-        // 在右半边
-        if (leftIndex > currentNodeMidIndex)
-        {
-            return this.#queryHelper(leftIndex, rightIndex, currentNode.rightChild, currentNodeMidIndex + 1, currentNodeRightIndex);
-        }
-
-        // 横跨两半边
-        if (leftIndex <= currentNodeMidIndex
-            && rightIndex > currentNodeMidIndex)
-        {
-            return this.#queryHelper(leftIndex, currentNodeMidIndex, currentNode.leftChild, currentNodeLeftIndex, currentNodeMidIndex)
-                + this.#queryHelper(currentNodeMidIndex + 1, rightIndex, currentNode.rightChild, currentNodeMidIndex + 1, currentNodeRightIndex);
-        }
-    }
-
-    /**
-     * 
-     * @param {number} index 
-     * @param {number} value 
-     * @param {SegmentTreeNode} currentNode - `index` 所在区间所在结点
-     * @param {number} currentNodeLeftIndex - `index` 所在区间所在结点的左边界
-     * @param {number} currentNodeRightIndex - `index` 所在区间所在结点的右边界
-     * @returns {number} - 设置之前的原始值
-     */
-    #setHelper(index, value,
-        currentNode, currentNodeLeftIndex, currentNodeRightIndex)
-    {
-        let originalValue;
-        if (currentNodeLeftIndex === currentNodeRightIndex)
-        {
-            originalValue = currentNode.value;
-            currentNode.value = value;
+            this.#container[rootIndex] = nums[rootStartIndex];
         }
         else
         {
-            const currentNodeMidIndex = currentNodeLeftIndex + Math.floor((currentNodeRightIndex - currentNodeLeftIndex) / 2);
+            const leftChildIndex = 2 * rootIndex + 1;
+            const rightChildIndex = 2 * rootIndex + 2;
 
-            if (index <= currentNodeMidIndex)   // 在左子结点
-            {
-                originalValue = this.#setHelper(index, value, currentNode.leftChild, currentNodeLeftIndex, currentNodeMidIndex);
-            }
-            else    // 在右子结点
-            {
-                originalValue = this.#setHelper(index, value, currentNode.rightChild, currentNodeMidIndex + 1, currentNodeRightIndex);
-            }
-            // 计算当前结点的新值，根据需要替换
-            currentNode.value = this.#merge(currentNode.leftChild.value, currentNode.rightChild.value);
+            const midIndex = rootStartIndex + Math.floor((rootEndIndex - rootStartIndex) / 2);
+
+            // 递归构造左右结点
+            this.#build(nums, rootStartIndex, midIndex, leftChildIndex);
+            this.#build(nums, midIndex + 1, rootEndIndex, rightChildIndex);
+
+            // 构造当前结点
+            this.#container[rootIndex] = this.#merge(
+                this.#container[leftChildIndex],
+                this.#container[rightChildIndex]
+            );
         }
-        return originalValue;
+    }
+
+    /**
+     * 
+     * @param {number} index 
+     * @param {number} val 
+     */
+    set(index, val)
+    {
+        this.#setHelper(index, val, 0, this.#numsLength - 1, 0);
+    }
+
+    /**
+     * @param {number} index - 要修改的 nums 上的下标
+     * @param {number} val
+     * @param {number} rootStartIndex - root 结点代表的 nums 上的区间起点
+     * @param {number} rootEndIndex - root 结点代表的 nums 上的区间终点
+     * @param {number} rootIndex - root 结点在 container 上的下标
+     */
+    #setHelper(index, val, rootStartIndex, rootEndIndex, rootIndex)
+    {
+        if (rootStartIndex === rootEndIndex)
+        {
+            this.#container[rootIndex] = val;
+        }
+        else
+        {
+            const leftChildIndex = 2 * rootIndex + 1;
+            const rightChildIndex = 2 * rootIndex + 2;
+
+            const midIndex = rootStartIndex + Math.floor((rootEndIndex - rootStartIndex) / 2);
+
+            // 被修改的下标在左半边
+            if (index <= midIndex)
+            {
+                this.#setHelper(index, val, rootStartIndex, midIndex, leftChildIndex);
+            }
+            // 被修改的下标在右半边
+            else
+            {
+                this.#setHelper(index, val, midIndex + 1, rootEndIndex, rightChildIndex);
+            }
+
+            // 更新当前结点值
+            this.#container[rootIndex] = this.#merge(
+                this.#container[leftChildIndex],
+                this.#container[rightChildIndex]
+            );
+        }
+    }
+
+    /**
+     * @param {number} startIndex - 要查询的在 nums 上的区间起点
+     * @param {number} endIndex - 要查询的在 nums 上的区间终点
+     */
+    query(startIndex, endIndex)
+    {
+        return this.#queryHelper(0, this.#numsLength - 1, 0, startIndex, endIndex);
+    }
+
+    /**
+     * @param {number} rootStartIndex - root 结点代表的 nums 上的区间起点
+     * @param {number} rootEndIndex - root 结点代表的 nums 上的区间终点
+     * @param {number} rootContainerIndex - root 结点在 container 上的下标
+     * @param {number} queryStartIndex - 要查询的在 nums 上的区间起点
+     * @param {number} queryEndIndex - 要查询的在 nums 上的区间终点
+     * @returns {number}
+     */
+    #queryHelper(rootStartIndex, rootEndIndex, rootContainerIndex,
+        queryStartIndex, queryEndIndex)
+    {
+        // 区间对应，当前 root 就是要找的结点
+        if (rootStartIndex === queryStartIndex
+        && rootEndIndex === queryEndIndex)
+        {
+            return this.#container[rootContainerIndex];
+        }
+        else
+        {
+            const leftChildIndex = 2 * rootContainerIndex + 1;
+            const rightChildIndex = 2 * rootContainerIndex + 2;
+
+            const midIndex = rootStartIndex + Math.floor((rootEndIndex - rootStartIndex) / 2);
+
+            // 在左半个区间
+            if (queryEndIndex <= midIndex)
+            {
+                return this.#queryHelper(rootStartIndex, midIndex, leftChildIndex, queryStartIndex, queryEndIndex);
+            }
+            // 在右半个区间
+            else if (queryStartIndex > midIndex)
+            {
+                return this.#queryHelper(midIndex + 1, rootEndIndex, rightChildIndex, queryStartIndex, queryEndIndex);
+            }
+            // 横跨两个区间
+            else
+            {
+                return this.#merge(
+                    this.#queryHelper(rootStartIndex, midIndex, leftChildIndex, queryStartIndex, midIndex),
+                    this.#queryHelper(midIndex + 1, rootEndIndex, rightChildIndex, midIndex + 1, queryEndIndex),
+                );
+            }
+        }
+    }
+
+    /**
+     * @param {number} a 
+     * @param {number} b 
+     * @returns {number}
+     */
+    #merge(a, b)
+    {
+        return a + b;
     }
 }
 
@@ -225,10 +214,8 @@ class NumArray
  */
 // @lc code=end
 
-const numArray = new NumArray([9, -8]);
+const numArray = new NumArray([1,3,5]);
 
-numArray.update(0, 3);
-console.log(numArray.sumRange(1, 1));
-console.log(numArray.sumRange(0, 1));
-numArray.update(1, -3);
-console.log(numArray.sumRange(0, 1));
+console.log(numArray.sumRange(0, 2));
+numArray.update(1, 2);
+console.log(numArray.sumRange(0, 2));
