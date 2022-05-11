@@ -13,38 +13,42 @@ var countVowelStrings = function (n)
 {
     /**
      * a e i o u 对应 0 1 2 3 4
-     * dp[i][j] 以 i 开头，还剩下 j 个位置，有多少个合法字符串
+     * dp[i][j] 还剩下 i 个位置，以 j 开头，有多少个合法字符串
      * 
      * base case
-     * dp[i][1] = 1
+     * dp[1][j] = 1
      * 
-     * dp[i][j] = sum(k from i to 4 dp[k][j-1])
+     * dp[i][j] = sum(k from j to 4 dp[i-1][k])
+     * 
+     * 空间压缩
+     * 
+     * prevDp dp
+     * 
+     * base case dp[j] = 1
+     * 
+     * dp[j] = sum(k from j to 4 prevDp[k])
      */
-    const dp = new Array(5);
-    for (let i = 0; i <= 4; i++)
-    {
-        dp[i] = new Array(n + 1);
-        dp[i][1] = 1;
-    }
 
-    for (let i = 4; i >= 0; i--)
+    let prevDp = new Array(5);
+    prevDp.fill(1);
+    let dp = new Array(5);
+    dp.fill(0);
+
+    for (let i = 2; i <= n; i++)
     {
-        for (let j = 2; j <= n; j++)
+        for (let j = 0; j <= 4; j++)
         {
-            dp[i][j] = 0;
-            for (let k = i; k <= 4; k++)
+            for (let k = j; k <= 4; k++)
             {
-                dp[i][j] += dp[k][j - 1];
+                dp[j] += prevDp[k];
             }
         }
+
+        [prevDp, dp] = [dp, prevDp];
+        dp.fill(0);
     }
 
-    let result = 0;
-    for (let i = 0; i <= 4; i++)
-    {
-        result += dp[i][n];
-    }
-
-    return result;
+    return prevDp.reduce((prev, curr) => prev + curr);
+    
 };
 // @lc code=end
