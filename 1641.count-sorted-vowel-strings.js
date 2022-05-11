@@ -12,39 +12,39 @@
 var countVowelStrings = function (n)
 {
     /**
-     * a e i o u 对应 1 2 3 4 5
+     * a e i o u 对应 0 1 2 3 4
+     * dp[i][j] 以 i 开头，还剩下 j 个位置，有多少个合法字符串
+     * 
+     * base case
+     * dp[i][1] = 1
+     * 
+     * dp[i][j] = sum(k from i to 4 dp[k][j-1])
      */
-    const cache = new Map();
-    return helper(1, n, cache);
+    const dp = new Array(5);
+    for (let i = 0; i <= 4; i++)
+    {
+        dp[i] = new Array(n + 1);
+        dp[i][1] = 1;
+    }
+
+    for (let i = 4; i >= 0; i--)
+    {
+        for (let j = 2; j <= n; j++)
+        {
+            dp[i][j] = 0;
+            for (let k = i; k <= 4; k++)
+            {
+                dp[i][j] += dp[k][j - 1];
+            }
+        }
+    }
+
+    let result = 0;
+    for (let i = 0; i <= 4; i++)
+    {
+        result += dp[i][n];
+    }
+
+    return result;
 };
-
-/**
- * 以 startsWith 开头，还剩下 n 个位置，有多少种合法的字符串
- * @param {1|2|3|4|5} startsWith 
- * @param {number} n 
- * @param {Map<string, number>} cache
- * @returns {number}
- */
-function helper(startsWith, n, cache)
-{
-    if (n === 0)
-    {
-        return 1;
-    }
-
-    const cacheKey = `${startsWith}-${n}`;
-    if (cache.has(cacheKey))
-    {
-        return cache.get(cacheKey);
-    }
-    
-    let count = 0;
-    for (let i = startsWith; i <= 5; i++)
-    {
-        count += helper(i, n - 1, cache);
-    }
-
-    cache.set(cacheKey, count);
-    return count;
-}
 // @lc code=end
