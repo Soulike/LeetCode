@@ -12,43 +12,36 @@
 var countVowelStrings = function (n)
 {
     /**
-     * a e i o u 对应 0 1 2 3 4
-     * dp[i][j] 还剩下 i 个位置，以 j 开头，有多少个合法字符串
+     * 隔板法，我们有 n-1 个位置可以放隔板
+     * 插 0 个搁板，只有一个字母，数量 C(5,1)
+     * 插 1 个搁板，数量 C(n-1,1)*C(5,2)
+     * ...
+     * 插 i 个搁板，数量 C(n-1,i)*C(5,i+1)
      * 
-     * base case
-     * dp[1][j] = 1
-     * 
-     * dp[i][j] = sum(k from j to 4 dp[i-1][k])
-     * 
-     * 空间压缩
-     * 
-     * prevDp dp
-     * 
-     * base case dp[j] = 1
-     * 
-     * dp[j] = sum(k from j to 4 prevDp[k])
+     * C(n-1,0)*C(5,1) 
+     * + C(n-1,1)*C(5,2) 
+     * + C(n-1,2)*C(5,3) 
+     * + C(n-1,3)*C(5,4) 
+     * + C(n-1,4)*C(5,5)
      */
 
-    let prevDp = new Array(5);
-    prevDp.fill(1);
-    let dp = new Array(5);
-    dp.fill(0);
-
-    for (let i = 2; i <= n; i++)
+    let result = 0;
+    for (let i = 0; i <= 4 && i <= n - 1; i++)
     {
-        for (let j = 0; j <= 4; j++)
-        {
-            for (let k = j; k <= 4; k++)
-            {
-                dp[j] += prevDp[k];
-            }
-        }
-
-        [prevDp, dp] = [dp, prevDp];
-        dp.fill(0);
+        result += combination(n - 1, i) * combination(5, i + 1);
     }
-
-    return prevDp.reduce((prev, curr) => prev + curr);
-    
+    return result;
 };
+
+function combination(m, n)
+{
+    let result = 1;
+    for (let i = 1; i <= m - n; i++)
+    {
+        // 先做除法再做乘法，避免溢出
+        result /= i;
+        result *= i + n;
+    }
+    return result;
+}
 // @lc code=end
