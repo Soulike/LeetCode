@@ -12,52 +12,28 @@
  */
 var myPow = function (x, n)
 {
-    let sign = 1;
-    if (x === 0)
+    if (x === 0 || x === 1 || n === 1)
     {
-        return 0;
+        return x;
     }
-    else if (x < 0)
-    {
-        if (n % 2 === 1)
-        {
-            sign = -1;
-        }
-        x = -x;
-    }
-
-    if (n > 0)
-    {
-        return sign * positivePow(x, n);
-    }
-    else if (n < 0)
-    {
-        return sign * positivePow(1 / x, -n);
-    }
-    else
-    {
-        return sign * 1;
-    }
-};
-
-/**
- * 
- * @param {number} x - 大于 0
- * @param {number} n - 大于 0
- */
-function positivePow(x, n)
-{
-    if (x === 1)
+    if (n === 0)
     {
         return 1;
     }
 
-    let result = 1;
-    while (n > 0 && result !== 0)
+    if (n < 0)
     {
-        result *= x;
-        n--;
+        return 1 / myPow(x, -n);
     }
-    return result;
-}
+
+    if (n % 2 === 1)
+    {
+        return x * myPow(x, n - 1);
+    }
+
+    if (n % 2 === 0)
+    {
+        return myPow(x * x, n / 2);
+    }
+};
 // @lc code=end
