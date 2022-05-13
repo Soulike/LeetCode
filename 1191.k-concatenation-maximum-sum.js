@@ -6,6 +6,7 @@
 
 // @lc code=start
 /**
+ * https://leetcode.com/problems/k-concatenation-maximum-sum/discuss/382885/Short-and-concise-O(N)-C%2B%2B-solution
  * @param {number[]} arr
  * @param {number} k
  * @return {number}
