@@ -63,62 +63,27 @@ function pushNextSteps(queue, visited, grid)
     const head = queue.shift();
     const [x, y, step] = head;
 
-    if (x - 1 >= 0 && y - 1 >= 0
-        && grid[x - 1][y - 1] === 0
-        && !visited.has(`${x - 1}-${y - 1}`))
+    const nextSteps = [
+        [x - 1, y - 1,],
+        [x - 1, y,],
+        [x - 1, y + 1,],
+        [x, y + 1,],
+        [x + 1, y + 1,],
+        [x + 1, y,],
+        [x + 1, y - 1,],
+        [x, y - 1,],
+    ];
+
+    for (const [nextX, nextY] of nextSteps)
     {
-        queue.push([x - 1, y - 1, step + 1]);
-        visited.set(`${x - 1}-${y - 1}`, step + 1);
-    }
-    if (x - 1 >= 0
-        && grid[x - 1][y] === 0
-        && !visited.has(`${x - 1}-${y}`))
-    {
-        queue.push([x - 1, y, step + 1]);
-        visited.set(`${x - 1}-${y}`, step + 1);
-    }
-    if (x - 1 >= 0 && y + 1 <= N - 1
-        && grid[x - 1][y + 1] === 0
-        && !visited.has(`${x - 1}-${y + 1}`))
-    {
-        queue.push([x - 1, y + 1, step + 1]);
-        visited.set(`${x - 1}-${y + 1}`, step + 1);
-    }
-    if (y + 1 <= N - 1
-        && grid[x][y + 1] === 0
-        && !visited.has(`${x}-${y + 1}`))
-    {
-        queue.push([x, y + 1, step + 1]);
-        visited.set(`${x}-${y + 1}`, step + 1);
-    }
-    if (x + 1 <= N - 1 && y + 1 <= N - 1
-        && grid[x + 1][y + 1] === 0
-        && !visited.has(`${x + 1}-${y + 1}`))
-    {
-        queue.push([x + 1, y + 1, step + 1]);
-        visited.set(`${x + 1}-${y + 1}`, step + 1);
-    }
-    if (x + 1 <= N - 1
-        && grid[x + 1][y] === 0
-        && !visited.has(`${x + 1}-${y}`))
-    {
-        queue.push([x + 1, y, step + 1]);
-        visited.set(`${x + 1}-${y}`, step + 1);
-    }
-    if (x + 1 <= N - 1 && y - 1 >= 0
-        && grid[x + 1][y - 1] === 0
-        && !visited.has(`${x + 1}-${y - 1}`)
-    )
-    {
-        queue.push([x + 1, y - 1, step + 1]);
-        visited.set(`${x + 1}-${y - 1}`, step+1);
-    }
-    if (y - 1 >= 0
-        && grid[x][y - 1] === 0
-        && !visited.has(`${x}-${y - 1}`))
-    {
-        queue.push([x, y - 1, step + 1]);
-        visited.set(`${x}-${y - 1}`, step+1);
+        if (nextX >= 0 && nextX <= N - 1
+            && nextY >= 0 && nextY <= N - 1
+            && grid[nextX][nextY] === 0
+            && !visited.has(`${nextX}-${nextY}`))
+        {
+            queue.push([nextX, nextY, step + 1]);
+            visited.set(`${nextX}-${nextY}`, step + 1);
+        }
     }
 
     return head;
