@@ -45,6 +45,7 @@ var findMaxForm = function (strs, m, n)
 
     for (const [zeroCount, oneCount] of strCounts)
     {
+        // 这里必须是从 m 和 n 开始遍历而不能反过来，因为本次计算依赖上一个字符串的计算结果
         for (let i = m; i >= zeroCount; i--)
         {
             for (let j = n; j >= oneCount; j--)
