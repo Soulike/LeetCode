@@ -27,37 +27,68 @@ var findMaxForm = function (strs, m, n)
     }
 
     /**
-     * dp[i][j] 有 i 个 0 和 j 个 1 时能组成的最长子数组
+     * 0-1背包问题
+     * 
+     * dp[i][j][k] - 只取前 i 个物品，有 j 个 0 和 k 个 1，最多能装下多少个
      * 
      * base case
-     * dp[0][0] = 0;
+     * dp[0][j][k] = 0
+     * dp[i][0][0] = 0
      * 
-     * dp[i][j] = Math.max(dp[i][j], dp[i-zeroCount][j-oneCount]+1)
+     * zeroCount = strCounts[i][0]
+     * oneCount = strCounts[i][1]
+     * 如果装得下
+     * dp[i][j][k] = Math.max(dp[i-1][j][k],
+     * dp[i-1][j-zeroCount][k-oneCount]+1)
      * 
-     * @type {number[][]}
+     * 如果装不下
+     * dp[i][j][k] = dp[i-1][j][k]
+     * 
+     * returns
+     * 
+     * dp[str.length][m][n]
      */
-    const dp = new Array(m + 1);
+
+    /**
+     * @type {number[][][]}
+     */
+    const dp = new Array(strs.length + 1);
+
     for (let i = 0; i < dp.length; i++)
     {
-        dp[i] = new Array(n + 1);
-        dp[i].fill(0);
+        dp[i] = new Array(m + 1);
+        for (let j = 0; j < dp[i].length; j++)
+        {
+            dp[i][j] = new Array(n + 1);
+            if (i === 0)
+            {
+                dp[i][j].fill(0);
+            }
+            dp[i][0][0] = 0;
+        }
     }
 
-    for (const [zeroCount, oneCount] of strCounts)
+    for (let i = 1; i <= strCounts.length; i++)
     {
-        // 这里必须是从 m 和 n 开始遍历而不能反过来，因为本次计算依赖上一个字符串的计算结果
-        // 事实上是 0-1 背包的空间压缩4
-        for (let i = m; i >= zeroCount; i--)
+        const [zeroCount, oneCount] = strCounts[i - 1];
+
+        for (let j = 0; j <= m; j++)
         {
-            for (let j = n; j >= oneCount; j--)
+            for (let k = 0; k <= n; k++)
             {
-                dp[i][j] = Math.max(dp[i][j],
-                    dp[i - zeroCount][j - oneCount] + 1);
+                if (j < zeroCount || k < oneCount)
+                {
+                    dp[i][j][k] = dp[i - 1][j][k];
+                }
+                else
+                {
+                    dp[i][j][k] = Math.max(dp[i - 1][j][k],
+                        dp[i - 1][j - zeroCount][k - oneCount] + 1);
+                }
             }
         }
     }
 
-    return dp[m][n];
+    return dp[strs.length][m][n];
 };
 // @lc code=end
-
