@@ -13,14 +13,16 @@ const maxSubarraySumCircular = function (nums)
 {
     const sum = nums.reduce((prev, current) => prev + current);
     const {minSubArraySum, maxSubArraySum} = getMinMaxSubArraySum(nums);
-    if (sum === minSubArraySum) // 数组里全都是负数
+    if (maxSubArraySum < 0) // 数组里全都是负数
     {
         return maxSubArraySum;
     }
     else
     {
         // 要么是数组中间的子数组最大，要么是数组扣掉中间的最小子数组最大
-        return Math.max(maxSubArraySum, sum - minSubArraySum);
+        return Math.max(
+            maxSubArraySum,
+            sum - minSubArraySum);
     }
 };
 
@@ -30,31 +32,23 @@ const maxSubarraySumCircular = function (nums)
  */
 function getMinMaxSubArraySum(nums)
 {
+    let currentSubArrayMaxSum = nums[0];
     let maxSubArraySum = nums[0];
-    let maxPrev = nums[0];
-    let maxCurrent = 0;
 
+    let currentSubArrayMinSum = nums[0];
     let minSubArraySum = nums[0];
-    let minPrev = nums[0];
-    let minCurrent = 0;
 
-    const NUMS_LENGTH = nums.length;
-
-    for (let i = 1; i < NUMS_LENGTH; i++)
+    for (let i = 1; i < nums.length; i++)
     {
-        maxCurrent = maxPrev > 0
-            ? maxPrev + nums[i]
-            : nums[i];
-        
-        maxSubArraySum = Math.max(maxSubArraySum, maxCurrent);
-        maxPrev = maxCurrent;
+        currentSubArrayMaxSum = Math.max(currentSubArrayMaxSum + nums[i], nums[i]);
+        maxSubArraySum = Math.max(maxSubArraySum, currentSubArrayMaxSum);
 
-        minCurrent = minPrev >= 0
-            ? nums[i]
-            : minPrev + nums[i];
-        minSubArraySum = Math.min(minSubArraySum, minCurrent);
-        minPrev = minCurrent;
+        currentSubArrayMinSum = Math.min(currentSubArrayMinSum + nums[i], nums[i]);
+        minSubArraySum = Math.min(minSubArraySum, currentSubArrayMinSum);
     }
+
     return {minSubArraySum, maxSubArraySum};
 }
 // @lc code=end
+
+getMinMaxSubArraySum([5,-3,5])
