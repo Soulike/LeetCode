@@ -13,23 +13,18 @@
 var hasAllCodes = function (s, k)
 {
     const totalNumCount = 2 ** k;
+    const kMask = totalNumCount / 2 - 1;
 
-    let currentNum = 0;
     const numSet = new Set();
 
-    const kMask = 2 ** (k - 1) - 1;
+    let currentNum = Number.parseInt(s.slice(0, k), 2);
 
-    for (let i = 0; i < k; i++)
-    {
-        currentNum <<= 1;
-        currentNum += s[i] === '0' ? 0b0 : 0b1;
-    }
     numSet.add(currentNum);
 
     for (let i = k; i < s.length; i++)
     {
         currentNum &= kMask;    // 抹掉最高位
-        currentNum <<= 1;
+        currentNum *= 2;    // 左移
         currentNum += s[i] === '0' ? 0b0 : 0b1;
         numSet.add(currentNum);
         if (numSet.size === totalNumCount)
