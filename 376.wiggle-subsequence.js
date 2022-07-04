@@ -22,8 +22,12 @@ var wiggleMaxLength = function (nums) {
    *
    * 对于 i，向后查找符合正负的数字，并将其符号相反长度+1，查找最大值
    * 如果查找到最后都没有找到，长度为 1
+   *
+   * 可以简化为 O(n)
+   * 只记录目前见过的最长的两个符号序列的长度
+   * 对于 i，并将其符号相反最长长度+1
    */
-   
+
   const n = nums.length;
 
   let positiveDiffMaxLength = 1;
