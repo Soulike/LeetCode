@@ -4,8 +4,8 @@
     // 控制键入时是否应自动显示建议
     //"editor.quickSuggestions": {
     //    "other": false,
-        //"comments": false,
-        //"strings": false
+    //"comments": false,
+    //"strings": false
     //},
     // 控制键入触发器字符时是否应自动显示建议
     //"editor.suggestOnTriggerCharacters": false,

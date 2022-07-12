@@ -1,0 +1,26 @@
+{
+    "name": "LeetCode",
+    "version": "1.0.0",
+    "repository": "git@github.com:Soulike/LeetCode.git",
+    "author": "Soulike <git_anonymous@foxmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.3",
+        "prettier": "^2.7.1"
+    },
+    "scripts": {
+        "prepare": "husky install"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "singleQuote": true,
+        "jsxSingleQuote": true,
+        "trailingComma": "all",
+        "bracketSpacing": false,
+        "bracketSameLine": true
+    },
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
+    }
+}
