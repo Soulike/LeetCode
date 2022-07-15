@@ -10,43 +10,28 @@
  * @return {void} Do not return anything, modify nums in-place instead.
  */
 var moveZeroes = function (nums) {
-    let firstZeroIndex = -1;
-    let firstNonZeroAfterZeroIndex = -1;
+    const k = removeElement(nums, 0);
 
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] === 0) {
-            firstZeroIndex = i;
-            break;
-        }
-    }
-
-    for (let i = firstZeroIndex + 1; i < nums.length; i++) {
-        if (nums[i] !== 0) {
-            firstNonZeroAfterZeroIndex = i;
-            break;
-        }
-    }
-
-    if (firstZeroIndex === -1 || firstNonZeroAfterZeroIndex === -1) {
-        return;
-    }
-
-    while (firstNonZeroAfterZeroIndex < nums.length) {
-        nums[firstZeroIndex] = nums[firstNonZeroAfterZeroIndex];
-        nums[firstNonZeroAfterZeroIndex] = 0;
-
-        while (firstZeroIndex < nums.length && nums[firstZeroIndex] !== 0) {
-            firstZeroIndex++;
-        }
-
-        firstNonZeroAfterZeroIndex = firstZeroIndex + 1;
-
-        while (
-            firstNonZeroAfterZeroIndex < nums.length &&
-            nums[firstNonZeroAfterZeroIndex] === 0
-        ) {
-            firstNonZeroAfterZeroIndex++;
-        }
-    }
+    nums.fill(0, k);
 };
+
+/**
+ * @param {number[]} nums
+ * @param {number} val
+ * @return {number}
+ */
+function removeElement(nums, val) {
+    let left = 0;
+    let right = 0;
+
+    while (right < nums.length) {
+        if (nums[right] !== val) {
+            nums[left] = nums[right];
+            left++;
+        }
+        right++;
+    }
+
+    return left;
+}
 // @lc code=end
