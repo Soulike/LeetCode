@@ -12,6 +12,7 @@
  */
 var shipWithinDays = function (weights, days) {
     let capacityLeft = 1;
+    // capacity of shipping cargo in maximum weight in 1 day
     let capacityRight = 5 * 1000 * 500;
 
     const cache = new Map();
@@ -21,22 +22,17 @@ var shipWithinDays = function (weights, days) {
             capacityLeft + Math.floor((capacityRight - capacityLeft) / 2);
         const currentDays = getDaysByCapacity(capacityMid, weights, cache);
 
+        // Find the upper bound
         if (currentDays > days) {
             capacityLeft = capacityMid + 1;
-        } else if (currentDays < days) {
-            capacityRight = capacityMid - 1;
-        } else {
-            if (
-                capacityMid === 1 ||
-                getDaysByCapacity(capacityMid - 1, weights, cache) > days
-            ) {
+        } else if (currentDays <= days) {
+            if (getDaysByCapacity(capacityMid - 1, weights, cache) > days) {
                 return capacityMid;
             } else {
                 capacityRight = capacityMid - 1;
             }
         }
     }
-    return capacityLeft;
 };
 
 /**
