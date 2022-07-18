@@ -20,13 +20,13 @@ var shipWithinDays = function (weights, days) {
     while (capacityLeft <= capacityRight) {
         const capacityMid =
             capacityLeft + Math.floor((capacityRight - capacityLeft) / 2);
-        const currentDays = getDaysByCapacity(capacityMid, weights, cache);
+        const currentDays = getSpiltNumberBySum(capacityMid, weights, cache);
 
         // Find the upper bound
         if (currentDays > days) {
             capacityLeft = capacityMid + 1;
         } else if (currentDays <= days) {
-            if (getDaysByCapacity(capacityMid - 1, weights, cache) > days) {
+            if (getSpiltNumberBySum(capacityMid - 1, weights, cache) > days) {
                 return capacityMid;
             } else {
                 capacityRight = capacityMid - 1;
@@ -42,7 +42,7 @@ var shipWithinDays = function (weights, days) {
  * @param {Map<number, number>} cache
  * @returns {number}
  */
-function getDaysByCapacity(capacity, weights, cache) {
+function getSpiltNumberBySum(capacity, weights, cache) {
     if (cache.has(capacity)) {
         return cache.get(capacity);
     }
