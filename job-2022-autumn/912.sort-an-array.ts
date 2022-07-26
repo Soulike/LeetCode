@@ -6,66 +6,46 @@
 
 // @lc code=start
 function sortArray(nums: number[]): number[] {
-    mergeSort(nums, (a, b) => a - b);
-
+    quickSort(nums);
     return nums;
 }
 
-function mergeSort<T>(array: T[], predicate: (a: T, b: T) => number): void {
-    mergeSortHelper(array, 0, array.length - 1, predicate);
+function quickSort(nums: number[]): void {
+    quickSortHelper(nums, 0, nums.length - 1);
 }
 
-function mergeSortHelper<T>(
-    array: T[],
-    start: number,
-    end: number,
-    predicate: (a: T, b: T) => number,
-): void {
-    if (start === end) return;
+function quickSortHelper(nums: number[], start: number, end: number): void {
+    if (start >= end) return;
 
-    const mid = start + Math.floor((end - start) / 2);
+    const pivotIndex = getRandomNumber(start, end);
 
-    mergeSortHelper(array, start, mid, predicate);
-    mergeSortHelper(array, mid + 1, end, predicate);
+    [nums[pivotIndex], nums[start]] = [nums[start], nums[pivotIndex]];
 
-    mergeArrays(array, start, mid, end, predicate);
-}
+    const pivot = nums[start];
 
-/**
- * [start, mid] + (mid, end] => [start, end]
- */
-function mergeArrays<T>(
-    array: T[],
-    start: number,
-    mid: number,
-    end: number,
-    predicate: (a: T, b: T) => number,
-): void {
-    if (start === end) return;
+    let left = start;
+    let right = end;
 
-    const leftArray = array.slice(start, mid + 1);
-    const rightArray = array.slice(mid + 1, end + 1);
-    let leftIndex = 0;
-    let rightIndex = 0;
-
-    for (let i = start; i <= end; i++) {
-        if (leftIndex === leftArray.length) {
-            array[i] = rightArray[rightIndex];
-            rightIndex++;
-        } else if (rightIndex === rightArray.length) {
-            array[i] = leftArray[leftIndex];
-            leftIndex++;
-        } else if (
-            predicate(leftArray[leftIndex], rightArray[rightIndex]) > 0
-        ) {
-            array[i] = rightArray[rightIndex];
-            rightIndex++;
-        } else if (
-            predicate(leftArray[leftIndex], rightArray[rightIndex]) <= 0
-        ) {
-            array[i] = leftArray[leftIndex];
-            leftIndex++;
+    while (true) {
+        while (nums[right] >= pivot && left < right) {
+            right--;
         }
+        while (nums[left] <= pivot && left < right) {
+            left++;
+        }
+
+        if (left >= right) break;
+
+        [nums[left], nums[right]] = [nums[right], nums[left]];
     }
+
+    [nums[start], nums[right]] = [nums[right], nums[start]];
+
+    quickSortHelper(nums, start, right - 1);
+    quickSortHelper(nums, right + 1, end);
+}
+
+function getRandomNumber(start: number, end: number): number {
+    return start + Math.floor(Math.random() * (end - start + 1));
 }
 // @lc code=end
