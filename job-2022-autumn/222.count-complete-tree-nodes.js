@@ -41,12 +41,22 @@ function getHeights(root) {
         return [0, 0];
     }
 
-    const leftResult = getHeights(root.left);
-    const rightResult = getHeights(root.right);
+    let max = 0;
+    /**@type {TreeNode|null}*/
+    let leftNode = root;
+    while (leftNode !== null) {
+        max++;
+        leftNode = leftNode.left;
+    }
 
-    return [
-        1 + Math.min(leftResult[0], rightResult[0]),
-        1 + Math.max(leftResult[1], rightResult[1]),
-    ];
+    let min = 0;
+    /**@type {TreeNode|null}*/
+    let rightNode = root;
+    while (rightNode !== null) {
+        min++;
+        rightNode = rightNode.right;
+    }
+
+    return [min, max];
 }
 // @lc code=end
