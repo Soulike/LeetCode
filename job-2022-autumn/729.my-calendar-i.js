@@ -46,9 +46,8 @@ class MyCalendar {
             }
         }
 
-        this.#arr.push([start, true], [end, false]);
-
-        this.#arr.sort((a, b) => a[0] - b[0]);
+        this.#insert(start, true);
+        this.#insert(end, false);
 
         return true;
     }
@@ -126,6 +125,27 @@ class MyCalendar {
 
         return -1;
     }
+
+    /**
+     * @param {number} value
+     * @param {boolean} type
+     */
+    #insert(value, type) {
+        if (this.#arr.length === 0 || this.#arr[0][0] > value) {
+            this.#arr.unshift([value, type]);
+            return;
+        }
+
+        this.#arr.push([value, type]);
+        for (let i = this.#arr.length - 2; i >= 0; i--) {
+            if (this.#arr[i][0] > value) {
+                this.#arr[i + 1] = this.#arr[i];
+            } else {
+                this.#arr[i + 1] = [value, type];
+                break;
+            }
+        }
+    }
 }
 
 /**
@@ -134,3 +154,5 @@ class MyCalendar {
  * var param_1 = obj.book(start,end)
  */
 // @lc code=end
+
+// ["MyCalendar","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book","book"]\n[[],[99,100],[45,57],[79,94],[53,72],[88,99],[70,82],[51,69],[84,97],[80,98],[26,44],[73,87],[92,100],[56,74],[50,67],[71,85],[26,41],[96,100],[78,91],[50,61],[27,41],[56,66],[70,80],[82,92],[64,80],[57,76],[13,27],[39,57],[87,100],[92,100],[9,22],[99,100],[31,47],[93,100],[52,65],[53,67],[8,19],[14,26],[42,52],[93,100],[86,100]]
