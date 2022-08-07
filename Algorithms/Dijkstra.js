@@ -205,9 +205,12 @@ function dijkstra(start, end, graph, calculateWeight) {
     /** @type {number[]} */
     const weightFromStart = new Array(graph.length);
     weightFromStart.fill(Infinity);
-    weightFromStart[start] = 0;
 
-    const startNode = new Node(start, 0);
+    const toStartWeight = calculateWeight(0, 0);
+
+    weightFromStart[start] = toStartWeight;
+
+    const startNode = new Node(start, toStartWeight);
 
     const minHeap = new Heap(
         (a, b) => a.weightFromStart - b.weightFromStart,
