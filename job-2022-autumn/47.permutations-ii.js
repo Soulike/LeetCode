@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=46 lang=javascript
+ * @lc app=leetcode id=47 lang=javascript
  *
- * [46] Permutations
+ * [47] Permutations II
  */
 
 // @lc code=start
@@ -9,24 +9,28 @@
  * @param {number[]} nums
  * @return {number[][]}
  */
-var permute = function (nums) {
+var permuteUnique = function (nums) {
     /** @type {number[]} */
     const current = [];
     /** @type {number[][]} */
     const permutations = [];
     /** @type {Set<number>} */
-    const usedNums = new Set();
+    const usedNumIndexes = new Set();
 
     const backtrack = () => {
-        if (usedNums.size === nums.length) {
+        const currentUsedNums = new Set();
+        if (current.length === nums.length) {
             permutations.push([...current]);
         } else {
-            for (const num of nums) {
-                if (!usedNums.has(num)) {
+            for (let i = 0; i < nums.length; i++) {
+                const num = nums[i];
+                if (!currentUsedNums.has(num) && !usedNumIndexes.has(i)) {
+                    currentUsedNums.add(num);
+
                     current.push(num);
-                    usedNums.add(num);
+                    usedNumIndexes.add(i);
                     backtrack();
-                    usedNums.delete(num);
+                    usedNumIndexes.delete(i);
                     current.pop();
                 }
             }
