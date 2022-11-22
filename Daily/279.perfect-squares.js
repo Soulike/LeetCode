@@ -5,33 +5,33 @@
  */
 
 // @lc code=start
-
-/** @type {number[]} */
-const memo = [];
-
 /**
  * @param {number} n
  * @return {number}
  */
 var numSquares = function (n) {
-    if (memo[n] !== undefined) return memo[n];
-    if (Number.isInteger(Math.sqrt(n))) {
-        memo[n] = 1;
-        return 1;
-    }
+    /**
+     * dp[i] the least number of perfect square numbers that sum to `i`
+     *
+     * base case
+     * dp[0] = 0
+     * dp[1 to i] = Infinity
+     *
+     * for i from 1 to n
+     *  for j from 1 to sqrt(i)
+     *      dp[i] = Math.min(dp[i], dp[i-j**2]+1)
+     */
 
-    let minNum = Infinity;
+    const dp = new Array(n + 1);
+    dp.fill(Infinity);
+    dp[0] = 0;
 
-    for (let i = 1; ; i++) {
-        const square = i ** 2;
-        if (square < n) {
-            minNum = Math.min(minNum, 1 + numSquares(n - square));
-        } else {
-            break;
+    for (let i = 1; i <= n; i++) {
+        for (let j = 1; j * j <= i; j++) {
+            dp[i] = Math.min(dp[i], dp[i - j * j] + 1);
         }
     }
 
-    memo[n] = minNum;
-    return minNum;
+    return dp[n];
 };
 // @lc code=end
