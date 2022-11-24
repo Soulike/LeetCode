@@ -14,9 +14,6 @@ var exist = function (board, word) {
     const M = board.length;
     const N = board[0].length;
 
-    /** @type {Set<string>} */
-    const visited = new Set();
-
     /**
      * 从 board[i][j] 出发，查找 word[wordIndex:]
      * @param {number} i
@@ -27,20 +24,12 @@ var exist = function (board, word) {
     const dfs = (i, j, wordIndex) => {
         if (wordIndex === word.length) return true;
 
-        const visitedKey = `${i}-${j}`;
         const letter = word[wordIndex];
-        if (
-            i < 0 ||
-            i >= M ||
-            j < 0 ||
-            j >= N ||
-            visited.has(visitedKey) ||
-            board[i][j] !== letter
-        ) {
+        if (i < 0 || i >= M || j < 0 || j >= N || board[i][j] !== letter) {
             return false;
         }
 
-        visited.add(visitedKey);
+        board[i][j] = '.';
 
         let result = false;
 
@@ -59,7 +48,7 @@ var exist = function (board, word) {
 
             return false;
         } finally {
-            visited.delete(visitedKey);
+            board[i][j] = letter;
         }
     };
 
@@ -73,14 +62,3 @@ var exist = function (board, word) {
     return false;
 };
 // @lc code=end
-
-console.log(
-    exist(
-        [
-            ['C', 'A', 'A'],
-            ['A', 'A', 'A'],
-            ['B', 'C', 'D'],
-        ],
-        'AAB',
-    ),
-);
