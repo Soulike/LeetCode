@@ -12,27 +12,32 @@
 var sumSubarrayMins = function (arr) {
     const MOD = 10 ** 9 + 7;
     let sum = 0;
+    arr.unshift(-Infinity);
+    arr.push(-Infinity);
+
+    /**
+     * non-decreasing stack
+     * @type {number[]}
+     * */
+    const monostack = [];
+
     for (let i = 0; i < arr.length; i++) {
-        // prevent calculating duplicate ranges on duplicate numbers
-        let leftBorder = i - 1;
-        while (leftBorder >= 0 && arr[leftBorder] > arr[i]) {
-            leftBorder--;
+        while (
+            monostack.length > 0 &&
+            arr[monostack[monostack.length - 1]] > arr[i]
+        ) {
+            const stackTop = monostack.pop();
+            const leftBoundary = monostack[monostack.length - 1];
+            const rightBoundary = i;
+            sum +=
+                (stackTop - leftBoundary) *
+                (rightBoundary - stackTop) *
+                arr[stackTop];
         }
-        leftBorder++;
-
-        let rightBorder = i;
-        while (rightBorder <= arr.length - 1 && arr[rightBorder] >= arr[i]) {
-            rightBorder++;
-        }
-        rightBorder--;
-
-        const leftIndexCount = i - leftBorder;
-        const rightIndexCount = rightBorder - i;
-        sum += ((leftIndexCount + 1) * (rightIndexCount + 1) * arr[i]) % MOD;
-        sum %= MOD;
+        monostack.push(i);
     }
 
-    return sum;
+    return sum % MOD;
 };
 // @lc code=end
 
