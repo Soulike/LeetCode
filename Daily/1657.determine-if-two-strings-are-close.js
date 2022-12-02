@@ -13,35 +13,40 @@
 var closeStrings = function (word1, word2) {
     if (word1.length !== word2.length) return false;
 
-    /** @type {Map<string, number>} */
-    const word1LetterFreq = new Map();
-    /** @type {Map<string, number>} */
-    const word2LetterFreq = new Map();
+    const LOWER_ENGLISH_LETTER_NUM = 26;
 
-    for (const c of word1) {
-        word1LetterFreq.set(c, (word1LetterFreq.get(c) ?? 0) + 1);
+    const word1Hash = new Array(LOWER_ENGLISH_LETTER_NUM);
+    word1Hash.fill(0);
+
+    const word2Hash = new Array(LOWER_ENGLISH_LETTER_NUM);
+    word2Hash.fill(0);
+
+    const WORD_LENGTH = word1.length;
+
+    for (let i = 0; i < WORD_LENGTH; i++) {
+        word1Hash[word1.charCodeAt(i) - 'a'.charCodeAt(0)]++;
+        word2Hash[word2.charCodeAt(i) - 'a'.charCodeAt(0)]++;
     }
 
-    for (const c of word2) {
-        if (!word1LetterFreq.has(c)) return false;
-
-        word2LetterFreq.set(c, (word2LetterFreq.get(c) ?? 0) + 1);
+    for (let i = 0; i < LOWER_ENGLISH_LETTER_NUM; i++) {
+        if (
+            (word1Hash[i] === 0 && word2Hash[i] !== 0) ||
+            (word1Hash[i] !== 0 && word2Hash[i] === 0)
+        )
+            return false;
     }
 
-    for (const [c] of word1LetterFreq) {
-        if (!word2LetterFreq.has(c)) return false;
-    }
+    word1Hash.sort((a, b) => b - a);
+    word2Hash.sort((a, b) => b - a);
 
-    const word1Freqs = [...word1LetterFreq.values()];
-    const word2Freqs = [...word2LetterFreq.values()];
+    for (let i = 0; i < LOWER_ENGLISH_LETTER_NUM; i++) {
+        if (word1Hash[i] !== word2Hash[i]) {
+            return false;
+        }
 
-    if (word1Freqs.length !== word2Freqs.length) return false;
-
-    word1Freqs.sort((a, b) => a - b);
-    word2Freqs.sort((a, b) => a - b);
-
-    for (let i = 0; i < word1Freqs.length; i++) {
-        if (word1Freqs[i] !== word2Freqs[i]) return false;
+        if (word1Hash[i] === 0 || word2Hash[i] === 0) {
+            break;
+        }
     }
 
     return true;
