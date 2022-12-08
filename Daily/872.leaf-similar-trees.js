@@ -19,36 +19,32 @@
  * @return {boolean}
  */
 var leafSimilar = function (root1, root2) {
-    /** @type {number[]} */
-    const tree1Leaves = [];
-    /** @type {number[]} */
-    const tree2Leaves = [];
-
     /**
      * @param {TreeNode | null} root
-     * @param {number[]} leafValues
-     * @returns {void}
+     * @returns {number[]}
      */
-    const preOrderTraverse = (root, leafValues) => {
-        if (root === null) return;
+    const getLeafValues = (root) => {
+        if (root === null) return [];
         if (root.left === null && root.right === null) {
-            leafValues.push(root.val);
-            return;
+            return [root.val];
         }
-        preOrderTraverse(root.left, leafValues);
-        preOrderTraverse(root.right, leafValues);
+        const leftLeafValues = getLeafValues(root.left);
+        const rightLeafValues = getLeafValues(root.right);
+        leftLeafValues.push(...rightLeafValues);
+        return leftLeafValues;
     };
 
-    preOrderTraverse(root1, tree1Leaves);
-    preOrderTraverse(root2, tree2Leaves);
+    const tree1LeafValues = getLeafValues(root1);
+    const tree2LeafValues = getLeafValues(root2);
 
-    if (tree1Leaves.length !== tree2Leaves.length) {
+    if (tree1LeafValues.length !== tree2LeafValues.length) {
         return false;
     }
 
-    const length = tree1Leaves.length;
-    for (let i = 0; i < length; i++) {
-        if (tree1Leaves[i] !== tree2Leaves[i]) {
+    const leavesLength = tree1LeafValues.length;
+
+    for (let i = 0; i < leavesLength; i++) {
+        if (tree1LeafValues[i] !== tree2LeafValues[i]) {
             return false;
         }
     }
