@@ -27,18 +27,13 @@ var maxAncestorDiff = function (root) {
     const maxDiff = (root, min, max) => {
         if (root === null) return -1;
 
-        const selfDiff = Math.max(
-            Math.abs(min - root.val),
-            Math.abs(max - root.val),
-        );
-
         min = Math.min(min, root.val);
         max = Math.max(max, root.val);
 
         const leftDiff = maxDiff(root.left, min, max);
         const rightDiff = maxDiff(root.right, min, max);
 
-        return Math.max(selfDiff, leftDiff, rightDiff);
+        return Math.max(max - min, leftDiff, rightDiff);
     };
 
     return maxDiff(root, root.val, root.val);
