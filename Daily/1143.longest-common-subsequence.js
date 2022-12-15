@@ -32,12 +32,10 @@ var longestCommonSubsequence = function (text1, text2) {
     const M = text1.length;
     const N = text2.length;
 
-    /** @type {number[]} */
-    let prevDp = new Array(N + 1);
+    let prevDp = new Uint16Array(N + 1);
     prevDp.fill(0);
 
-    /** @type {number[]} */
-    let dp = new Array(N + 1);
+    let dp = new Uint16Array(N + 1);
     dp[0] = 0;
 
     for (let i = 1; i <= M; i++) {
