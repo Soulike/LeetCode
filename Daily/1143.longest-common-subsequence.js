@@ -26,28 +26,31 @@ var longestCommonSubsequence = function (text1, text2) {
      *  dp[i][j] = dp[i-1][j-1]+1
      */
 
+    [text1, text2] =
+        text1.length < text2.length ? [text1, text2] : [text2, text1];
+
     const M = text1.length;
     const N = text2.length;
 
-    /** @type {number[][]} */
-    const dp = new Array(M + 1);
-    for (let i = 0; i < M + 1; i++) {
-        dp[i] = new Array(N + 1);
-        dp[i][0] = 0;
-    }
+    /** @type {number[]} */
+    let prevDp = new Array(N + 1);
+    prevDp.fill(0);
 
-    dp[0].fill(0);
+    /** @type {number[]} */
+    let dp = new Array(N + 1);
+    dp[0] = 0;
 
     for (let i = 1; i <= M; i++) {
         for (let j = 1; j <= N; j++) {
-            dp[i][j] =
+            dp[j] =
                 text1[i - 1] !== text2[j - 1]
-                    ? Math.max(dp[i - 1][j], dp[i][j - 1]) // dp[i - 1][j - 1] must be less than the two
-                    : dp[i - 1][j - 1] + 1;
+                    ? Math.max(prevDp[j], dp[j - 1]) // dp[i - 1][j - 1] must be less than the two
+                    : prevDp[j - 1] + 1;
         }
+        [prevDp, dp] = [dp, prevDp];
     }
 
-    return dp[M][N];
+    return prevDp[N];
 };
 // @lc code=end
 
