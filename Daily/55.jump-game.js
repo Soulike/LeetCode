@@ -11,34 +11,25 @@
  */
 var canJump = function (nums) {
     const N = nums.length;
-    /**
-     * dp[i] can jump if start from nums[i]
-     *
-     * base case
-     * dp[N-1] = true
-     *
-     * i from N-2 to 0
-     * dp[i] = false if nums[i] === 0
-     * j from 1 to nums[i]
-     * dp[i] = true if dp[i+j] = true
-     *
-     * return dp[0]
-     */
+    let currentIndex = 0;
 
-    /** @type {boolean[]} */
-    const dp = new Array(N);
-    dp.fill(false);
-    dp[N - 1] = true;
+    while (true) {
+        const steps = nums[currentIndex];
+        const maxReachableIndex = currentIndex + steps;
+        if (maxReachableIndex >= N - 1) return true;
 
-    for (let i = N - 2; i >= 0; i--) {
-        for (let j = 1; j <= nums[i]; j++) {
-            if (dp[i + j] === true) {
-                dp[i] = true;
-                break;
+        let nextIndex = currentIndex;
+        let maxNextIndexReachableIndex = currentIndex;
+        for (let i = currentIndex; i <= maxReachableIndex; i++) {
+            if (nums[i] + i > maxNextIndexReachableIndex) {
+                maxNextIndexReachableIndex = nums[i] + i;
+                nextIndex = i;
             }
         }
+        if (currentIndex === nextIndex) return false;
+        currentIndex = nextIndex;
     }
-
-    return dp[0];
 };
 // @lc code=end
+
+canJump([1, 2, 3]);
