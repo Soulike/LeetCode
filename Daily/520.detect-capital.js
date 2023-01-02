@@ -10,23 +10,8 @@
  * @return {boolean}
  */
 var detectCapitalUse = function (word) {
-    let capitalNum = 0;
-    for (const c of word) {
-        if (isCapital(c)) capitalNum++;
-    }
-
-    if (capitalNum === 1) {
-        return isCapital(word[0]);
-    } else {
-        return capitalNum === 0 || capitalNum === word.length;
-    }
+    const regex = /^(?:(?:[A-Z]+)|(?:[A-z][a-z]*))$/;
+    return regex.test(word);
 };
 
-/**
- * @param {string} letter
- * @returns {boolean}
- */
-function isCapital(letter) {
-    return letter.toUpperCase() === letter;
-}
 // @lc code=end
