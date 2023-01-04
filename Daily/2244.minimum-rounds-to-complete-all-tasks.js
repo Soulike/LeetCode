@@ -16,10 +16,7 @@ var minimumRounds = function (tasks) {
      */
     const getMinRoundCount = (taskCount) => {
         if (taskCount === 1) return -1;
-        let roundCount = Math.floor(taskCount / 3);
-
-        if (taskCount % 3 !== 0) roundCount++;
-        return roundCount;
+        return Math.floor((taskCount + 2) / 3);
     };
 
     /** @type {{[key:number]: number}} */
