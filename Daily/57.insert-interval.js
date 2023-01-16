@@ -32,7 +32,8 @@ var insert = function (intervals, newInterval) {
                     |--I--|
             |--N--|
             */
-            afterIntervals.push(interval);
+            afterIntervals.push(...intervals.slice(i));
+            break;
         } else if (newInterval[START] < interval[START]) {
             if (newInterval[END] <= interval[END]) {
                 /*
