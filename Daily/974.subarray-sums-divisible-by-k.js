@@ -53,7 +53,10 @@ var subarraysDivByK = function (nums, k) {
     }
 
     for (const [, count] of remainderToCount) {
-        subArrayCount += (count * (count - 1)) / 2;
+        subArrayCount +=
+            count % 2 === 1
+                ? count * ((count - 1) / 2)
+                : (count / 2) * (count - 1);
     }
 
     subArrayCount += remainderToCount.get(0) ?? 0;
