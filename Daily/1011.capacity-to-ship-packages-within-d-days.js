@@ -35,26 +35,19 @@ var shipWithinDays = function (weights, days) {
     let minCapacity = 1;
     let maxCapacity = MAX_WEIGHT * weights.length;
 
-    while (true) {
+    while (minCapacity < maxCapacity) {
         const capacity =
             Math.floor((maxCapacity - minCapacity) / 2) + minCapacity;
         const dayNumber = getDayNumber(capacity);
 
         if (dayNumber > days) {
-            // take more days than expected, increase capacity
-            minCapacity = capacity;
+            minCapacity = capacity + 1;
         } else if (dayNumber <= days) {
-            // take less or equal days than expected
-            const lessCapacityDayNumber = getDayNumber(capacity - 1);
-            // can we further decrease capacity?
-            if (lessCapacityDayNumber > days) {
-                // we can't
-                return capacity;
-            } else {
-                maxCapacity = capacity;
-            }
+            maxCapacity = capacity;
         }
     }
+
+    return minCapacity;
 };
 // @lc code=end
 
