@@ -203,36 +203,33 @@ var findMaximizedCapital = function (k, w, profits, capital) {
         profitsAndCapital.push([profits[i], capital[i]]);
     }
 
+    profitsAndCapital.sort(([, capitalA], [, capitalB]) => capitalA - capitalB);
+
+    let projectIndex = 0;
+
     const maxProfitHeap = new Heap(
         ([profitA], [profitB]) => profitB - profitA,
-        profitsAndCapital,
+        [],
     );
 
-    for (let i = 0; i < k; i++) {
-        /** @type {[profit: number, capital: number][]} */
-        const pickedItems = [];
-
-        if (maxProfitHeap.getSize() === 0) {
-            return currentCapital;
+    OUT: for (let i = 0; i < k; i++) {
+        while (
+            projectIndex < N &&
+            profitsAndCapital[projectIndex][CAPITAL] <= currentCapital
+        ) {
+            maxProfitHeap.add(profitsAndCapital[projectIndex]);
+            projectIndex++;
         }
 
-        let profitAndCapital = maxProfitHeap.getRoot();
+        if (maxProfitHeap.getSize() === 0) break OUT;
+
+        const maxProfitsAndCapital = maxProfitHeap.getRoot();
         maxProfitHeap.deleteRoot();
-
-        while (profitAndCapital[CAPITAL] > currentCapital) {
-            if (maxProfitHeap.getSize() === 0) {
-                return currentCapital;
-            }
-
-            pickedItems.push(profitAndCapital);
-            profitAndCapital = maxProfitHeap.getRoot();
-            maxProfitHeap.deleteRoot();
-        }
-
-        currentCapital += profitAndCapital[PROFIT];
-        maxProfitHeap.add(...pickedItems);
+        currentCapital += maxProfitsAndCapital[PROFIT];
     }
 
     return currentCapital;
 };
 // @lc code=end
+
+findMaximizedCapital(10, 0, [1, 2, 3], [0, 1, 2]);
