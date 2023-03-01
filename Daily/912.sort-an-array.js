@@ -10,59 +10,73 @@
  * @return {number[]}
  */
 var sortArray = function (nums) {
-    quickSort(nums);
+    mergeSort(nums);
     return nums;
 };
 
 /**
  * @param {number[]} nums
- * @returns {void}
+ * @return {void}
  */
-function quickSort(nums) {
+function mergeSort(nums) {
+    /**
+     * @param {number} start1
+     * @param {number} end1
+     * @param {number} start2
+     * @param {number} end2
+     * @return {number[]}
+     */
+    const merge = (start1, end1, start2, end2) => {
+        /** @type {number[]} */
+        const mergedNums = [];
+
+        let nums1Index = start1;
+        let nums2Index = start2;
+
+        while (nums1Index <= end1 && nums2Index <= end2) {
+            if (nums[nums1Index] < nums[nums2Index]) {
+                mergedNums.push(nums[nums1Index]);
+                nums1Index++;
+            } else {
+                mergedNums.push(nums[nums2Index]);
+                nums2Index++;
+            }
+        }
+
+        while (nums1Index <= end1) {
+            mergedNums.push(nums[nums1Index]);
+            nums1Index++;
+        }
+
+        while (nums2Index <= end2) {
+            mergedNums.push(nums[nums2Index]);
+            nums2Index++;
+        }
+
+        return mergedNums;
+    };
+
     /**
      * @param {number} leftBorder
      * @param {number} rightBorder
      * @returns {void}
      */
     const recursive = (leftBorder, rightBorder) => {
-        if (leftBorder >= rightBorder) return;
-        const randomIndex = random(leftBorder, rightBorder);
-        [nums[leftBorder], nums[randomIndex]] = [
-            nums[randomIndex],
-            nums[leftBorder],
-        ];
+        if (leftBorder === rightBorder) return;
 
-        let pivot = nums[leftBorder];
-        let left = leftBorder;
-        let right = rightBorder;
+        const mid = leftBorder + Math.floor((rightBorder - leftBorder) / 2);
 
-        while (left < right) {
-            while (left < right && nums[right] >= pivot) {
-                right--;
-            }
-            while (left < right && nums[left] <= pivot) {
-                left++;
-            }
+        recursive(leftBorder, mid);
+        recursive(mid + 1, rightBorder);
 
-            [nums[left], nums[right]] = [nums[right], nums[left]];
+        const merged = merge(leftBorder, mid, mid + 1, rightBorder);
+
+        for (let i = leftBorder; i <= rightBorder; i++) {
+            nums[i] = merged[i - leftBorder];
         }
-
-        [nums[leftBorder], nums[right]] = [nums[right], nums[leftBorder]];
-
-        recursive(leftBorder, right - 1);
-        recursive(right + 1, rightBorder);
     };
 
     recursive(0, nums.length - 1);
-}
-
-/**
- * @param {number} start
- * @param {number} end
- * @returns {number}
- */
-function random(start, end) {
-    return start + Math.round(Math.random() * (end - start));
 }
 // @lc code=end
 
