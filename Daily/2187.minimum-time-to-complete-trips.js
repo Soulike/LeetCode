@@ -24,10 +24,19 @@ var minimumTime = function (busTimes, totalTrips) {
     };
 
     const BUS_NUMBER = busTimes.length;
+    const MAX_BUS_TIME = Math.max(...busTimes);
 
     let leftTime = 1;
-    let rightTime = Math.ceil((totalTrips * 10 ** 7) / BUS_NUMBER);
+    /*
+    Worst case: all bus times are MAX_BUS_TIME, we need the minimum time n fulfilling
+        Math.floor(n / MAX_BUS_TIME) * BUS_NUMBER >= totalTrips
+    =>  Math.floor(n / MAX_BUS_TIME) >= totalTrips / BUS_NUMBER
+    =>  n / MAX_BUS_TIME >= Math.ceil(totalTrips / BUS_NUMBER)
+    =>  n >= Math.ceil(totalTrips / BUS_NUMBER) * MAX_BUS_TIME
+    */
+    let rightTime = MAX_BUS_TIME * Math.ceil(totalTrips / BUS_NUMBER);
 
+    // find right border
     while (leftTime < rightTime) {
         const midTime = Math.floor((rightTime - leftTime) / 2) + leftTime;
         const midTotalTrips = getTotalTripsAtTime(midTime);
@@ -42,3 +51,5 @@ var minimumTime = function (busTimes, totalTrips) {
     return rightTime;
 };
 // @lc code=end
+
+minimumTime([9, 7, 10, 9, 10, 9, 10], 1);
