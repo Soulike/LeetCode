@@ -195,26 +195,63 @@ class Heap {
  * @return {ListNode | null}
  */
 var mergeKLists = function (lists) {
-    const nodes = lists.filter((head) => head !== null);
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @returns {ListNode|null}
+     */
+    const mergeLists = (left, right) => {
+        if (left === right) return lists[left];
 
-    const heap = new Heap((a, b) => a.val - b.val, nodes);
+        const mid = left + Math.floor((right - left) / 2);
 
-    const newListFakeHead = new ListNode(-1, null);
+        const list1 = mergeLists(left, mid);
+        const list2 = mergeLists(mid + 1, right);
+
+        return merge2Lists(list1, list2);
+    };
+
+    if (lists.length === 0) return null;
+
+    return mergeLists(0, lists.length - 1);
+};
+
+/**
+ *
+ * @param {ListNode|null} list1
+ * @param {ListNode|null} list2
+ */
+function merge2Lists(list1, list2) {
+    if (list1 === null || list2 === null || list1 === list2) {
+        return list1 === null ? list2 : list1;
+    }
+
+    let newListFakeHead = new ListNode(-1, null);
     let newListTail = newListFakeHead;
 
-    while (heap.getSize() > 0) {
-        const node = heap.getRoot();
-        heap.deleteRoot();
+    /** @type {ListNode|null} */
+    let list1Node = list1;
+    /** @type {ListNode|null} */
+    let list2Node = list2;
 
-        if (node.next !== null) {
-            heap.addOne(node.next);
+    while (list1Node !== null && list2Node !== null) {
+        if (list1Node.val < list2Node.val) {
+            newListTail.next = list1Node;
+            list1Node = list1Node.next;
+        } else {
+            newListTail.next = list2Node;
+            list2Node = list2Node.next;
         }
+        newListTail = newListTail.next;
+        newListTail.next = null;
+    }
 
-        newListTail.next = node;
-        node.next = null;
-        newListTail = node;
+    if (list1Node === null) {
+        newListTail.next = list2Node;
+    } else {
+        newListTail.next = list1Node;
     }
 
     return newListFakeHead.next;
-};
+}
 // @lc code=end
