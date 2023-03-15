@@ -19,39 +19,22 @@
  */
 var isCompleteTree = function (root) {
     /** @type {(TreeNode|null)[]} */
-    let lastLevelNodes = [root];
-    /** @type {(TreeNode|null)[]} */
-    let currentLevelNodes = [];
-    let hasNextLevel = false;
+    const nodeQueue = [root];
 
-    while (lastLevelNodes.length > 0) {
-        hasNextLevel = false;
-        for (let i = 0; i < lastLevelNodes.length; i++) {
-            const lastLevelNode = lastLevelNodes[i];
-            if (lastLevelNode === null) {
-                if (hasNextLevel) {
-                    return false;
-                }
-
-                for (let j = i + 1; j < lastLevelNodes.length; j++) {
-                    if (lastLevelNodes[j] !== null) {
-                        return false;
-                    }
-                }
-            } else {
-                if (
-                    lastLevelNode.left !== null ||
-                    lastLevelNode.right !== null
-                ) {
-                    hasNextLevel = true;
-                }
-                currentLevelNodes.push(lastLevelNode.left);
-                currentLevelNodes.push(lastLevelNode.right);
-            }
+    while (nodeQueue.length > 0) {
+        const headNode = nodeQueue.shift();
+        if (headNode !== null) {
+            nodeQueue.push(headNode.left);
+            nodeQueue.push(headNode.right);
+        } else {
+            break;
         }
+    }
 
-        lastLevelNodes = currentLevelNodes;
-        currentLevelNodes = [];
+    for (const node of nodeQueue) {
+        if (node !== null) {
+            return false;
+        }
     }
 
     return true;
