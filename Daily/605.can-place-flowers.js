@@ -14,45 +14,27 @@ var canPlaceFlowers = function (flowerbed, n) {
     const UNPLANTED = 0;
     const PLANTED = 1;
 
-    let canPlant = false;
-    let leftFlowerNumber = n;
+    let prevFloweredIndex = -2;
+    let plantNumber = 0;
 
-    /**
-     * @param {number} plantIndex
-     * @returns {void}
-     */
-    const backtrack = (plantIndex) => {
-        if (leftFlowerNumber === 0) {
-            canPlant = true;
-            return;
+    for (let i = 0; i < flowerbed.length; i++) {
+        if (flowerbed[i] === PLANTED) {
+            const canPlantRangeSize = Math.ceil(
+                Math.max(i - 1 - (prevFloweredIndex + 1) - 1, 0) / 2,
+            );
+            plantNumber += canPlantRangeSize;
+
+            if (plantNumber >= n) return true;
+
+            prevFloweredIndex = i;
         }
-        if (plantIndex >= flowerbed.length) {
-            return;
-        }
+    }
 
-        if (flowerbed[plantIndex] === PLANTED) {
-            backtrack(plantIndex + 2);
-            if (canPlant) return;
-        } else {
-            if (
-                plantIndex === flowerbed.length - 1 ||
-                flowerbed[plantIndex + 1] !== PLANTED
-            ) {
-                leftFlowerNumber--;
-                flowerbed[plantIndex] = PLANTED;
-                backtrack(plantIndex + 2);
-                if (canPlant) return;
+    const lastCanPlantRangeSize = Math.ceil(
+        Math.max(flowerbed.length + 1 - 1 - (prevFloweredIndex + 1) - 1, 0) / 2,
+    );
+    plantNumber += lastCanPlantRangeSize;
 
-                flowerbed[plantIndex] = UNPLANTED;
-                leftFlowerNumber++;
-            } else {
-                backtrack(plantIndex + 3);
-                if (canPlant) return;
-            }
-        }
-    };
-
-    backtrack(0);
-    return canPlant;
+    return plantNumber >= n;
 };
 // @lc code=end
