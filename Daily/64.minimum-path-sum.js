@@ -29,26 +29,28 @@ var minPathSum = function (grid) {
     const ROW_NUMBER = grid.length;
     const COL_NUMBER = grid[0].length;
 
-    /** @type {number[][]} */
-    const dp = new Array(ROW_NUMBER);
-    for (let i = 0; i < ROW_NUMBER; i++) {
-        dp[i] = new Array(COL_NUMBER);
-    }
+    /** @type {number[]} */
+    const dp = [];
 
-    dp[ROW_NUMBER - 1][COL_NUMBER - 1] = grid[ROW_NUMBER - 1][COL_NUMBER - 1];
+    dp[COL_NUMBER - 1] = grid[ROW_NUMBER - 1][COL_NUMBER - 1];
 
     for (let i = ROW_NUMBER - 1; i >= 0; i--) {
         for (let j = COL_NUMBER - 1; j >= 0; j--) {
             if (i === ROW_NUMBER - 1 && j === COL_NUMBER - 1) continue;
-
-            dp[i][j] =
+            dp[j] =
                 Math.min(
-                    i + 1 < ROW_NUMBER ? dp[i + 1][j] : Infinity,
-                    j + 1 < COL_NUMBER ? dp[i][j + 1] : Infinity,
+                    dp[j] ?? Infinity,
+                    j + 1 < COL_NUMBER ? dp[j + 1] : Infinity,
                 ) + grid[i][j];
         }
     }
 
-    return dp[0][0];
+    return dp[0];
 };
 // @lc code=end
+
+minPathSum([
+    [1, 3, 1],
+    [1, 5, 1],
+    [4, 2, 1],
+]);
