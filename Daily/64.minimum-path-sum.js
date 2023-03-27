@@ -17,6 +17,13 @@ var minPathSum = function (grid) {
      * dp[M-1][N-1] = grid[M-1][N-1]
      *
      * dp[i][j] = Math.min(dp[i+1][j], dp[i][j+1]) + grid[i][j]
+     *
+     * memory compression
+     *
+     * base case
+     * dp[N-1] = grid[M-1][N-1]
+     *
+     * dp[j] = Math.min(dp[j], dp[j+1]) + grid[i][j]
      */
 
     const ROW_NUMBER = grid.length;
