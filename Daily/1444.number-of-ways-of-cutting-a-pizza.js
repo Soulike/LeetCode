@@ -44,32 +44,26 @@ var ways = function (pizza, pieceNumber) {
         }
 
         let wayNumber = 0;
-        let hasApple = false;
 
-        for (let i = x; i < M; i++) {
+        OUT1: for (let i = x; i < M; i++) {
             for (let j = y; j < N; j++) {
                 if (pizza[i][j] === APPLE) {
-                    hasApple = true;
-                    break;
+                    for (let k = i + 1; k < M; k++) {
+                        wayNumber += waysRecursive([k, y], leftPieceNumber - 1);
+                    }
+                    break OUT1;
                 }
-            }
-
-            if (hasApple) {
-                wayNumber += waysRecursive([i + 1, y], leftPieceNumber - 1);
             }
         }
 
-        hasApple = false;
-        for (let j = y; j < N; j++) {
+        OUT2: for (let j = y; j < N; j++) {
             for (let i = x; i < M; i++) {
                 if (pizza[i][j] === APPLE) {
-                    hasApple = true;
-                    break;
+                    for (let k = j + 1; k < N; k++) {
+                        wayNumber += waysRecursive([x, k], leftPieceNumber - 1);
+                    }
+                    break OUT2;
                 }
-            }
-
-            if (hasApple) {
-                wayNumber += waysRecursive([x, j + 1], leftPieceNumber - 1);
             }
         }
 
@@ -83,5 +77,3 @@ var ways = function (pizza, pieceNumber) {
     return result;
 };
 // @lc code=end
-
-ways(['.A..A', 'A.A..', 'A.AA.', 'AAAA.', 'A.AA.'], 5); // 153
