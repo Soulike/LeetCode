@@ -10,38 +10,36 @@
  * @return {number}
  */
 var minInsertions = function (s) {
-    /** @type {Map<string, number>} */
-    const memo = new Map();
     /**
-     * @param {number} left
-     * @param {number} right
-     * @returns {number}
+     * dp[i][j] s[i] 到 s[j] 最少需要多少次插入才能成为回文
+     *
+     * base case
+     * dp[i][i] = 0
+     * dp[i][i+1] = 0 if s[i] === s[j]
+     *
+     * dp[i][j] =
+     * if s[i] === s[j] dp[i][j] = dp[i+1][j-1]
+     * else dp[i][j] = 1+Math.min(dp[i+1][j], dp[i][j-1])
      */
-    const getMinInsertions = (left, right) => {
-        while (left < right && s[left] === s[right]) {
-            left++;
-            right--;
+    const N = s.length;
+    /** @type {number[][]} */
+    const dp = new Array(N);
+    for (let i = 0; i < dp.length; i++) {
+        dp[i] = [];
+        dp[i][i] = 0;
+    }
+
+    for (let i = N - 1; i >= 0; i--) {
+        for (let j = i + 1; j < N; j++) {
+            if (s[i] === s[j]) {
+                dp[i][j] = i + 1 === j ? 0 : dp[i + 1][j - 1];
+            } else {
+                dp[i][j] = 1 + Math.min(dp[i + 1][j], dp[i][j - 1]);
+            }
         }
+    }
 
-        if (left >= right) return 0;
-
-        const memoKey = `${left}-${right}`;
-        if (memo.has(memoKey)) return memo.get(memoKey);
-
-        const minSteps =
-            1 +
-            Math.min(
-                getMinInsertions(left + 1, right),
-                getMinInsertions(left, right - 1),
-            );
-
-        memo.set(memoKey, minSteps);
-
-        return minSteps;
-    };
-
-    const result = getMinInsertions(0, s.length - 1);
-    return result;
+    return dp[0][N - 1];
 };
 // @lc code=end
 
