@@ -15,43 +15,36 @@ var minCost = function (n, cuts) {
 
     const newCuts = [0, ...cuts, n];
 
-    /** @type {Map<string, number>} */
-    const memo = new Map();
-
     /**
-     * @param {number} newCutsLeft
-     * @param {number} newCutsRight
-     * @returns {number}
+     * dp[i][j] the min cost from newCuts[i] to newCuts[j]
+     *
+     * base case
+     * dp[i][i+1] = 0
+     *
+     * dp[i][j] = min
+     *  dp[i][k] + dp[k][j]
      */
-    const getMinCost = (newCutsLeft, newCutsRight) => {
-        if (newCutsRight - newCutsLeft === 1) {
-            return 0;
+
+    /** @type {number[][]} */
+    const dp = new Array(newCuts.length);
+    for (let i = 0; i < dp.length; i++) {
+        dp[i] = [];
+        dp[i][i + 1] = 0;
+    }
+
+    for (let i = newCuts.length - 1; i >= 0; i--) {
+        for (let j = i + 2; j < newCuts.length; j++) {
+            dp[i][j] = Infinity;
+            for (let k = i + 1; k < j; k++) {
+                dp[i][j] = Math.min(
+                    dp[i][j],
+                    newCuts[j] - newCuts[i] + dp[i][k] + dp[k][j],
+                );
+            }
         }
+    }
 
-        const memoKey = `${newCutsLeft}-${newCutsRight}`;
-        if (memo.has(memoKey)) return memo.get(memoKey);
-
-        let minCost = Infinity;
-        for (let i = newCutsLeft + 1; i < newCutsRight; i++) {
-            const leftMinCost = getMinCost(newCutsLeft, i);
-
-            const rightMinCost = getMinCost(i, newCutsRight);
-
-            minCost = Math.min(
-                minCost,
-                leftMinCost +
-                    rightMinCost +
-                    newCuts[newCutsRight] -
-                    newCuts[newCutsLeft],
-            );
-        }
-
-        memo.set(memoKey, minCost);
-        return minCost;
-    };
-
-    const result = getMinCost(0, newCuts.length - 1);
-    return result;
+    return dp[0][newCuts.length - 1];
 };
 // @lc code=end
 
