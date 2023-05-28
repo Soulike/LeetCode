@@ -12,44 +12,47 @@
  */
 var minCost = function (n, cuts) {
     cuts.sort((a, b) => a - b);
+
+    const newCuts = [0, ...cuts, n];
+
     /** @type {Map<string, number>} */
     const memo = new Map();
 
     /**
-     *
-     * @param {number} n
-     * @param {number[]} cuts
+     * @param {number} newCutsLeft
+     * @param {number} newCutsRight
      * @returns {number}
      */
-    const minCutRecursive = (n, cuts) => {
-        if (n === 1 || cuts.length === 0) return 0;
-
-        const memoKey = `${n}-${cuts.join(',')}`;
-
-        if (memo.has(memoKey)) return memo.get(memoKey);
-
-        let cost = Infinity;
-        for (let i = 0; i < cuts.length; i++) {
-            const cutPosition = cuts[i];
-
-            const leftMinCost = minCutRecursive(cutPosition, cuts.slice(0, i));
-
-            const rightMinCost = minCutRecursive(
-                n - cutPosition,
-                cuts.slice(i + 1).map((value) => value - cutPosition),
-            );
-
-            cost = Math.min(cost, n + leftMinCost + rightMinCost);
+    const getMinCost = (newCutsLeft, newCutsRight) => {
+        if (newCutsRight - newCutsLeft === 1) {
+            return 0;
         }
 
-        memo.set(memoKey, cost);
-        return cost;
+        const memoKey = `${newCutsLeft}-${newCutsRight}`;
+        if (memo.has(memoKey)) return memo.get(memoKey);
+
+        let minCost = Infinity;
+        for (let i = newCutsLeft + 1; i < newCutsRight; i++) {
+            const leftMinCost = getMinCost(newCutsLeft, i);
+
+            const rightMinCost = getMinCost(i, newCutsRight);
+
+            minCost = Math.min(
+                minCost,
+                leftMinCost +
+                    rightMinCost +
+                    newCuts[newCutsRight] -
+                    newCuts[newCutsLeft],
+            );
+        }
+
+        memo.set(memoKey, minCost);
+        return minCost;
     };
 
-    const result = minCutRecursive(n, cuts);
-
+    const result = getMinCost(0, newCuts.length - 1);
     return result;
 };
 // @lc code=end
 
-minCost(9, [5, 6, 1, 4, 2]);
+minCost(7, [1, 3, 4, 5]);
