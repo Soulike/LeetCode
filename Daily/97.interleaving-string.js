@@ -12,41 +12,33 @@
  * @return {boolean}
  */
 var isInterleave = function (s1, s2, s3) {
-    /** @type {Map<string, boolean>} */
-    const memo = new Map();
+    if (s1.length + s2.length !== s3.length) return false;
+
     /**
-     * @param {number} s1Start
-     * @param {number} s2Start
-     * @param {number} s3Start
-     * @returns {boolean}
-     */
-    const helper = (s1Start, s2Start, s3Start) => {
-        if (s3Start === s3.length) {
-            return s1Start === s1.length && s2Start === s2.length;
-        }
+     * dp[i][j] whether s1[i-1] and s2[j-1] can interleave to s3[i + j - 1]
+     * @type {boolean[][]}
+     * */
+    const dp = new Array(s1.length + 1);
+    for (let i = 0; i < dp.length; i++) {
+        dp[i] = new Array(s2.length + 1).fill(false);
+    }
 
-        const memoKey = `${s1Start},${s2Start},${s3Start}`;
-        if (memo.has(memoKey)) return memo.get(memoKey);
-
-        if (s1Start < s1.length && s1[s1Start] === s3[s3Start]) {
-            if (helper(s1Start + 1, s2Start, s3Start + 1)) {
-                memo.set(memoKey, true);
-                return true;
+    for (let i = 0; i < s1.length + 1; i++) {
+        for (let j = 0; j < s2.length + 1; j++) {
+            if (i === 0 && j === 0) {
+                dp[i][j] = true;
+            } else if (i === 0 && j !== 0) {
+                dp[i][j] = dp[i][j - 1] && s2[j - 1] === s3[i + j - 1];
+            } else if (i !== 0 && j === 0) {
+                dp[i][j] = dp[i - 1][j] && s1[i - 1] === s3[i + j - 1];
+            } else {
+                dp[i][j] =
+                    (dp[i][j - 1] && s2[j - 1] === s3[i + j - 1]) ||
+                    (dp[i - 1][j] && s1[i - 1] === s3[i + j - 1]);
             }
         }
+    }
 
-        if (s2Start < s2.length && s2[s2Start] === s3[s3Start]) {
-            if (helper(s1Start, s2Start + 1, s3Start + 1)) {
-                memo.set(memoKey, true);
-                return true;
-            }
-        }
-
-        memo.set(memoKey, false);
-        return false;
-    };
-
-    const result = helper(0, 0, 0);
-    return result;
+    return dp[s1.length][s2.length];
 };
 // @lc code=end
