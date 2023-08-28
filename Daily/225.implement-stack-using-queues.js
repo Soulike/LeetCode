@@ -8,17 +8,10 @@
 
 class MyStack {
     /** @type {number[]} */
-    #queue1;
-    /** @type {number[]} */
-    #queue2;
-
-    /** @type {number[]} */
-    #currentQueue;
+    #queue;
 
     constructor() {
-        this.#queue1 = [];
-        this.#queue2 = [];
-        this.#currentQueue = this.#queue1;
+        this.#queue = [];
     }
 
     /**
@@ -26,7 +19,7 @@ class MyStack {
      * @return {void}
      */
     push(x) {
-        this.#currentQueue.push(x);
+        this.#queue.push(x);
     }
 
     /**
@@ -41,7 +34,7 @@ class MyStack {
      */
     top() {
         const lastElement = this.#toggleQueueWithoutLastElement();
-        this.#currentQueue.push(lastElement);
+        this.#queue.push(lastElement);
         return lastElement;
     }
 
@@ -49,20 +42,18 @@ class MyStack {
      * @return {boolean}
      */
     empty() {
-        return this.#currentQueue.length === 0;
+        return this.#queue.length === 0;
     }
 
     /**
      * @return {number}
      */
     #toggleQueueWithoutLastElement() {
-        const anotherQueue =
-            this.#currentQueue === this.#queue1 ? this.#queue2 : this.#queue1;
-        while (this.#currentQueue.length > 1) {
-            anotherQueue.push(this.#currentQueue.shift());
+        const currentQueueLength = this.#queue.length;
+        for (let i = 0; i < currentQueueLength - 1; i++) {
+            this.#queue.push(this.#queue.shift());
         }
-        const lastElement = this.#currentQueue.shift();
-        this.#currentQueue = anotherQueue;
+        const lastElement = this.#queue.shift();
         return lastElement;
     }
 }
