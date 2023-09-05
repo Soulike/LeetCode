@@ -11,36 +11,69 @@ function Node(val, next, random) {
 
 // @lc code=start
 /**
- * @param {Node} head
- * @return {Node}
+ * @param {Node|null} head
+ * @return {Node|null}
  */
 var copyRandomList = function (head) {
-    /** @type {Map<Node, Node>} */
-    const nodeToCopy = new Map();
+    makeDuplicateList(head);
+    restoreRandomPointer(head);
 
-    /**
-     * @param {Node} node
-     * @returns {Node}
-     */
-    const getNodeCopy = (node) => {
-        if (node === null) return null;
-        if (nodeToCopy.has(node)) return nodeToCopy.get(node);
-
-        const {val, next, random} = node;
-
-        const nodeCopy = new Node(val, null, null);
-        nodeToCopy.set(node, nodeCopy);
-
-        const nextCopy = getNodeCopy(next);
-        const randomCopy = getNodeCopy(random);
-
-        nodeCopy.next = nextCopy;
-        nodeCopy.random = randomCopy;
-
-        return nodeCopy;
-    };
-
-    const headCopy = getNodeCopy(head);
-    return headCopy;
+    const copyHead = extractCopyList(head);
+    return copyHead;
 };
+
+/**
+ * 1 -> 2 -> null => 1 -> 1 -> 2 -> 2 -> null
+ * @param {Node | null} head
+ * @return {void}
+ */
+function makeDuplicateList(head) {
+    let node = head;
+    while (node !== null) {
+        const {val, next} = node;
+        const nodeCopy = new Node(val, null, null);
+        nodeCopy.next = next;
+        node.next = nodeCopy;
+
+        node = next;
+    }
+}
+
+/**
+ * @param {Node | null} head
+ * @return {void}
+ */
+function restoreRandomPointer(head) {
+    let node = head;
+    while (node !== null) {
+        const {next: copy, random} = node;
+        copy.random = random === null ? null : random.next;
+
+        node = copy.next;
+    }
+}
+
+/**
+ * @param {Node | null} head
+ * @return {Node|null}
+ */
+function extractCopyList(head) {
+    if (head === null) return null;
+
+    let node = head;
+    let copyNode = new Node(-1, null, null);
+    const fakeCopyListHead = copyNode;
+
+    while (node !== null) {
+        const {next: copy} = node;
+        node.next = copy.next;
+        node = node.next;
+
+        copyNode.next = copy;
+        copyNode = copyNode.next;
+        copyNode.next = null;
+    }
+
+    return fakeCopyListHead.next;
+}
 // @lc code=end
