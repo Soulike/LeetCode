@@ -16,15 +16,11 @@ var minDeletions = function (s) {
         letterToFreq.set(c, (letterToFreq.get(c) ?? 0) + 1);
     }
 
-    const letterFreqArr = Array.from(letterToFreq.entries());
-
-    letterFreqArr.sort(([, freq1], [, freq2]) => freq2 - freq1);
-
     /** @type {Set<number>} */
     const usedFreqs = new Set();
     let deleteCount = 0;
 
-    for (let [letter, freq] of letterFreqArr) {
+    for (let [letter, freq] of letterToFreq) {
         while (freq > 0 && usedFreqs.has(freq)) {
             deleteCount++;
             freq--;
