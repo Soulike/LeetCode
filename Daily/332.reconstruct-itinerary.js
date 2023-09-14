@@ -26,7 +26,7 @@ var findItinerary = function (tickets) {
 
     visit('JFK');
 
-    return route.reverse();
+    return route;
 
     /**
      * @param {string} from
@@ -40,7 +40,7 @@ var findItinerary = function (tickets) {
             visit(to);
         }
 
-        route.push(from);
+        route.unshift(from);
     }
 };
 // @lc code=end
