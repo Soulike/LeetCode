@@ -8,25 +8,21 @@
 /**
  * @param {string} s
  * @param {string} t
- * @return {character}
+ * @return {string}
  */
 var findTheDifference = function (s, t) {
-    /** @type {Map<string, number>} */
-    const letterToNumber = new Map();
-
-    for (const letter of s) {
-        letterToNumber.set(letter, (letterToNumber.get(letter) ?? 0) + 1);
-    }
-
-    for (const letter of t) {
-        if (!letterToNumber.has(letter)) {
-            return letter;
-        }
-
-        letterToNumber.set(letter, (letterToNumber.get(letter) ?? 0) - 1);
-        if (letterToNumber.get(letter) === 0) {
-            letterToNumber.delete(letter);
-        }
-    }
+    return String.fromCharCode(getASCIISum(t) - getASCIISum(s));
 };
+
+/**
+ * @param {string} s
+ * @returns {number}
+ */
+function getASCIISum(s) {
+    let sum = 0;
+    for (let i = 0; i < s.length; i++) {
+        sum += s.charCodeAt(i);
+    }
+    return sum;
+}
 // @lc code=end
