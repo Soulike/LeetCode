@@ -41,51 +41,41 @@ class MountainArray {
  * @return {number}
  */
 var findInMountainArray = function (target, mountainArr) {
-    /**
-     * @param {number} startIndex
-     * @param {number} endIndex
-     * @returns {number} -1 if not found
-     */
-    const helper = (startIndex, endIndex) => {
-        if (startIndex > endIndex) return -1;
+    const peak = peakIndexInMountainArray(mountainArr);
+    let result = mountainArrayBinarySearch(mountainArr, 0, peak, target, true);
+    if (result === -1) {
+        result = mountainArrayBinarySearch(
+            mountainArr,
+            peak + 1,
+            mountainArr.length() - 1,
+            target,
+            false,
+        );
+    }
 
-        const isIncreaseOrdered =
-            startIndex === endIndex ||
-            (mountainArr.get(startIndex) < mountainArr.get(startIndex + 1) &&
-                mountainArr.get(endIndex - 1) < mountainArr.get(endIndex));
-        if (isIncreaseOrdered) {
-            return mountainArrayBinarySearch(
-                mountainArr,
-                startIndex,
-                endIndex,
-                target,
-                true,
-            );
-        }
-        const isDecreaseOrdered =
-            mountainArr.get(startIndex) > mountainArr.get(startIndex + 1) &&
-            mountainArr.get(endIndex - 1) > mountainArr.get(endIndex);
-        if (isDecreaseOrdered) {
-            return mountainArrayBinarySearch(
-                mountainArr,
-                startIndex,
-                endIndex,
-                target,
-                false,
-            );
-        }
-
-        const midIndex = Math.floor((startIndex + endIndex) / 2);
-        let result = helper(startIndex, midIndex);
-        if (result === -1) {
-            result = helper(midIndex + 1, endIndex);
-        }
-        return result;
-    };
-
-    const result = helper(0, mountainArr.length() - 1);
     return result;
 };
+
+/**
+ * @param {MountainArray} arr
+ * @returns {number}
+ */
+function peakIndexInMountainArray(arr) {
+    let left = 0;
+    let right = arr.length() - 1;
+
+    while (left <= right) {
+        const mid = left + Math.floor((right - left) / 2);
+
+        if (arr.get(mid) < arr.get(mid + 1)) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    return left;
+}
 
 /**
  * @param {MountainArray} mountainArr
