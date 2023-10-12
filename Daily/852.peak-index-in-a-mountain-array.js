@@ -12,26 +12,17 @@
 var peakIndexInMountainArray = function (arr) {
     let left = 0;
     let right = arr.length - 1;
-    while (true) {
-        const mid = Math.floor((right - left) / 2) + left;
 
-        // peak
-        if (
-            (mid === 0 && arr[mid] > arr[mid + 1]) ||
-            (mid === arr.length - 1 && arr[mid - 1] < arr[mid]) ||
-            (arr[mid - 1] < arr[mid] && arr[mid] > arr[mid + 1])
-        ) {
-            return mid;
-        }
+    while (left <= right) {
+        const mid = left + Math.floor((right - left) / 2);
 
-        // uphill
-        if (arr[mid - 1] < arr[mid] && arr[mid] < arr[mid + 1]) {
-            left = mid;
-        }
-        // downhill
-        else if (arr[mid - 1] > arr[mid] && arr[mid] > arr[mid + 1]) {
-            right = mid;
+        if (arr[mid] < arr[mid + 1]) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
         }
     }
+
+    return left;
 };
 // @lc code=end
