@@ -11,22 +11,44 @@
  * @return {boolean}
  */
 var backspaceCompare = function (s, t) {
-    return buildString(s) === buildString(t);
-};
+    const BACKSPACE = '#';
 
-/**
- * @param {string} input
- * @returns {string}
- */
-function buildString(input) {
-    /** @type {string[]} */
-    const stack = [];
+    let sSkip = 0;
+    let tSkip = 0;
 
-    for (const c of input) {
-        if (c === '#') stack.pop();
-        else stack.push(c);
+    let sIndex = s.length - 1;
+    let tIndex = t.length - 1;
+
+    while (sIndex >= 0 || tIndex >= 0) {
+        if (s[sIndex] === BACKSPACE || t[tIndex] === BACKSPACE) {
+            while (s[sIndex] === BACKSPACE) {
+                sSkip++;
+                sIndex--;
+            }
+            while (t[tIndex] === BACKSPACE) {
+                tSkip++;
+                tIndex--;
+            }
+        } else if (sSkip > 0 || tSkip > 0) {
+            if (sSkip > 0) {
+                sIndex--;
+                sSkip--;
+            }
+            if (tSkip > 0) {
+                tIndex--;
+                tSkip--;
+            }
+        } else {
+            if (s[sIndex] !== t[tIndex]) return false;
+            else {
+                sIndex--;
+                tIndex--;
+            }
+        }
     }
 
-    return stack.join('');
-}
+    return true;
+};
 // @lc code=end
+
+backspaceCompare('a##c', '#a#c');
