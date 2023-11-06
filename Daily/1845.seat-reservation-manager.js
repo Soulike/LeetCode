@@ -188,23 +188,28 @@ class Heap {
 class SeatManager {
     /** @type {Heap<Seat>} */
     #heap;
+    /** @type {Seat} */
+    #minSeatIfNoUnreserve;
 
     /**
      * @param {number} n
      */
     constructor(n) {
         /** @type {Seat[]} */
-        const seats = new Array(n);
-        for (let i = 0; i < n; i++) {
-            seats[i] = i + 1;
-        }
+        const seats = [];
         this.#heap = new Heap((a, b) => a - b, seats);
+        this.#minSeatIfNoUnreserve = 1;
     }
 
     /**
      * @return {number}
      */
     reserve() {
+        if (this.#heap.getSize() === 0) {
+            this.#minSeatIfNoUnreserve++;
+            return this.#minSeatIfNoUnreserve - 1;
+        }
+
         const seat = this.#heap.getRoot();
         this.#heap.deleteRoot();
         return seat;
