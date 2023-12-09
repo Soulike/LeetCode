@@ -18,10 +18,22 @@
  * @return {number[]}
  */
 var inorderTraversal = function (root) {
-    if (root === null) return [];
+    /** @type {number[]} */
+    const result = [];
 
-    const leftChildInOrder = inorderTraversal(root.left);
-    const rightChildInOrder = inorderTraversal(root.right);
-    return [...leftChildInOrder, root.val, ...rightChildInOrder];
+    /**
+     * @param {TreeNode | null} root
+     * @returns {void}
+     */
+    const helper = (root) => {
+        if (root === null) return;
+        helper(root.left);
+        result.push(root.val);
+        helper(root.right);
+    };
+
+    helper(root);
+
+    return result;
 };
 // @lc code=end
