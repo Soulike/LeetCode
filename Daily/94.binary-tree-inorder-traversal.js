@@ -20,19 +20,20 @@
 var inorderTraversal = function (root) {
     /** @type {number[]} */
     const result = [];
+    /** @type {TreeNode[]} */
+    const stack = [];
+    let currNode = root;
 
-    /**
-     * @param {TreeNode | null} root
-     * @returns {void}
-     */
-    const helper = (root) => {
-        if (root === null) return;
-        helper(root.left);
-        result.push(root.val);
-        helper(root.right);
-    };
+    while (currNode !== null || stack.length > 0) {
+        while (currNode !== null) {
+            stack.push(currNode);
+            currNode = currNode.left;
+        }
 
-    helper(root);
+        const top = stack.pop();
+        result.push(top?.val);
+        currNode = top?.right;
+    }
 
     return result;
 };
