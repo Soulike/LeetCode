@@ -6,20 +6,196 @@
 
 // @lc code=start
 /**
+ * @template T
+ */
+class Heap {
+    /** @type {T[]} */
+    #treeNodes;
+    /** @type {(a:T, b:T) => number} */
+    #compareFunction;
+
+    /**
+     * @param {(a:T, b:T) => number} compareFunction
+     * @param {T[]} elements
+     */
+    constructor(compareFunction, elements) {
+        this.#treeNodes = [];
+        this.#compareFunction = compareFunction;
+        if (elements !== undefined) {
+            this.add(...elements);
+        }
+    }
+
+    /**
+     * @param  {T[]} elements
+     * @returns {void}
+     */
+    add(...elements) {
+        for (const element of elements) {
+            this.addOne(element);
+        }
+    }
+
+    /**
+     * @param {T} element
+     * @returns {void}
+     */
+    addOne(element) {
+        let elementIndex = this.#treeNodes.length;
+        let parentIndex = Heap.#getParentIndex(elementIndex);
+        this.#treeNodes.push(element);
+
+        while (
+            elementIndex > 0 &&
+            this.#compareFunction(
+                this.#treeNodes[elementIndex],
+                this.#treeNodes[parentIndex],
+            ) < 0
+        ) {
+            Heap.#swap(this.#treeNodes, elementIndex, parentIndex);
+            elementIndex = parentIndex;
+            parentIndex = Heap.#getParentIndex(elementIndex);
+        }
+    }
+
+    /**
+     * @throws {RangeError}
+     * @returns {T}
+     * */
+    getRoot() {
+        if (this.#treeNodes.length === 0) {
+            throw new RangeError('Heap has no element');
+        } else {
+            return this.#treeNodes[0];
+        }
+    }
+
+    /**
+     * @throws {RangeError}
+     * @returns {void}
+     * */
+    deleteRoot() {
+        if (this.#treeNodes.length === 0) {
+            throw new RangeError('Heap has no element');
+        } else {
+            const lastIndex = this.#treeNodes.length - 1;
+            Heap.#swap(this.#treeNodes, 0, lastIndex);
+            this.#treeNodes.length--;
+
+            let elementIndex = 0;
+            let minChildIndex = this.#getMinChildIndex(elementIndex);
+            if (minChildIndex === -1) {
+                return;
+            }
+
+            while (
+                this.#compareFunction(
+                    this.#treeNodes[minChildIndex],
+                    this.#treeNodes[elementIndex],
+                ) < 0
+            ) {
+                Heap.#swap(this.#treeNodes, elementIndex, minChildIndex);
+                elementIndex = minChildIndex;
+
+                minChildIndex = this.#getMinChildIndex(elementIndex);
+                if (minChildIndex === -1) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the smaller child
+     * @param {number} elementIndex
+     * @returns {number} -1 if no child
+     */
+    #getMinChildIndex(elementIndex) {
+        const LENGTH = this.#treeNodes.length;
+        let leftChildIndex = Heap.#getLeftChildIndex(elementIndex);
+        let rightChildIndex = Heap.#getRightChildIndex(elementIndex);
+
+        let minChildIndex;
+
+        if (leftChildIndex < LENGTH && rightChildIndex < LENGTH) {
+            minChildIndex =
+                this.#compareFunction(
+                    this.#treeNodes[leftChildIndex],
+                    this.#treeNodes[rightChildIndex],
+                ) < 0
+                    ? leftChildIndex
+                    : rightChildIndex;
+        } else if (leftChildIndex < LENGTH) {
+            minChildIndex = leftChildIndex;
+        } else if (rightChildIndex < LENGTH) {
+            minChildIndex = rightChildIndex;
+        } else {
+            minChildIndex = -1;
+        }
+        return minChildIndex;
+    }
+
+    /**
+     * @returns {number}
+     */
+    getSize() {
+        return this.#treeNodes.length;
+    }
+
+    /**
+     * @param {number} rootIndex
+     * @returns {number}
+     */
+    static #getLeftChildIndex(rootIndex) {
+        return 2 * rootIndex + 1;
+    }
+
+    /**
+     * @param {number} rootIndex
+     * @returns {number}
+     */
+    static #getRightChildIndex(rootIndex) {
+        return 2 * rootIndex + 2;
+    }
+
+    /**
+     * @param {number} childIndex
+     * @returns {number}
+     */
+    static #getParentIndex(childIndex) {
+        if (childIndex % 2) {
+            // odd
+            return (childIndex - 1) / 2;
+        } // even
+        else {
+            return (childIndex - 2) / 2;
+        }
+    }
+
+    /**
+     * @param {unknown[]} array
+     * @param {number} index1
+     * @param {number} index2
+     * @returns {void}
+     */
+    static #swap(array, index1, index2) {
+        [array[index1], array[index2]] = [array[index2], array[index1]];
+    }
+}
+
+/**
  * @typedef {string} Food
  * @typedef {string} Cuisine
  * @typedef {number} Rating
  */
 
 class FoodRatings {
-    /** @type {Map<Cuisine, Food[]>} */
-    #cuisineToFoods;
-    /** @type {Map<Food,Cuisine[]>} */
-    #foodToCuisines;
     /** @type {Map<Food, Rating>} */
-    #foodToRating;
-    /** @type {Map<Cuisine, [Rating, Food]>} */
-    #cuisineHighestRatingFoodCache;
+    foodToRatings;
+    /** @type {Map<Food, Cuisine>} */
+    foodToCuisines;
+    /** @type {Map<Cuisine, Heap<[Food, Rating]>>} */
+    cuisineToFoodMaxHeap;
 
     /**
      * @param {Food[]} foods
@@ -27,28 +203,39 @@ class FoodRatings {
      * @param {Rating[]} ratings
      */
     constructor(foods, cuisines, ratings) {
-        this.#cuisineToFoods = new Map();
-        this.#foodToCuisines = new Map();
-        this.#foodToRating = new Map();
-        this.#cuisineHighestRatingFoodCache = new Map();
-
-        const N = foods.length;
-        for (let i = 0; i < N; i++) {
+        this.foodToRatings = new Map();
+        this.foodToCuisines = new Map();
+        for (let i = 0; i < foods.length; i++) {
             const food = foods[i];
             const cuisine = cuisines[i];
             const rating = ratings[i];
 
-            if (!this.#cuisineToFoods.has(cuisine)) {
-                this.#cuisineToFoods.set(cuisine, []);
-            }
-            this.#cuisineToFoods.get(cuisine)?.push(food);
+            this.foodToRatings.set(food, rating);
+            this.foodToCuisines.set(food, cuisine);
+        }
 
-            if (!this.#foodToCuisines.has(food)) {
-                this.#foodToCuisines.set(food, []);
-            }
-            this.#foodToCuisines.get(food)?.push(cuisine);
+        this.cuisineToFoodMaxHeap = new Map();
+        for (let i = 0; i < foods.length; i++) {
+            const food = foods[i];
+            const cuisine = cuisines[i];
+            const rating = ratings[i];
 
-            this.#foodToRating.set(food, rating);
+            let cuisineMaxHeap = this.cuisineToFoodMaxHeap.get(cuisine);
+            if (!cuisineMaxHeap) {
+                /** @type {[Food, Rating][]} */
+                const init = [];
+                cuisineMaxHeap = new Heap(
+                    ([food1, rating1], [food2, rating2]) => {
+                        if (rating1 !== rating2) {
+                            return rating2 - rating1;
+                        } else return food1 < food2 ? -1 : 1;
+                    },
+                    init,
+                );
+            }
+
+            cuisineMaxHeap.addOne([food, rating]);
+            this.cuisineToFoodMaxHeap.set(cuisine, cuisineMaxHeap);
         }
     }
 
@@ -58,32 +245,10 @@ class FoodRatings {
      * @return {void}
      */
     changeRating(food, newRating) {
-        this.#foodToRating.set(food, newRating);
-
-        const foodCuisines = this.#foodToCuisines.get(food) ?? [];
-
-        for (const cuisine of foodCuisines) {
-            if (!this.#cuisineHighestRatingFoodCache.has(cuisine)) {
-                return;
-            }
-
-            const [highestRating, highestRatingFood] =
-                this.#cuisineHighestRatingFoodCache.get(cuisine) ?? [0, ''];
-            if (
-                newRating > highestRating ||
-                (newRating === highestRating && food < highestRatingFood)
-            ) {
-                this.#cuisineHighestRatingFoodCache.set(cuisine, [
-                    newRating,
-                    food,
-                ]);
-            } else if (
-                highestRatingFood === food &&
-                newRating < highestRating
-            ) {
-                this.#cuisineHighestRatingFoodCache.delete(cuisine);
-            }
-        }
+        this.foodToRatings.set(food, newRating);
+        const cuisine = this.foodToCuisines.get(food);
+        const cuisineMaxHeap = this.cuisineToFoodMaxHeap.get(cuisine);
+        cuisineMaxHeap.addOne([food, newRating]);
     }
 
     /**
@@ -91,35 +256,15 @@ class FoodRatings {
      * @return {Food}
      */
     highestRated(cuisine) {
-        if (this.#cuisineHighestRatingFoodCache.has(cuisine)) {
-            return this.#cuisineHighestRatingFoodCache.get(cuisine)[1];
-        }
-
-        const foods = this.#cuisineToFoods.get(cuisine) ?? [];
-
-        let highestRatedFoodIndex = -1;
-        let highestRating = -1;
-
-        for (let i = 0; i < foods.length; i++) {
-            const food = foods[i];
-            const rating = this.#foodToRating.get(food) ?? 0;
-            if (rating > highestRating) {
-                highestRatedFoodIndex = i;
-                highestRating = rating;
-            } else if (
-                rating === highestRating &&
-                food < foods[highestRatedFoodIndex]
-            ) {
-                highestRatedFoodIndex = i;
+        const cuisineMaxHeap = this.cuisineToFoodMaxHeap.get(cuisine);
+        while (true) {
+            const [food, rating] = cuisineMaxHeap.getRoot();
+            if (this.foodToRatings.get(food) !== rating) {
+                cuisineMaxHeap.deleteRoot();
+            } else {
+                return food;
             }
         }
-
-        this.#cuisineHighestRatingFoodCache.set(cuisine, [
-            highestRating,
-            foods[highestRatedFoodIndex],
-        ]);
-
-        return foods[highestRatedFoodIndex];
     }
 }
 
@@ -130,15 +275,3 @@ class FoodRatings {
  * var param_2 = obj.highestRated(cuisine)
  */
 // @lc code=end
-
-const foodRatings = new FoodRatings(
-    ['czopaaeyl', 'lxoozsbh', 'kbaxapl'],
-    ['dmnuqeatj', 'dmnuqeatj', 'dmnuqeatj'],
-    [11, 2, 15],
-);
-
-foodRatings.changeRating('czopaaeyl', 12);
-foodRatings.highestRated('dmnuqeatj');
-foodRatings.changeRating('kbaxapl', 8);
-foodRatings.changeRating('lxoozsbh', 5);
-foodRatings.highestRated('dmnuqeatj');
