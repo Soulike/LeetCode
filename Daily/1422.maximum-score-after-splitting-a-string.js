@@ -10,36 +10,32 @@
  * @return {number}
  */
 var maxScore = function (s) {
-    const N = s.length;
-    const LEFT_ZERO_NUM = 0;
-    const RIGHT_ONE_NUM = 1;
-    /** @type {[leftZeroNum: number, rightOneNum: number][]} */
-    const dp = new Array(N);
-    for (let i = 0; i < N; i++) {
-        dp[i] = [0, 0];
+    /*
+    score = leftZeros + rightOnes
+          = leftZeros + (totalOnes - leftOnes)
+          = totalOnes + (leftZeros - leftOnes)
+    => Max(score) = totalOnes + Max(leftZeros - leftOnes)
+    */
+
+    let totalOnes = 0;
+    let leftZeros = 0;
+    let leftOnes = 0;
+
+    let maxLeftZeroOneDiff = -Infinity;
+
+    for (let i = 0; i < s.length - 1; i++) {
+        if (s[i] === '1') {
+            totalOnes++;
+            leftOnes++;
+        } else {
+            leftZeros++;
+        }
+
+        maxLeftZeroOneDiff = Math.max(maxLeftZeroOneDiff, leftZeros - leftOnes);
     }
 
-    dp[0][LEFT_ZERO_NUM] = s[0] === '0' ? 1 : 0;
+    if (s[s.length - 1] === '1') totalOnes++;
 
-    for (let i = 1; i < N; i++) {
-        dp[i][LEFT_ZERO_NUM] =
-            dp[i - 1][LEFT_ZERO_NUM] + (s[i] === '0' ? 1 : 0);
-    }
-
-    for (let i = N - 2; i >= 0; i--) {
-        dp[i][RIGHT_ONE_NUM] =
-            dp[i + 1][RIGHT_ONE_NUM] + (s[i + 1] === '1' ? 1 : 0);
-    }
-
-    let maxScore = -Infinity;
-
-    for (let i = 0; i < N - 1; i++) {
-        maxScore = Math.max(
-            maxScore,
-            dp[i][LEFT_ZERO_NUM] + dp[i][RIGHT_ONE_NUM],
-        );
-    }
-
-    return maxScore;
+    return totalOnes + maxLeftZeroOneDiff;
 };
 // @lc code=end
