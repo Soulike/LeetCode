@@ -28,7 +28,7 @@ var numRollsToTarget = function (n, k, target) {
      *
      * @type {number[][]}
      */
-    const dp = new Array(n + 1);
+    const dp = new Array(2);
     for (let i = 0; i < dp.length; i++) {
         dp[i] = new Array(target + 1);
         dp[i][0] = 0;
@@ -41,16 +41,16 @@ var numRollsToTarget = function (n, k, target) {
 
     for (let m = 2; m <= n; m++) {
         for (let t = 1; t <= target; t++) {
-            dp[m][t] = 0;
+            dp[m % 2][t] = 0;
             for (let l = 1; l <= k; l++) {
                 if (l > t) break;
-                dp[m][t] += dp[m - 1][t - l];
+                dp[m % 2][t] += dp[(m - 1) % 2][t - l];
             }
-            dp[m][t] %= MOD;
+            dp[m % 2][t] %= MOD;
         }
     }
 
-    return dp[n][target];
+    return dp[n % 2][target];
 };
 // @lc code=end
 
