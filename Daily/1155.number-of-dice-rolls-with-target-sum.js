@@ -42,8 +42,7 @@ var numRollsToTarget = function (n, k, target) {
     for (let m = 2; m <= n; m++) {
         for (let t = 1; t <= target; t++) {
             dp[m % 2][t] = 0;
-            for (let l = 1; l <= k; l++) {
-                if (l > t) break;
+            for (let l = 1; l <= k && l <= t; l++) {
                 dp[m % 2][t] += dp[(m - 1) % 2][t - l];
             }
             dp[m % 2][t] %= MOD;
