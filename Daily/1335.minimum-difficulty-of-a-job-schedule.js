@@ -12,57 +12,45 @@
  */
 var minDifficulty = function (jobDifficulty, d) {
     const JOB_COUNT = jobDifficulty.length;
-    /** @type {Map<string, number>} */
-    const memo = new Map();
+
     /**
-     * @param {number} startJob
-     * @param {number} days
-     * @returns {number}
+     * dp[i][j] Start from `i`-th job, the min difficulty to finish them in `j` days
+     *
+     * base case
+     * dp[i][1] = max(jobDifficulty after `i`-th job)
+     *
+     * dp[i][j] = min(
+     *  k from i+1 to JOB_COUNT - 1
+     *      dp[k][j-1] + max(jobDifficulty[k])
+     * )
+     * @type {number[][]}
      */
-    const dp = (startJob, days) => {
-        if (days < 0 || JOB_COUNT - startJob < days) {
-            return -1;
-        }
+    const dp = new Array(JOB_COUNT);
+    for (let i = 0; i < dp.length; i++) {
+        dp[i] = new Array(d + 1);
+        dp[i].fill(Infinity);
+    }
 
-        const memoKey = `${startJob}-${days}`;
-        if (memo.has(memoKey)) return memo.get(memoKey);
+    dp[dp.length - 1][1] = jobDifficulty[JOB_COUNT - 1];
+    for (let i = dp.length - 2; i >= 0; i--) {
+        dp[i][1] = Math.max(dp[i + 1][1], jobDifficulty[i]);
+    }
 
-        if (days === 1) {
-            let max = 0;
-            for (let i = startJob; i < JOB_COUNT; i++) {
-                max = Math.max(jobDifficulty[i], max);
+    for (let i = JOB_COUNT - 1; i >= 0; i--) {
+        for (let j = 2; j <= d; j++) {
+            let maxJobDifficulty = 0;
+            for (let k = i + 1; k < JOB_COUNT; k++) {
+                maxJobDifficulty = Math.max(
+                    maxJobDifficulty,
+                    jobDifficulty[k - 1],
+                );
+                dp[i][j] = Math.min(maxJobDifficulty + dp[k][j - 1], dp[i][j]);
             }
-            return max;
         }
+    }
 
-        if (JOB_COUNT - startJob === days) {
-            let sum = 0;
-            for (let i = startJob; i < JOB_COUNT; i++) {
-                sum += jobDifficulty[i];
-            }
-            memo.set(memoKey, sum);
-            return sum;
-        }
-
-        let maxDifficultyToday = -Infinity;
-        let minDifficulty = Infinity;
-        for (let i = startJob; i < JOB_COUNT; i++) {
-            const restDaysMinDifficulty = dp(i + 1, days - 1);
-            if (restDaysMinDifficulty === -1) continue;
-            maxDifficultyToday = Math.max(maxDifficultyToday, jobDifficulty[i]);
-            minDifficulty = Math.min(
-                minDifficulty,
-                maxDifficultyToday + restDaysMinDifficulty,
-            );
-        }
-        const result = minDifficulty === Infinity ? -1 : minDifficulty;
-        memo.set(memoKey, result);
-        return result;
-    };
-
-    const result = dp(0, d);
-    return result;
+    return dp[0][d] === Infinity ? -1 : dp[0][d];
 };
 // @lc code=end
 
-minDifficulty([7, 1, 7, 1, 7, 1], 3); // 15
+minDifficulty([11, 111, 22, 222, 33, 333, 44, 444], 6); // 843
