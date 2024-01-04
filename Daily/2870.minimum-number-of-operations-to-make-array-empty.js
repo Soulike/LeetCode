@@ -18,11 +18,8 @@ var minOperations = function (nums) {
     }
 
     let operationCount = 0;
-    for (const num of numCounts.keys()) {
-        const numCount = numCounts.get(num) ?? 0;
+    for (const [_, numCount] of numCounts) {
         if (numCount === 1) return -1;
-        else if (numCount === 2 || numCount === 3) operationCount++;
-        else if (numCount === 4) operationCount += 2;
         else operationCount += Math.ceil(numCount / 3);
     }
 
