@@ -6,43 +6,36 @@
 
 // @lc code=start
 /**
- * @param {number[][]} matches
+ * @param {[winner: number, loser: number][]} matches
  * @return {number[][]}
  */
 var findWinners = function (matches) {
+    /** @type {Map<number, number>} */
+    const playerToInDegrees = new Map();
     /** @type {Set<number>} */
-    const loseZeroTimePlayers = new Set();
-    /** @type {Set<number>} */
-    const loseOneTimePlayers = new Set();
-    /** @type {Set<number>} */
-    const lostMoreThanOneTimesPlayers = new Set();
+    const players = new Set();
 
     for (const [winner, loser] of matches) {
-        if (
-            !loseOneTimePlayers.has(winner) &&
-            !lostMoreThanOneTimesPlayers.has(winner)
-        ) {
-            loseZeroTimePlayers.add(winner);
-        }
+        playerToInDegrees.set(loser, (playerToInDegrees.get(loser) ?? 0) + 1);
+        players.add(winner);
+        players.add(loser);
+    }
 
-        if (lostMoreThanOneTimesPlayers.has(loser)) {
-            continue;
-        } else if (loseZeroTimePlayers.has(loser)) {
-            loseZeroTimePlayers.delete(loser);
-            loseOneTimePlayers.add(loser);
-        } else if (loseOneTimePlayers.has(loser)) {
-            loseOneTimePlayers.delete(loser);
-            lostMoreThanOneTimesPlayers.add(loser);
-        } else {
-            loseOneTimePlayers.add(loser);
+    const playersArr = Array.from(players).sort((a, b) => a - b);
+    /** @type {number[]} */
+    const notLostAnyMatchPlayers = [];
+    /** @type {number[]} */
+    const lostOneMatchPlayers = [];
+
+    for (const player of playersArr) {
+        const inDegree = playerToInDegrees.get(player) ?? 0;
+        if (inDegree === 0) {
+            notLostAnyMatchPlayers.push(player);
+        } else if (inDegree === 1) {
+            lostOneMatchPlayers.push(player);
         }
     }
 
-    const loseZeroTimePlayersArray = [...loseZeroTimePlayers];
-    loseZeroTimePlayersArray.sort((a, b) => a - b);
-    const loseOneTimePlayersArray = [...loseOneTimePlayers];
-    loseOneTimePlayersArray.sort((a, b) => a - b);
-
-    return [loseZeroTimePlayersArray, loseOneTimePlayersArray];
+    return [notLostAnyMatchPlayers, lostOneMatchPlayers];
 };
 // @lc code=end
