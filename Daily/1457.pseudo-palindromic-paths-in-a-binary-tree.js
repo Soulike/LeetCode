@@ -18,21 +18,21 @@
  * @return {number}
  */
 var pseudoPalindromicPaths = function (root) {
-    /** @type {number[]} */
-    const currentPath = [];
     let pathNum = 0;
+    const numberCounts = new Array(10);
+    numberCounts.fill(0);
 
     /**
      * @param {TreeNode} root
      */
     const backtrack = (root) => {
-        currentPath.push(root.val);
+        numberCounts[root.val]++;
         if (root.left === null && root.right === null) {
-            if (isPseudoPalindromicPath(currentPath)) pathNum++;
+            if (hasOnlyOneOddCountNumber(numberCounts)) pathNum++;
         }
         if (root.left) backtrack(root.left);
         if (root.right) backtrack(root.right);
-        currentPath.pop();
+        numberCounts[root.val]--;
     };
 
     backtrack(root);
@@ -40,32 +40,17 @@ var pseudoPalindromicPaths = function (root) {
 };
 
 /**
- * @param {readonly number[]} path
+ * @param {readonly number[]} numberCounts
  * @returns {boolean}
  */
-function isPseudoPalindromicPath(path) {
-    /** @type {number[]} */
-    const numberCounts = new Array(10);
-    numberCounts.fill(0);
-    for (const num of path) {
-        numberCounts[num]++;
-    }
-
-    if (path.length % 2 === 0) {
-        for (const count of numberCounts) {
-            if (count % 2 === 1) return false;
+function hasOnlyOneOddCountNumber(numberCounts) {
+    let oddNumCount = 0;
+    for (const count of numberCounts) {
+        if (count % 2 === 1) {
+            if (oddNumCount === 1) return false;
+            oddNumCount++;
         }
-        return true;
-    } else {
-        let oddNumCount = 0;
-        for (const count of numberCounts) {
-            if (count % 2 === 1) {
-                oddNumCount++;
-            }
-        }
-        return oddNumCount === 1;
     }
+    return true;
 }
 // @lc code=end
-
-isPseudoPalindromicPath([8, 8, 7]);
