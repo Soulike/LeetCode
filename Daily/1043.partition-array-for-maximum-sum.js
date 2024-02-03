@@ -11,34 +11,27 @@
  * @return {number}
  */
 var maxSumAfterPartitioning = function (arr, k) {
-    /** @type {number[]} */
-    const memo = [];
-
     /**
-     * @param {number} start
-     * @returns {number}
+     * dp[i][j] 1 <= j <= k
+     * The current partition ends with i
+     * The length of the partition is j
+     *
+     * dp[i][j] = max(arr[i-j+1 to i])*j + max(dp[i-j])
      */
-    const dfs = (start) => {
-        if (memo[start] !== undefined) return memo[start];
+    const dp = new Array(arr.length);
+    dp.fill(0);
 
-        let currentMaxElement = 0;
-        let currentMaxSum = 0;
-        for (let i = 1; i <= k; i++) {
-            if (start + i - 1 >= arr.length) break;
-
-            currentMaxElement = Math.max(arr[start + i - 1], currentMaxElement);
-            currentMaxSum = Math.max(
-                currentMaxSum,
-                currentMaxElement * i + dfs(start + i),
-            );
+    for (let i = 0; i < arr.length; i++) {
+        let currentMax = 0;
+        for (let j = 1; j <= k; j++) {
+            if (i - j + 1 < 0) break;
+            currentMax = Math.max(currentMax, arr[i - j + 1]);
+            dp[i] = Math.max(dp[i], currentMax * j + (dp[i - j] ?? 0));
         }
-        memo[start] = currentMaxSum;
-        return currentMaxSum;
-    };
+    }
 
-    const result = dfs(0);
-    return result;
+    return dp[arr.length - 1];
 };
 // @lc code=end
 
-maxSumAfterPartitioning([1, 4, 1, 5, 7, 3, 6, 1, 9, 9, 3], 4);
+maxSumAfterPartitioning([1, 15, 7, 9, 2, 5, 10], 3);
