@@ -5,8 +5,7 @@
             "includePath": ["${default}"],
             "defines": ["_GNU_SOURCE"],
             "compilerPath": "/usr/bin/clang++",
-            "cppStandard": "c++23",
-            "cStandard": "c23"
+            "cppStandard": "c++20"
         }
     ],
     "version": 4
