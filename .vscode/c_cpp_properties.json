@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": ["${default}"],
+            "defines": ["_GNU_SOURCE"],
+            "compilerPath": "/usr/bin/clang++",
+            "cppStandard": "c++23",
+            "cStandard": "c23"
+        }
+    ],
+    "version": 4
+}
