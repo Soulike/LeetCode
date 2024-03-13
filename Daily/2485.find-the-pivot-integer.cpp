@@ -14,9 +14,19 @@ class Solution {
       prefixSum[i] = prefixSum[i - 1] + i;
     }
 
-    for (int i = 1; i <= n; i++) {
-      if (prefixSum[i] == prefixSum[n] - prefixSum[i - 1]) {
-        return i;
+    int left = 1;
+    int right = n;
+
+    while (left <= right) {
+      int mid = left + (right - left) / 2;
+      int leftSum = prefixSum[mid];
+      int rightSum = prefixSum[n] - prefixSum[mid - 1];
+      if (leftSum == rightSum) {
+        return mid;
+      } else if (leftSum < rightSum) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
       }
     }
 
