@@ -34,29 +34,21 @@ var insert = function (intervals, newInterval) {
             */
             afterIntervals.push(...intervals.slice(i));
             break;
-        } else if (newInterval[START] < interval[START]) {
+        } else if (newInterval[START] <= interval[START]) {
             if (newInterval[END] <= interval[END]) {
                 /*
                 |--N--|
                   |--I--|
-                */
-                newInterval[END] = interval[END];
-            } else {
-                /*
-                |----N----|
-                  |--I--|
-                */
-                // skip;
-            }
-        } else if (newInterval[START] === interval[START]) {
-            if (newInterval[END] <= interval[END]) {
-                /*
+                OR
                 |--N--|
                 |----I----|
                 */
                 newInterval[END] = interval[END];
             } else {
                 /*
+                |----N----|
+                  |--I--|
+                OR
                 |----N----|
                 |--I--|
                 */
