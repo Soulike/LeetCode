@@ -27,12 +27,11 @@ class Solution {
       maxTaskFrequency = std::max(maxTaskFrequency, taskFrequency[task - 'A']);
     }
 
-    int taskWithMaxFrequencyCount = 0;
-    for (auto& frequency : taskFrequency) {
-      if (frequency == maxTaskFrequency) {
-        taskWithMaxFrequencyCount++;
-      }
-    }
+    const int taskWithMaxFrequencyCount =
+        std::count_if(taskFrequency.cbegin(), taskFrequency.cend(),
+                      [maxTaskFrequency](auto element) {
+                        return element == maxTaskFrequency;
+                      });
 
     return std::max(TASK_COUNT, (maxTaskFrequency - 1) * (n + 1) +
                                     taskWithMaxFrequencyCount);
