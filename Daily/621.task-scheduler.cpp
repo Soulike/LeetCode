@@ -11,10 +11,6 @@ using std::map;
 using std::vector;
 
 // @lc code=start
-bool comparator(int a, int b) {
-  return b < a;
-}
-
 class Solution {
  public:
   int leastInterval(vector<char>& tasks, int n) {
