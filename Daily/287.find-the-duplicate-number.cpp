@@ -12,15 +12,23 @@ using std::vector;
 class Solution {
  public:
   int findDuplicate(vector<int>& nums) {
-    for (int i = 0; i < nums.size(); i++) {
-      int index = std::abs(nums[i]) - 1;
-      if (nums[index] < 0) {
-        // visited
-        return std::abs(nums[i]);
-      }
-      nums[index] *= -1;
+    int slow = 0;
+    int fast = 0;
+    while (true) {
+      slow = nums[slow];
+      fast = nums[nums[fast]];
+      if (slow == fast)
+        break;
     }
-    return 0;
+
+    int temp = 0;
+    while (true) {
+      slow = nums[slow];
+      temp = nums[temp];
+      if (slow == temp)
+        break;
+    }
+    return slow;
   }
 };
 // @lc code=end
