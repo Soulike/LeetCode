@@ -22,15 +22,16 @@ class Solution {
       } else if (c == ')') {
         // At this point, if minOpenParenthesis < 0,
         // then we treat too many '*'s as ')'s,
-        // so set some of them to '',
-        // as we can't use future '('s to match them.
+        // so set one of them to '',
+        // as we can't use future '('s to match it.
         minOpenParenthesis = std::max(minOpenParenthesis - 1, 0);
         maxOpenParenthesis--;
       } else {
-        // At this point, if minOpenParenthesis < 0,
+        // Try to try to treat the '*' as ')'.
+        // But if minOpenParenthesis < 0,
         // then we treat too many '*'s as ')'s,
-        // so set some of them to '',
-        // as we can't use future '('s to match them.
+        // so set one of them to '',
+        // as we can't use future '('s to match it.
         minOpenParenthesis = std::max(minOpenParenthesis - 1, 0);
         maxOpenParenthesis++;
       }
