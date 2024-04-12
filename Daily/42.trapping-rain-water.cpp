@@ -14,21 +14,28 @@ class Solution {
  public:
   int trap(const vector<int>& heights) {
     const int N = heights.size();
-    vector<int> maxLeftHeight(N);
-    vector<int> maxRightHeight(N);
-
-    maxLeftHeight[0] = heights[0];
-    maxRightHeight[N - 1] = heights[N - 1];
-
-    for (int i = 1; i < N; i++) {
-      maxLeftHeight[i] = std::max(maxLeftHeight[i - 1], heights[i]);
-      maxRightHeight[N - i - 1] =
-          std::max(maxRightHeight[N - i], heights[N - i - 1]);
-    }
-
+    int left = 0;
+    int right = N - 1;
+    int leftMaxHeight = 0;
+    int rightMaxHeight = 0;
     int water = 0;
-    for (int i = 0; i < N; i++) {
-      water += std::min(maxLeftHeight[i], maxRightHeight[i]) - heights[i];
+
+    while (left <= right) {
+      if (heights[left] < heights[right]) {
+        if (leftMaxHeight < heights[left]) {
+          leftMaxHeight = heights[left];
+        } else {
+          water += leftMaxHeight - heights[left];
+        }
+        left++;
+      } else {
+        if (rightMaxHeight < heights[right]) {
+          rightMaxHeight = heights[right];
+        } else {
+          water += rightMaxHeight - heights[right];
+        }
+        right--;
+      }
     }
 
     return water;
