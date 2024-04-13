@@ -4,80 +4,80 @@
  * [85] Maximal Rectangle
  */
 #include <algorithm>
+#include <stack>
 #include <vector>
 
+using std::stack;
 using std::vector;
 
 // @lc code=start
 class Solution {
  public:
   int maximalRectangle(vector<vector<char>>& matrix) {
-    if (matrix.empty()) {
-      return 0;
-    }
+    // We see every row as a histogram.
+    // Then the issue is converted to
+    // LeetCode 84. Largest Rectangle in Histogram
     const int M = matrix.size();
     const int N = matrix[0].size();
 
-    // The left boundary of rectangle
-    // if the height of the rectangle is height[j]
-    // -1 means no rectangle here
-    int left[N];
-    // The right boundary of rectangle
-    // if the height of the rectangle is height[j]
-    // N means no rectangle here
-    int right[N];
-
-    int height[N];
-    std::fill_n(left, N, -1);
-    std::fill_n(right, N, N);
-    std::fill_n(height, N, 0);
+    vector<int> heights(N);
+    std::fill(heights.begin(), heights.end(), 0);
 
     int maxArea = 0;
 
     for (int i = 0; i < M; i++) {
-      int currentLeft = 0;
-      int currentRight = N - 1;
+      for (int j = 0; j < N; j++) {
+        if (matrix[i][j] == '1') {
+          heights[j]++;
+        } else {
+          heights[j] = 0;
+        }
+      }
 
-      for (int j = 0; j < N; j++) {
-        // compute height (can do this from either side)
-        if (matrix[i][j] == '1') {
-          height[j]++;
-        } else {
-          height[j] = 0;
-        }
-      }
-      for (int j = 0; j < N; j++) {
-        // compute left (from left to right)
-        if (matrix[i][j] == '1') {
-          left[j] = std::max(left[j], currentLeft);
-        } else {
-          left[j] = 0;
-          currentLeft = j + 1;
-        }
-      }
-      // compute right (from right to left)
-      for (int j = N - 1; j >= 0; j--) {
-        if (matrix[i][j] == '1')
-          right[j] = std::min(right[j], currentRight);
-        else {
-          right[j] = N;
-          currentRight = j - 1;
-        }
-      }
-      // compute the area of rectangle (can do this from either side)
-      for (int j = 0; j < N; j++)
-        maxArea = std::max(maxArea, (right[j] - left[j] + 1) * height[j]);
+      maxArea = std::max(maxArea, largestRectangleArea(heights));
     }
+
+    return maxArea;
+  }
+
+  // LeetCode 84
+  int largestRectangleArea(vector<int>& heights) {
+    heights.push_back(0);  // force stack to empty in the end
+
+    int maxArea = 0;
+    stack<int> increasingIndexStack;
+    for (int i = 0; i < heights.size(); i++) {
+      while (!increasingIndexStack.empty() &&
+             heights[increasingIndexStack.top()] >= heights[i]) {
+        int topIndex = increasingIndexStack.top();
+        increasingIndexStack.pop();
+
+        int topHeight = heights[topIndex];
+        int topHeightWidth =
+            i -
+            (increasingIndexStack.empty() ? -1 : increasingIndexStack.top()) -
+            1;
+        // (i - increasingIndexStack.top() + 1) - 1 - 1
+        // `(i - increasingIndexStack.top() + 1)`
+        // width from i to increasingIndexStack.top()
+        // `-1`
+        // exclude i, as height[i] < topHeight
+        // `-1`
+        // exclude increasingIndexStack.top()
+        // as height[increasingIndexStack.top()] < topHeight
+        maxArea = std::max(maxArea, topHeight * topHeightWidth);
+      }
+      increasingIndexStack.push(i);
+    }
+
+    heights.pop_back();
     return maxArea;
   }
 };
 // @lc code=end
 
 int main() {
-  vector<vector<char>> matrix = {{'1', '0', '1', '0', '0'},
-                                 {'1', '0', '1', '1', '1'},
-                                 {'1', '1', '1', '1', '1'},
-                                 {'1', '0', '0', '1', '0'}};
+  vector<vector<char>> matrix = {{'0', '1'}, {'1', '0'}};
   Solution sol;
   sol.maximalRectangle(matrix);
 }
