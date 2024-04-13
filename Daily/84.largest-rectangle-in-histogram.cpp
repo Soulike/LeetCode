@@ -14,7 +14,7 @@ using std::vector;
 class Solution {
  public:
   int largestRectangleArea(vector<int>& heights) {
-    heights.push_back(0); // force stack to empty in the end
+    heights.push_back(0);  // force stack to empty in the end
 
     int maxArea = 0;
     stack<int> increasingIndexStack;
@@ -25,10 +25,18 @@ class Solution {
         increasingIndexStack.pop();
 
         int topHeight = heights[topIndex];
-        int topHeightWidth = increasingIndexStack.empty()
-                           ? i
-                           : i - increasingIndexStack.top() -
-                                 1;
+        int topHeightWidth =
+            i -
+            (increasingIndexStack.empty() ? -1 : increasingIndexStack.top()) -
+            1;
+        // (i - increasingIndexStack.top() + 1) - 1 - 1
+        // `(i - increasingIndexStack.top() + 1)`
+        // width from i to increasingIndexStack.top()
+        // `-1`
+        // exclude i, as height[i] < topHeight
+        // `-1`
+        // exclude increasingIndexStack.top()
+        // as height[increasingIndexStack.top()] < topHeight
         maxArea = std::max(maxArea, topHeight * topHeightWidth);
       }
       increasingIndexStack.push(i);
