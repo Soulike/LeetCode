@@ -3,56 +3,63 @@
  *
  * [1971] Find if Path Exists in Graph
  */
-#include <queue>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
-using std::queue;
-using std::unordered_map;
-using std::unordered_set;
 using std::vector;
 
 // @lc code=start
+class union_find_set {
+ private:
+  using member_type = unsigned long long;
+  using size_type = unsigned long long;
+
+  size_type _set_count;
+  const size_type _size;
+  member_type* const parent;
+
+ public:
+  union_find_set(size_type n) : _size(n), parent(new member_type[n]) {
+    for (int i = 0; i < n; i++) {
+      parent[i] = i;
+    }
+    _set_count = n;
+  }
+
+  ~union_find_set() { delete[] parent; }
+
+  size_type size() const { return _size; }
+
+  size_type set_count() const { return _set_count; }
+
+  void do_union(member_type a, member_type b) {
+    member_type aSet = find(a);
+    member_type bSet = find(b);
+    if (aSet != bSet) {
+      _set_count--;
+      parent[bSet] = aSet;
+    }
+  }
+
+  member_type find(member_type m) {
+    if (parent[m] == m)
+      return m;
+    parent[m] = find(parent[m]);
+    return parent[m];
+  }
+};
+
 class Solution {
  public:
   bool validPath(int n,
                  vector<vector<int>>& edges,
                  int source,
                  int destination) {
-    unordered_map<int, vector<int>> edgeMap;
+    union_find_set unionFindSet(n);
     for (auto& edge : edges) {
-      edgeMap[edge[0]].push_back(edge[1]);
-      edgeMap[edge[1]].push_back(edge[0]);
+      unionFindSet.do_union(edge[0], edge[1]);
     }
 
-    queue<int> nextNodes;
-    unordered_set<int> visited;
-    nextNodes.push(source);
-    visited.insert(source);
-
-    while (!nextNodes.empty()) {
-      const int currentNextNodesLength = nextNodes.size();
-      for (int i = 0; i < currentNextNodesLength; i++) {
-        int node = nextNodes.front();
-        nextNodes.pop();
-        if (node == destination) {
-          return true;
-        }
-        const vector<int>& neighbors = edgeMap[node];
-        for (auto& neighbor : neighbors) {
-          if (!visited.count(neighbor)) {
-            if (neighbor == destination) {
-              return true;
-            }
-            visited.insert(neighbor);
-            nextNodes.push(neighbor);
-          }
-        }
-      }
-    }
-
-    return false;
+    return unionFindSet.find(source) == unionFindSet.find(destination);
   }
 };
 // @lc code=end
