@@ -9,16 +9,17 @@ using std::vector;
 
 // @lc code=start
 class union_find_set {
- private:
-  using member_type = unsigned long long;
+ public:
+  using element_type = unsigned long long;
   using size_type = unsigned long long;
 
+ private:
   size_type _set_count;
   const size_type _size;
-  member_type* const parent;
+  element_type* const parent;
 
  public:
-  union_find_set(size_type n) : _size(n), parent(new member_type[n]) {
+  union_find_set(size_type n) : _size(n), parent(new element_type[n]) {
     for (int i = 0; i < n; i++) {
       parent[i] = i;
     }
@@ -31,20 +32,27 @@ class union_find_set {
 
   size_type set_count() const { return _set_count; }
 
-  void do_union(member_type a, member_type b) {
-    member_type aSet = find(a);
-    member_type bSet = find(b);
+  void do_union(element_type element1, element_type element2) {
+    element_type aSet = find(element1);
+    element_type bSet = find(element2);
     if (aSet != bSet) {
       _set_count--;
       parent[bSet] = aSet;
     }
   }
 
-  member_type find(member_type m) {
-    if (parent[m] == m)
-      return m;
-    parent[m] = find(parent[m]);
-    return parent[m];
+  bool isInOneSet(element_type element1, element_type element2) {
+    return find(element1) == find(element2);
+  }
+
+ private:
+  element_type find(element_type element) {
+    element_type currentMember = element;
+    while (parent[currentMember] != currentMember) {
+      currentMember = parent[currentMember];
+      parent[currentMember] = find(parent[currentMember]);
+    }
+    return currentMember;
   }
 };
 
@@ -59,7 +67,7 @@ class Solution {
       unionFindSet.do_union(edge[0], edge[1]);
     }
 
-    return unionFindSet.find(source) == unionFindSet.find(destination);
+    return unionFindSet.isInOneSet(source, destination);
   }
 };
 // @lc code=end
