@@ -18,34 +18,34 @@
  * @return {ListNode | null}
  */
 var partition = function (head, x) {
-    if (head === null) {
-        return null;
+  if (head === null) {
+    return null;
+  }
+  const ltLinkedListHead = new ListNode();
+  const geqLinkedListHead = new ListNode();
+
+  let ltLinkedListCurr = ltLinkedListHead;
+  let geqLinkedListCurr = geqLinkedListHead;
+
+  let curr = head;
+  let next = head.next;
+
+  while (curr !== null) {
+    if (curr.val < x) {
+      ltLinkedListCurr.next = curr;
+      ltLinkedListCurr = curr;
+    } else {
+      geqLinkedListCurr.next = curr;
+      geqLinkedListCurr = curr;
     }
-    const ltLinkedListHead = new ListNode();
-    const geqLinkedListHead = new ListNode();
+    curr.next = null;
 
-    let ltLinkedListCurr = ltLinkedListHead;
-    let geqLinkedListCurr = geqLinkedListHead;
+    curr = next;
+    next = curr?.next;
+  }
 
-    let curr = head;
-    let next = head.next;
+  ltLinkedListCurr.next = geqLinkedListHead.next;
 
-    while (curr !== null) {
-        if (curr.val < x) {
-            ltLinkedListCurr.next = curr;
-            ltLinkedListCurr = curr;
-        } else {
-            geqLinkedListCurr.next = curr;
-            geqLinkedListCurr = curr;
-        }
-        curr.next = null;
-
-        curr = next;
-        next = curr?.next;
-    }
-
-    ltLinkedListCurr.next = geqLinkedListHead.next;
-
-    return ltLinkedListHead.next;
+  return ltLinkedListHead.next;
 };
 // @lc code=end

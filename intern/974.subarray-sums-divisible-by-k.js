@@ -11,24 +11,24 @@
  * @return {number}
  */
 const subarraysDivByK = function (nums, k) {
-    const sumToCount = new Map();
-    sumToCount.set(0, 1); // 和余数是 0 也符合题意
+  const sumToCount = new Map();
+  sumToCount.set(0, 1); // 和余数是 0 也符合题意
 
-    let subarrayCount = 0;
-    let subarraySumDivByK = 0;
-    for (const num of nums) {
-        subarraySumDivByK = (subarraySumDivByK + num) % k;
-        if (subarraySumDivByK < 0) {
-            // 只需要正余数
-            subarraySumDivByK += k;
-        }
-        subarrayCount += sumToCount.get(subarraySumDivByK) ?? 0;
-        sumToCount.set(
-            subarraySumDivByK,
-            (sumToCount.get(subarraySumDivByK) ?? 0) + 1,
-        );
+  let subarrayCount = 0;
+  let subarraySumDivByK = 0;
+  for (const num of nums) {
+    subarraySumDivByK = (subarraySumDivByK + num) % k;
+    if (subarraySumDivByK < 0) {
+      // 只需要正余数
+      subarraySumDivByK += k;
     }
+    subarrayCount += sumToCount.get(subarraySumDivByK) ?? 0;
+    sumToCount.set(
+      subarraySumDivByK,
+      (sumToCount.get(subarraySumDivByK) ?? 0) + 1,
+    );
+  }
 
-    return subarrayCount;
+  return subarrayCount;
 };
 // @lc code=end

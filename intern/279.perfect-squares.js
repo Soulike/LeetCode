@@ -14,27 +14,27 @@ const cache = [];
  * @return {number}
  */
 const numSquares = function (n) {
-    if (cache[n]) {
-        return cache[n];
+  if (cache[n]) {
+    return cache[n];
+  }
+  if (n < 4) {
+    return n;
+  }
+  let min = Number.POSITIVE_INFINITY;
+  let square = 0;
+  for (let i = 2; ; i++) {
+    square = i * i;
+    if (square === n) {
+      return 1;
+    } else if (square < n) {
+      min = Math.min(1 + numSquares(n - square), min);
+    } else {
+      break;
     }
-    if (n < 4) {
-        return n;
-    }
-    let min = Number.POSITIVE_INFINITY;
-    let square = 0;
-    for (let i = 2; ; i++) {
-        square = i * i;
-        if (square === n) {
-            return 1;
-        } else if (square < n) {
-            min = Math.min(1 + numSquares(n - square), min);
-        } else {
-            break;
-        }
-    }
-    if (!cache[n]) {
-        cache[n] = min;
-    }
-    return min;
+  }
+  if (!cache[n]) {
+    cache[n] = min;
+  }
+  return min;
 };
 // @lc code=end

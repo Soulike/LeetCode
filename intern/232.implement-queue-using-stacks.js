@@ -7,66 +7,65 @@
 // @lc code=start
 
 class MyQueue {
-    headToTailStack; // 栈顶是 tail，栈底是 head
-    tailToHeadStack; // 栈底是 tail，栈顶是 head
+  headToTailStack; // 栈顶是 tail，栈底是 head
+  tailToHeadStack; // 栈底是 tail，栈顶是 head
 
-    constructor() {
-        this.headToTailStack = [];
-        this.tailToHeadStack = [];
-    }
+  constructor() {
+    this.headToTailStack = [];
+    this.tailToHeadStack = [];
+  }
 
-    /**
-     * @param {number} x
-     * @return {void}
-     */
-    push(x) {
-        if (this.headToTailStack.length === 0) {
-            this.transferStack();
-        }
-        this.headToTailStack.push(x);
+  /**
+   * @param {number} x
+   * @return {void}
+   */
+  push(x) {
+    if (this.headToTailStack.length === 0) {
+      this.transferStack();
     }
+    this.headToTailStack.push(x);
+  }
 
-    /**
-     * @return {number}
-     */
-    pop() {
-        if (this.tailToHeadStack.length === 0) {
-            this.transferStack();
-        }
-        return this.tailToHeadStack.pop();
+  /**
+   * @return {number}
+   */
+  pop() {
+    if (this.tailToHeadStack.length === 0) {
+      this.transferStack();
     }
+    return this.tailToHeadStack.pop();
+  }
 
-    /**
-     * @return {number}
-     */
-    peek() {
-        if (this.tailToHeadStack.length === 0) {
-            this.transferStack();
-        }
-        return this.tailToHeadStack[this.tailToHeadStack.length - 1];
+  /**
+   * @return {number}
+   */
+  peek() {
+    if (this.tailToHeadStack.length === 0) {
+      this.transferStack();
     }
+    return this.tailToHeadStack[this.tailToHeadStack.length - 1];
+  }
 
-    /**
-     * @return {boolean}
-     */
-    empty() {
-        return (
-            this.headToTailStack.length === 0 &&
-            this.tailToHeadStack.length === 0
-        );
-    }
+  /**
+   * @return {boolean}
+   */
+  empty() {
+    return (
+      this.headToTailStack.length === 0 && this.tailToHeadStack.length === 0
+    );
+  }
 
-    transferStack() {
-        if (this.headToTailStack.length === 0) {
-            while (this.tailToHeadStack.length > 0) {
-                this.headToTailStack.push(this.tailToHeadStack.pop());
-            }
-        } else if (this.tailToHeadStack.length === 0) {
-            while (this.headToTailStack.length > 0) {
-                this.tailToHeadStack.push(this.headToTailStack.pop());
-            }
-        }
+  transferStack() {
+    if (this.headToTailStack.length === 0) {
+      while (this.tailToHeadStack.length > 0) {
+        this.headToTailStack.push(this.tailToHeadStack.pop());
+      }
+    } else if (this.tailToHeadStack.length === 0) {
+      while (this.headToTailStack.length > 0) {
+        this.tailToHeadStack.push(this.headToTailStack.pop());
+      }
     }
+  }
 }
 
 /**

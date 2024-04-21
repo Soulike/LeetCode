@@ -9,32 +9,32 @@
  * @param {number[]} nums
  */
 class Solution {
-    numToIndexes;
+  numToIndexes;
 
-    constructor(nums) {
-        this.numToIndexes = new Map();
+  constructor(nums) {
+    this.numToIndexes = new Map();
 
-        for (let i = 0; i < nums.length; i++) {
-            if (this.numToIndexes.has(nums[i])) {
-                const indexes = this.numToIndexes.get(nums[i]);
-                indexes.push(i);
-            } else {
-                this.numToIndexes.set(nums[i], [i]);
-            }
-        }
+    for (let i = 0; i < nums.length; i++) {
+      if (this.numToIndexes.has(nums[i])) {
+        const indexes = this.numToIndexes.get(nums[i]);
+        indexes.push(i);
+      } else {
+        this.numToIndexes.set(nums[i], [i]);
+      }
     }
-    /**
-     * @param {number} target
-     * @return {number}
-     */
-    pick(target) {
-        const indexes = this.numToIndexes.get(target);
-        return indexes[this.generateRandom(0, indexes.length - 1)];
-    }
+  }
+  /**
+   * @param {number} target
+   * @return {number}
+   */
+  pick(target) {
+    const indexes = this.numToIndexes.get(target);
+    return indexes[this.generateRandom(0, indexes.length - 1)];
+  }
 
-    generateRandom(start, end) {
-        return Math.floor(start + Math.random() * (end - start + 1));
-    }
+  generateRandom(start, end) {
+    return Math.floor(start + Math.random() * (end - start + 1));
+  }
 }
 
 /**

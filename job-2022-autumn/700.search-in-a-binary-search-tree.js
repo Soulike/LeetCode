@@ -19,10 +19,10 @@
  * @return {TreeNode | null}
  */
 var searchBST = function (root, val) {
-    if (root === null || root.val === val) {
-        return root;
-    }
+  if (root === null || root.val === val) {
+    return root;
+  }
 
-    return searchBST(val < root.val ? root.left : root.right, val);
+  return searchBST(val < root.val ? root.left : root.right, val);
 };
 // @lc code=end

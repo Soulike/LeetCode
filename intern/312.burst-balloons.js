@@ -10,9 +10,9 @@
  * @return {number}
  */
 var maxCoins = function (nums) {
-    // 添加两侧的虚拟气球
-    const points = [1, ...nums, 1];
-    /**
+  // 添加两侧的虚拟气球
+  const points = [1, ...nums, 1];
+  /**
      * n = points.length
      * 
      * dp[i][j] 戳破 (i,j) 区间的所有气球，所能获得的最大收益
@@ -31,23 +31,23 @@ var maxCoins = function (nums) {
     );
      */
 
-    const dp = new Array(points.length);
-    for (let i = 0; i < dp.length; i++) {
-        dp[i] = new Array(points.length);
-        dp[i].fill(0);
-    }
+  const dp = new Array(points.length);
+  for (let i = 0; i < dp.length; i++) {
+    dp[i] = new Array(points.length);
+    dp[i].fill(0);
+  }
 
-    for (let i = points.length - 1; i >= 0; i--) {
-        for (let j = i + 2; j < points.length; j++) {
-            for (let k = i + 1; k < j; k++) {
-                dp[i][j] = Math.max(
-                    dp[i][j],
-                    dp[i][k] + dp[k][j] + points[i] * points[j] * points[k],
-                );
-            }
-        }
+  for (let i = points.length - 1; i >= 0; i--) {
+    for (let j = i + 2; j < points.length; j++) {
+      for (let k = i + 1; k < j; k++) {
+        dp[i][j] = Math.max(
+          dp[i][j],
+          dp[i][k] + dp[k][j] + points[i] * points[j] * points[k],
+        );
+      }
     }
+  }
 
-    return dp[0][points.length - 1];
+  return dp[0][points.length - 1];
 };
 // @lc code=end

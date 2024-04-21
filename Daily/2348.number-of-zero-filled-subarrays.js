@@ -10,29 +10,29 @@
  * @return {number}
  */
 var zeroFilledSubarray = function (nums) {
-    let currentRangeLength = 0;
-    let subarrayNumber = 0;
+  let currentRangeLength = 0;
+  let subarrayNumber = 0;
 
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] === 0) {
-            currentRangeLength++;
-        } else {
-            subarrayNumber += getArithmeticProgressionSum(
-                1,
-                currentRangeLength,
-                currentRangeLength,
-            );
-            currentRangeLength = 0;
-        }
-    }
-
-    subarrayNumber += getArithmeticProgressionSum(
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] === 0) {
+      currentRangeLength++;
+    } else {
+      subarrayNumber += getArithmeticProgressionSum(
         1,
         currentRangeLength,
         currentRangeLength,
-    );
+      );
+      currentRangeLength = 0;
+    }
+  }
 
-    return subarrayNumber;
+  subarrayNumber += getArithmeticProgressionSum(
+    1,
+    currentRangeLength,
+    currentRangeLength,
+  );
+
+  return subarrayNumber;
 };
 
 /**
@@ -42,7 +42,7 @@ var zeroFilledSubarray = function (nums) {
  * @returns {number}
  */
 function getArithmeticProgressionSum(a_0, a_n, n) {
-    return ((a_0 + a_n) / 2) * n;
+  return ((a_0 + a_n) / 2) * n;
 }
 // @lc code=end
 

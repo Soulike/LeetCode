@@ -17,35 +17,35 @@
  * @return {ListNode | null}
  */
 var swapPairs = function (head) {
-    if (head === null || head.next === null) return head;
+  if (head === null || head.next === null) return head;
 
-    const fakeHead = new ListNode();
-    fakeHead.next = head;
+  const fakeHead = new ListNode();
+  fakeHead.next = head;
 
-    /** @type {ListNode | null} */
-    let node1 = head;
-    /** @type {ListNode | null} */
-    let node2 = head.next;
+  /** @type {ListNode | null} */
+  let node1 = head;
+  /** @type {ListNode | null} */
+  let node2 = head.next;
 
-    let prevTail = fakeHead;
-    let nextHead = node2.next;
+  let prevTail = fakeHead;
+  let nextHead = node2.next;
 
-    while (node1 !== null && node2 !== null) {
-        nextHead = node2.next; // remember next starting node
+  while (node1 !== null && node2 !== null) {
+    nextHead = node2.next; // remember next starting node
 
-        // swap node1 and node2
-        prevTail.next = node2;
-        node2.next = node1;
-        node1.next = nextHead;
+    // swap node1 and node2
+    prevTail.next = node2;
+    node2.next = node1;
+    node1.next = nextHead;
 
-        // remember last tail
-        prevTail = node1;
+    // remember last tail
+    prevTail = node1;
 
-        // get swapped nodes in next round
-        node1 = prevTail.next;
-        node2 = prevTail.next?.next ?? null;
-    }
+    // get swapped nodes in next round
+    node1 = prevTail.next;
+    node2 = prevTail.next?.next ?? null;
+  }
 
-    return fakeHead.next;
+  return fakeHead.next;
 };
 // @lc code=end

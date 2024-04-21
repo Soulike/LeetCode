@@ -20,27 +20,27 @@
  */
 
 function constructMaximumBinaryTree(nums: number[]): TreeNode | null {
-    return helper(nums, 0, nums.length - 1);
+  return helper(nums, 0, nums.length - 1);
 }
 
 function helper(nums: number[], left: number, right: number): TreeNode | null {
-    if (left > right) return null;
+  if (left > right) return null;
 
-    let maxValInRange = -Infinity;
-    let maxValIndexInRange = -1;
+  let maxValInRange = -Infinity;
+  let maxValIndexInRange = -1;
 
-    for (let i = left; i <= right; i++) {
-        if (nums[i] > maxValInRange) {
-            maxValInRange = nums[i];
-            maxValIndexInRange = i;
-        }
+  for (let i = left; i <= right; i++) {
+    if (nums[i] > maxValInRange) {
+      maxValInRange = nums[i];
+      maxValIndexInRange = i;
     }
+  }
 
-    const leftChild = helper(nums, left, maxValIndexInRange - 1);
-    const rightChild = helper(nums, maxValIndexInRange + 1, right);
+  const leftChild = helper(nums, left, maxValIndexInRange - 1);
+  const rightChild = helper(nums, maxValIndexInRange + 1, right);
 
-    const root = new TreeNode(maxValInRange, leftChild, rightChild);
+  const root = new TreeNode(maxValInRange, leftChild, rightChild);
 
-    return root;
+  return root;
 }
 // @lc code=end

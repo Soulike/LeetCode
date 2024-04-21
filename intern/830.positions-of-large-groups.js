@@ -10,26 +10,26 @@
  * @return {number[][]}
  */
 const largeGroupPositions = function (s) {
-    /**@type {number[][]} */
-    const groups = [];
-    const LENGTH = s.length;
+  /**@type {number[][]} */
+  const groups = [];
+  const LENGTH = s.length;
 
-    let leftIndex = 0;
-    let rightIndex = 0;
+  let leftIndex = 0;
+  let rightIndex = 0;
 
-    while (rightIndex < LENGTH) {
-        if (s.charAt(leftIndex) !== s.charAt(rightIndex)) {
-            if (rightIndex - leftIndex >= 3) {
-                groups.push([leftIndex, rightIndex - 1]);
-            }
-            leftIndex = rightIndex;
-        }
-        rightIndex++;
-    }
-    if (rightIndex - leftIndex >= 3) {
+  while (rightIndex < LENGTH) {
+    if (s.charAt(leftIndex) !== s.charAt(rightIndex)) {
+      if (rightIndex - leftIndex >= 3) {
         groups.push([leftIndex, rightIndex - 1]);
+      }
+      leftIndex = rightIndex;
     }
+    rightIndex++;
+  }
+  if (rightIndex - leftIndex >= 3) {
+    groups.push([leftIndex, rightIndex - 1]);
+  }
 
-    return groups;
+  return groups;
 };
 // @lc code=end

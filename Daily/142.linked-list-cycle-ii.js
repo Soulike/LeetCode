@@ -18,31 +18,31 @@
  * @return {ListNode | null}
  */
 var detectCycle = function (head) {
-    if (head === null) return null;
+  if (head === null) return null;
 
-    /** @type {ListNode|null} */
-    let fast = head;
-    /** @type {ListNode|null} */
-    let slow = head;
+  /** @type {ListNode|null} */
+  let fast = head;
+  /** @type {ListNode|null} */
+  let slow = head;
 
-    while (true) {
-        slow = slow.next;
+  while (true) {
+    slow = slow.next;
 
-        fast = fast.next;
-        if (fast === null) return null;
-        fast = fast.next;
-        if (fast === null) return null;
+    fast = fast.next;
+    if (fast === null) return null;
+    fast = fast.next;
+    if (fast === null) return null;
 
-        if (fast === slow) break;
-    }
+    if (fast === slow) break;
+  }
 
-    let p = head;
+  let p = head;
 
-    while (p !== slow) {
-        p = p.next;
-        slow = slow.next;
-    }
+  while (p !== slow) {
+    p = p.next;
+    slow = slow.next;
+  }
 
-    return p;
+  return p;
 };
 // @lc code=end

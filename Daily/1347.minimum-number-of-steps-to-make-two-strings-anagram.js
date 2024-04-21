@@ -11,23 +11,23 @@
  * @return {number}
  */
 var minSteps = function (s, t) {
-    /** @type {Map<string, number>} */
-    const letterToFrequencyInT = new Map();
+  /** @type {Map<string, number>} */
+  const letterToFrequencyInT = new Map();
 
-    for (const c of t) {
-        letterToFrequencyInT.set(c, (letterToFrequencyInT.get(c) ?? 0) + 1);
-    }
+  for (const c of t) {
+    letterToFrequencyInT.set(c, (letterToFrequencyInT.get(c) ?? 0) + 1);
+  }
 
-    for (const c of s) {
-        letterToFrequencyInT.set(c, (letterToFrequencyInT.get(c) ?? 0) - 1);
-    }
+  for (const c of s) {
+    letterToFrequencyInT.set(c, (letterToFrequencyInT.get(c) ?? 0) - 1);
+  }
 
-    let steps = 0;
+  let steps = 0;
 
-    for (const [_, value] of letterToFrequencyInT) {
-        if (value < 0) steps += -value;
-    }
+  for (const [_, value] of letterToFrequencyInT) {
+    if (value < 0) steps += -value;
+  }
 
-    return steps;
+  return steps;
 };
 // @lc code=end

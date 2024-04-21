@@ -10,16 +10,16 @@
  * @return {string[][]}
  */
 var groupAnagrams = function (strs) {
-    /** @type {Map<string, string[]>} */
-    const strToAnagrams = new Map();
+  /** @type {Map<string, string[]>} */
+  const strToAnagrams = new Map();
 
-    for (const str of strs) {
-        const mapKey = str.split('').sort().join('');
-        const anagrams = strToAnagrams.get(mapKey) ?? [];
-        anagrams.push(str);
-        strToAnagrams.set(mapKey, anagrams);
-    }
+  for (const str of strs) {
+    const mapKey = str.split('').sort().join('');
+    const anagrams = strToAnagrams.get(mapKey) ?? [];
+    anagrams.push(str);
+    strToAnagrams.set(mapKey, anagrams);
+  }
 
-    return Array.from(strToAnagrams.values());
+  return Array.from(strToAnagrams.values());
 };
 // @lc code=end

@@ -10,14 +10,14 @@
  * @return {string}
  */
 var destCity = function (paths) {
-    const fromSet = new Set();
+  const fromSet = new Set();
 
-    for (const [from] of paths) {
-        fromSet.add(from);
-    }
+  for (const [from] of paths) {
+    fromSet.add(from);
+  }
 
-    for (const [_, to] of paths) {
-        if (!fromSet.has(to)) return to;
-    }
+  for (const [_, to] of paths) {
+    if (!fromSet.has(to)) return to;
+  }
 };
 // @lc code=end

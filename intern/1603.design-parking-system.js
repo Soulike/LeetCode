@@ -6,57 +6,57 @@
 
 // @lc code=start
 class ParkingSystem {
-    #bigRoom;
-    #mediumRoom;
-    #smallRoom;
+  #bigRoom;
+  #mediumRoom;
+  #smallRoom;
 
-    static #BIG = 1;
-    static #MEDIUM = 2;
-    static #SMALL = 3;
+  static #BIG = 1;
+  static #MEDIUM = 2;
+  static #SMALL = 3;
 
-    /**
-     * @param {number} big
-     * @param {number} medium
-     * @param {number} small
-     */
-    constructor(big, medium, small) {
-        this.#bigRoom = big;
-        this.#mediumRoom = medium;
-        this.#smallRoom = small;
-    }
+  /**
+   * @param {number} big
+   * @param {number} medium
+   * @param {number} small
+   */
+  constructor(big, medium, small) {
+    this.#bigRoom = big;
+    this.#mediumRoom = medium;
+    this.#smallRoom = small;
+  }
 
-    /**
-     * @param {1|2|3} carType
-     * @return {boolean}
-     */
-    addCar(carType) {
-        switch (carType) {
-            case ParkingSystem.#SMALL: {
-                if (this.#smallRoom > 0) {
-                    this.#smallRoom--;
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            case ParkingSystem.#MEDIUM: {
-                if (this.#mediumRoom > 0) {
-                    this.#mediumRoom--;
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            case ParkingSystem.#BIG: {
-                if (this.#bigRoom > 0) {
-                    this.#bigRoom--;
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+  /**
+   * @param {1|2|3} carType
+   * @return {boolean}
+   */
+  addCar(carType) {
+    switch (carType) {
+      case ParkingSystem.#SMALL: {
+        if (this.#smallRoom > 0) {
+          this.#smallRoom--;
+          return true;
+        } else {
+          return false;
         }
+      }
+      case ParkingSystem.#MEDIUM: {
+        if (this.#mediumRoom > 0) {
+          this.#mediumRoom--;
+          return true;
+        } else {
+          return false;
+        }
+      }
+      case ParkingSystem.#BIG: {
+        if (this.#bigRoom > 0) {
+          this.#bigRoom--;
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
+  }
 }
 
 /**

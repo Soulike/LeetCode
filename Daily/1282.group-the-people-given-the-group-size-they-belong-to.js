@@ -10,24 +10,24 @@
  * @return {number[][]}
  */
 var groupThePeople = function (groupSizes) {
-    /** @type {number[][]} */
-    const groups = [];
+  /** @type {number[][]} */
+  const groups = [];
 
-    /** @type {number[][]} */
-    const sizeToUnfinishedGroups = [];
+  /** @type {number[][]} */
+  const sizeToUnfinishedGroups = [];
 
-    for (let i = 0; i < groupSizes.length; i++) {
-        const groupSize = groupSizes[i];
-        const unfinishedGroup = sizeToUnfinishedGroups[groupSize] ?? [];
-        unfinishedGroup.push(i);
-        if (unfinishedGroup.length === groupSize) {
-            groups.push(unfinishedGroup);
-            sizeToUnfinishedGroups[groupSize] = [];
-        } else {
-            sizeToUnfinishedGroups[groupSize] = unfinishedGroup;
-        }
+  for (let i = 0; i < groupSizes.length; i++) {
+    const groupSize = groupSizes[i];
+    const unfinishedGroup = sizeToUnfinishedGroups[groupSize] ?? [];
+    unfinishedGroup.push(i);
+    if (unfinishedGroup.length === groupSize) {
+      groups.push(unfinishedGroup);
+      sizeToUnfinishedGroups[groupSize] = [];
+    } else {
+      sizeToUnfinishedGroups[groupSize] = unfinishedGroup;
     }
+  }
 
-    return groups;
+  return groups;
 };
 // @lc code=end

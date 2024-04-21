@@ -10,38 +10,35 @@
  * @param {number} combinationLength
  */
 class CombinationIterator {
-    generator;
-    value;
-    done;
+  generator;
+  value;
+  done;
 
-    constructor(characters, combinationLength) {
-        this.generator = nextCombination(
-            characters.split(''),
-            combinationLength,
-        );
-        const {value, done} = this.generator.next();
-        this.value = value;
-        this.done = done;
-    }
+  constructor(characters, combinationLength) {
+    this.generator = nextCombination(characters.split(''), combinationLength);
+    const {value, done} = this.generator.next();
+    this.value = value;
+    this.done = done;
+  }
 
-    /**
-     * @return {string}
-     */
-    next() {
-        const prevValue = this.value;
-        const {value, done} = this.generator.next();
-        this.value = value;
-        this.done = done;
+  /**
+   * @return {string}
+   */
+  next() {
+    const prevValue = this.value;
+    const {value, done} = this.generator.next();
+    this.value = value;
+    this.done = done;
 
-        return prevValue.join('');
-    }
+    return prevValue.join('');
+  }
 
-    /**
-     * @return {boolean}
-     */
-    hasNext() {
-        return !this.done;
-    }
+  /**
+   * @return {boolean}
+   */
+  hasNext() {
+    return !this.done;
+  }
 }
 
 /**
@@ -50,21 +47,21 @@ class CombinationIterator {
  * @param {number} k
  */
 function nextCombination(s, k) {
-    const current = [];
+  const current = [];
 
-    function* backtrack(startIndex) {
-        if (current.length === k) {
-            yield [...current];
-        } else {
-            for (let i = startIndex; i < s.length; i++) {
-                current.push(s[i]);
-                yield* backtrack(i + 1);
-                current.pop();
-            }
-        }
+  function* backtrack(startIndex) {
+    if (current.length === k) {
+      yield [...current];
+    } else {
+      for (let i = startIndex; i < s.length; i++) {
+        current.push(s[i]);
+        yield* backtrack(i + 1);
+        current.pop();
+      }
     }
+  }
 
-    return backtrack(0);
+  return backtrack(0);
 }
 
 /**

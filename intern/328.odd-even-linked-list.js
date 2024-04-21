@@ -5,14 +5,14 @@
  */
 
 class ListNode {
-    /**
-     * @param {number} val
-     * @param {ListNode|null} next
-     */
-    constructor(val, next) {
-        this.val = val;
-        this.next = next;
-    }
+  /**
+   * @param {number} val
+   * @param {ListNode|null} next
+   */
+  constructor(val, next) {
+    this.val = val;
+    this.next = next;
+  }
 }
 
 // @lc code=start
@@ -21,44 +21,44 @@ class ListNode {
  * @return {ListNode|null}
  */
 const oddEvenList = function (head) {
-    if (head === null || head.next === null || head.next.next === null) {
-        return head;
+  if (head === null || head.next === null || head.next.next === null) {
+    return head;
+  }
+
+  // 至少会有三个结点
+
+  const oddHead = head;
+  const evenHead = head.next;
+
+  let currentOddNode = oddHead;
+  let currentEvenNode = evenHead;
+
+  let lastEvenNode = null;
+  let lastOddNode = null;
+
+  while (currentOddNode !== null && currentEvenNode !== null) {
+    let nextOddNode = currentEvenNode.next;
+    // 记录最后见到的奇数位结点
+    lastOddNode = nextOddNode === null ? lastOddNode : nextOddNode;
+
+    let nextEvenNode = nextOddNode?.next ?? null;
+
+    // 取出偶数位结点
+    currentOddNode.next = currentEvenNode.next;
+    currentEvenNode.next = null;
+
+    // 挂载到偶数结点链表上
+    if (lastEvenNode !== null) {
+      lastEvenNode.next = currentEvenNode;
     }
+    lastEvenNode = currentEvenNode;
 
-    // 至少会有三个结点
+    currentOddNode = nextOddNode;
+    currentEvenNode = nextEvenNode;
+  }
 
-    const oddHead = head;
-    const evenHead = head.next;
+  lastOddNode.next = evenHead;
 
-    let currentOddNode = oddHead;
-    let currentEvenNode = evenHead;
-
-    let lastEvenNode = null;
-    let lastOddNode = null;
-
-    while (currentOddNode !== null && currentEvenNode !== null) {
-        let nextOddNode = currentEvenNode.next;
-        // 记录最后见到的奇数位结点
-        lastOddNode = nextOddNode === null ? lastOddNode : nextOddNode;
-
-        let nextEvenNode = nextOddNode?.next ?? null;
-
-        // 取出偶数位结点
-        currentOddNode.next = currentEvenNode.next;
-        currentEvenNode.next = null;
-
-        // 挂载到偶数结点链表上
-        if (lastEvenNode !== null) {
-            lastEvenNode.next = currentEvenNode;
-        }
-        lastEvenNode = currentEvenNode;
-
-        currentOddNode = nextOddNode;
-        currentEvenNode = nextEvenNode;
-    }
-
-    lastOddNode.next = evenHead;
-
-    return oddHead;
+  return oddHead;
 };
 // @lc code=end

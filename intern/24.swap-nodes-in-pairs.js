@@ -11,15 +11,15 @@
  */
 // @ts-ignore
 class ListNode {
-    /**
-     * @constructor
-     * @param {number|undefined} val
-     * @param {null|ListNode|undefined} next
-     */
-    constructor(val, next) {
-        this.val = val === undefined ? 0 : val;
-        this.next = next === undefined ? null : next;
-    }
+  /**
+   * @constructor
+   * @param {number|undefined} val
+   * @param {null|ListNode|undefined} next
+   */
+  constructor(val, next) {
+    this.val = val === undefined ? 0 : val;
+    this.next = next === undefined ? null : next;
+  }
 }
 // @lc code=start
 /**
@@ -34,28 +34,28 @@ class ListNode {
  * @return {ListNode}
  */
 const swapPairs = function (head) {
-    if (head === null || head.next === null) {
-        return head;
+  if (head === null || head.next === null) {
+    return head;
+  }
+  const fakeHead = new ListNode(undefined, head);
+  let lastRightNode = fakeHead;
+  /**@type {ListNode|null} */
+  let leftNode = head;
+  /**@type {ListNode|null} */
+  let rightNode = head.next;
+  while (leftNode !== null && rightNode !== null) {
+    lastRightNode.next = rightNode;
+    leftNode.next = rightNode.next;
+    rightNode.next = leftNode;
+    lastRightNode = leftNode;
+    leftNode = leftNode.next;
+    if (leftNode !== null) {
+      rightNode = leftNode.next;
+    } else {
+      break;
     }
-    const fakeHead = new ListNode(undefined, head);
-    let lastRightNode = fakeHead;
-    /**@type {ListNode|null} */
-    let leftNode = head;
-    /**@type {ListNode|null} */
-    let rightNode = head.next;
-    while (leftNode !== null && rightNode !== null) {
-        lastRightNode.next = rightNode;
-        leftNode.next = rightNode.next;
-        rightNode.next = leftNode;
-        lastRightNode = leftNode;
-        leftNode = leftNode.next;
-        if (leftNode !== null) {
-            rightNode = leftNode.next;
-        } else {
-            break;
-        }
-    }
-    // @ts-ignore
-    return fakeHead.next;
+  }
+  // @ts-ignore
+  return fakeHead.next;
 };
 // @lc code=end

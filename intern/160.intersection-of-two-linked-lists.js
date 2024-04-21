@@ -19,22 +19,22 @@
  * @return {ListNode}
  */
 var getIntersectionNode = function (headA, headB) {
-    let currentNode1 = headA;
-    let currentNode2 = headB;
+  let currentNode1 = headA;
+  let currentNode2 = headB;
 
-    while (currentNode1 !== currentNode2) {
-        if (currentNode1 === null) {
-            currentNode1 = headB;
-        } else {
-            currentNode1 = currentNode1.next;
-        }
-        if (currentNode2 === null) {
-            currentNode2 = headA;
-        } else {
-            currentNode2 = currentNode2.next;
-        }
+  while (currentNode1 !== currentNode2) {
+    if (currentNode1 === null) {
+      currentNode1 = headB;
+    } else {
+      currentNode1 = currentNode1.next;
     }
+    if (currentNode2 === null) {
+      currentNode2 = headA;
+    } else {
+      currentNode2 = currentNode2.next;
+    }
+  }
 
-    return currentNode1;
+  return currentNode1;
 };
 // @lc code=end

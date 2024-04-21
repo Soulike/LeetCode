@@ -17,49 +17,49 @@
  * @param {TreeNode} root
  */
 class FindElements {
-    #root;
+  #root;
 
-    static #LEFT = 0;
-    static #RIGHT = 1;
+  static #LEFT = 0;
+  static #RIGHT = 1;
 
-    constructor(root) {
-        this.#root = root;
+  constructor(root) {
+    this.#root = root;
+  }
+
+  /**
+   * @param {number} target
+   * @return {boolean}
+   */
+  find(target) {
+    let current = target;
+    const path = [];
+
+    while (current > 0) {
+      if (current % 2 === 0) {
+        current = (current - 2) / 2;
+        path.push(FindElements.#RIGHT);
+      } else {
+        current = (current - 1) / 2;
+        path.push(FindElements.#LEFT);
+      }
     }
 
-    /**
-     * @param {number} target
-     * @return {boolean}
-     */
-    find(target) {
-        let current = target;
-        const path = [];
+    let currentNode = this.#root;
+    for (let i = path.length - 1; i >= 0; i--) {
+      const direction = path[i];
+      if (direction === FindElements.#LEFT) {
+        currentNode = currentNode.left;
+      } else if (direction === FindElements.#RIGHT) {
+        currentNode = currentNode.right;
+      }
 
-        while (current > 0) {
-            if (current % 2 === 0) {
-                current = (current - 2) / 2;
-                path.push(FindElements.#RIGHT);
-            } else {
-                current = (current - 1) / 2;
-                path.push(FindElements.#LEFT);
-            }
-        }
-
-        let currentNode = this.#root;
-        for (let i = path.length - 1; i >= 0; i--) {
-            const direction = path[i];
-            if (direction === FindElements.#LEFT) {
-                currentNode = currentNode.left;
-            } else if (direction === FindElements.#RIGHT) {
-                currentNode = currentNode.right;
-            }
-
-            if (currentNode === null) {
-                return false;
-            }
-        }
-
-        return true;
+      if (currentNode === null) {
+        return false;
+      }
     }
+
+    return true;
+  }
 }
 
 /**

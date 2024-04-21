@@ -10,19 +10,19 @@
  * @return {number}
  */
 var maxProduct = function (nums) {
-    let maxNum = 0;
-    let secondMaxNum = 0;
+  let maxNum = 0;
+  let secondMaxNum = 0;
 
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] > maxNum) {
-            secondMaxNum = maxNum;
-            maxNum = nums[i];
-        } else {
-            secondMaxNum = Math.max(secondMaxNum, nums[i]);
-        }
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] > maxNum) {
+      secondMaxNum = maxNum;
+      maxNum = nums[i];
+    } else {
+      secondMaxNum = Math.max(secondMaxNum, nums[i]);
     }
+  }
 
-    return (maxNum - 1) * (secondMaxNum - 1);
+  return (maxNum - 1) * (secondMaxNum - 1);
 };
 // @lc code=end
 

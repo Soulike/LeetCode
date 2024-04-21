@@ -11,14 +11,14 @@
  * @return {number}
  */
 var rangeBitwiseAnd = function (left, right) {
-    // Find the common prefix as all bits after the prefix can be 0 during counting
-    let prefixLength = 0;
-    while (left !== right) {
-        left >>= 1;
-        right >>= 1;
-        prefixLength++;
-    }
-    return left << prefixLength;
+  // Find the common prefix as all bits after the prefix can be 0 during counting
+  let prefixLength = 0;
+  while (left !== right) {
+    left >>= 1;
+    right >>= 1;
+    prefixLength++;
+  }
+  return left << prefixLength;
 };
 // @lc code=end
 

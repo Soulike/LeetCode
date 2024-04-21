@@ -11,34 +11,34 @@
  * @return {number[][]}
  */
 var shiftGrid = function (grid, k) {
-    const m = grid.length;
-    const n = grid[0].length;
-    const size = m * n;
-    k %= size;
+  const m = grid.length;
+  const n = grid[0].length;
+  const size = m * n;
+  k %= size;
 
-    if (k === 0) {
-        return grid;
+  if (k === 0) {
+    return grid;
+  }
+
+  const newGrid = new Array(m);
+  for (let i = 0; i < m; i++) {
+    newGrid[i] = new Array(n);
+  }
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      const [shiftedRowIndex, shiftedColIndex] = getShiftedIndex(
+        i,
+        j,
+        k,
+        size,
+        n,
+      );
+      newGrid[shiftedRowIndex][shiftedColIndex] = grid[i][j];
     }
+  }
 
-    const newGrid = new Array(m);
-    for (let i = 0; i < m; i++) {
-        newGrid[i] = new Array(n);
-    }
-
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            const [shiftedRowIndex, shiftedColIndex] = getShiftedIndex(
-                i,
-                j,
-                k,
-                size,
-                n,
-            );
-            newGrid[shiftedRowIndex][shiftedColIndex] = grid[i][j];
-        }
-    }
-
-    return newGrid;
+  return newGrid;
 };
 
 /**
@@ -51,10 +51,10 @@ var shiftGrid = function (grid, k) {
  * @returns {[number, number]}
  */
 function getShiftedIndex(i, j, k, size, n) {
-    const flattenIndex = i * n + j;
-    const shiftedFlattenIndex = (flattenIndex + k) % size;
-    const shiftedColIndex = shiftedFlattenIndex % n;
-    const shiftedRowIndex = (shiftedFlattenIndex - shiftedColIndex) / n;
-    return [shiftedRowIndex, shiftedColIndex];
+  const flattenIndex = i * n + j;
+  const shiftedFlattenIndex = (flattenIndex + k) % size;
+  const shiftedColIndex = shiftedFlattenIndex % n;
+  const shiftedRowIndex = (shiftedFlattenIndex - shiftedColIndex) / n;
+  return [shiftedRowIndex, shiftedColIndex];
 }
 // @lc code=end

@@ -10,38 +10,35 @@
  * @return {number}
  */
 var nextGreaterElement = function (n) {
-    /**
-     * 从末尾向前，查找第一个非递增位置 i
-     * 从末尾到 i，查找第一个大于 nums[i] 的数字位置 j
-     * 交换 i 和 j
-     * 排序 i 到末尾为从小到大（可以直接翻转得到）
-     */
+  /**
+   * 从末尾向前，查找第一个非递增位置 i
+   * 从末尾到 i，查找第一个大于 nums[i] 的数字位置 j
+   * 交换 i 和 j
+   * 排序 i 到末尾为从小到大（可以直接翻转得到）
+   */
 
-    const nums = splitNumber(n);
-    let nonIncreaseIndex = -1;
-    for (let i = nums.length - 2; i >= 0; i--) {
-        if (nums[i] < nums[i + 1]) {
-            nonIncreaseIndex = i;
-            break;
-        }
+  const nums = splitNumber(n);
+  let nonIncreaseIndex = -1;
+  for (let i = nums.length - 2; i >= 0; i--) {
+    if (nums[i] < nums[i + 1]) {
+      nonIncreaseIndex = i;
+      break;
     }
-    if (nonIncreaseIndex === -1) {
-        return -1;
+  }
+  if (nonIncreaseIndex === -1) {
+    return -1;
+  }
+
+  for (let i = nums.length - 1; i > nonIncreaseIndex; i--) {
+    if (nums[i] > nums[nonIncreaseIndex]) {
+      [nums[i], nums[nonIncreaseIndex]] = [nums[nonIncreaseIndex], nums[i]];
+      break;
     }
+  }
 
-    for (let i = nums.length - 1; i > nonIncreaseIndex; i--) {
-        if (nums[i] > nums[nonIncreaseIndex]) {
-            [nums[i], nums[nonIncreaseIndex]] = [
-                nums[nonIncreaseIndex],
-                nums[i],
-            ];
-            break;
-        }
-    }
+  reverse(nums, nonIncreaseIndex + 1, nums.length - 1);
 
-    reverse(nums, nonIncreaseIndex + 1, nums.length - 1);
-
-    return joinNumber(nums);
+  return joinNumber(nums);
 };
 
 /**
@@ -51,11 +48,11 @@ var nextGreaterElement = function (n) {
  * @param {number} right
  */
 function reverse(nums, left, right) {
-    while (left < right) {
-        [nums[left], nums[right]] = [nums[right], nums[left]];
-        left++;
-        right--;
-    }
+  while (left < right) {
+    [nums[left], nums[right]] = [nums[right], nums[left]];
+    left++;
+    right--;
+  }
 }
 
 /**
@@ -64,12 +61,12 @@ function reverse(nums, left, right) {
  * @returns {number[]}
  */
 function splitNumber(num) {
-    const result = [];
-    while (num > 0) {
-        result.push(num % 10);
-        num = Math.floor(num / 10);
-    }
-    return result.reverse();
+  const result = [];
+  while (num > 0) {
+    result.push(num % 10);
+    num = Math.floor(num / 10);
+  }
+  return result.reverse();
 }
 
 /**
@@ -78,16 +75,16 @@ function splitNumber(num) {
  * @returns {number}
  */
 function joinNumber(nums) {
-    const MAX = 2 ** 31 - 1;
-    let result = 0;
-    for (let i = 0; i < nums.length; i++) {
-        result *= 10;
-        result += nums[i];
-        if (result > MAX) {
-            return -1;
-        }
+  const MAX = 2 ** 31 - 1;
+  let result = 0;
+  for (let i = 0; i < nums.length; i++) {
+    result *= 10;
+    result += nums[i];
+    if (result > MAX) {
+      return -1;
     }
+  }
 
-    return result;
+  return result;
 }
 // @lc code=end

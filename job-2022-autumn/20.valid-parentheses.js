@@ -10,28 +10,28 @@
  * @return {boolean}
  */
 var isValid = function (s) {
-    /** @type {string[]} */
-    const stack = [];
+  /** @type {string[]} */
+  const stack = [];
 
-    for (const c of s) {
-        if (c === '(' || c === '[' || c === '{') {
-            stack.push(c);
-        } else {
-            if (stack.length === 0) return false;
+  for (const c of s) {
+    if (c === '(' || c === '[' || c === '{') {
+      stack.push(c);
+    } else {
+      if (stack.length === 0) return false;
 
-            if (c === ')') {
-                if (stack[stack.length - 1] !== '(') return false;
-                else stack.pop();
-            } else if (c === ']') {
-                if (stack[stack.length - 1] !== '[') return false;
-                else stack.pop();
-            } else if (c === '}') {
-                if (stack[stack.length - 1] !== '{') return false;
-                else stack.pop();
-            }
-        }
+      if (c === ')') {
+        if (stack[stack.length - 1] !== '(') return false;
+        else stack.pop();
+      } else if (c === ']') {
+        if (stack[stack.length - 1] !== '[') return false;
+        else stack.pop();
+      } else if (c === '}') {
+        if (stack[stack.length - 1] !== '{') return false;
+        else stack.pop();
+      }
     }
+  }
 
-    return stack.length === 0;
+  return stack.length === 0;
 };
 // @lc code=end

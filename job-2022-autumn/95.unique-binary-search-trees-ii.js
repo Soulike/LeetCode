@@ -18,8 +18,8 @@
  * @return {TreeNode[]}
  */
 var generateTrees = function (n) {
-    const cache = new Map();
-    return helper(1, n, cache);
+  const cache = new Map();
+  return helper(1, n, cache);
 };
 
 /**
@@ -29,30 +29,30 @@ var generateTrees = function (n) {
  * @returns {(TreeNode|null)[]}
  */
 function helper(left, right, cache) {
-    if (left > right) {
-        return [null];
+  if (left > right) {
+    return [null];
+  }
+
+  const cacheKey = `${left}-${right}`;
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey);
+  }
+
+  const roots = [];
+  for (let i = left; i <= right; i++) {
+    const lefts = helper(left, i - 1, cache);
+    const rights = helper(i + 1, right, cache);
+
+    for (const left of lefts) {
+      for (const right of rights) {
+        const root = new TreeNode(i, left, right);
+        roots.push(root);
+      }
     }
+  }
 
-    const cacheKey = `${left}-${right}`;
-    if (cache.has(cacheKey)) {
-        return cache.get(cacheKey);
-    }
+  cache.set(cacheKey, roots);
 
-    const roots = [];
-    for (let i = left; i <= right; i++) {
-        const lefts = helper(left, i - 1, cache);
-        const rights = helper(i + 1, right, cache);
-
-        for (const left of lefts) {
-            for (const right of rights) {
-                const root = new TreeNode(i, left, right);
-                roots.push(root);
-            }
-        }
-    }
-
-    cache.set(cacheKey, roots);
-
-    return roots;
+  return roots;
 }
 // @lc code=end

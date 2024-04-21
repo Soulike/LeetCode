@@ -8,8 +8,8 @@
  * @param {ListNode|null} next
  */
 function ListNode(val, next) {
-    this.val = val;
-    this.next = next;
+  this.val = val;
+  this.next = next;
 }
 // @lc code=start
 /**
@@ -17,12 +17,12 @@ function ListNode(val, next) {
  * @return {number}
  */
 const getDecimalValue = function (head) {
-    let result = head.val;
-    let currentNode = head.next;
-    while (currentNode !== null) {
-        result = (result << 1) + currentNode.val;
-        currentNode = currentNode.next;
-    }
-    return result;
+  let result = head.val;
+  let currentNode = head.next;
+  while (currentNode !== null) {
+    result = (result << 1) + currentNode.val;
+    currentNode = currentNode.next;
+  }
+  return result;
 };
 // @lc code=end

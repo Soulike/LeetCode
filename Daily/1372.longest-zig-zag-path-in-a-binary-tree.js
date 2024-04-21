@@ -18,33 +18,33 @@
  * @return {number}
  */
 var longestZigZag = function (root) {
-    let longestZigZagNodeNumber = 0;
-    const TO_LEFT = 0;
-    const TO_RIGHT = 1;
+  let longestZigZagNodeNumber = 0;
+  const TO_LEFT = 0;
+  const TO_RIGHT = 1;
 
-    /**
-     * @param {TreeNode|null} root
-     * @returns {[toLeft: number, toRight: number]}
-     */
-    const visit = (root) => {
-        if (root === null) return [0, 0];
+  /**
+   * @param {TreeNode|null} root
+   * @returns {[toLeft: number, toRight: number]}
+   */
+  const visit = (root) => {
+    if (root === null) return [0, 0];
 
-        const leftVisitResult = visit(root.left);
-        const rightVisitResult = visit(root.right);
+    const leftVisitResult = visit(root.left);
+    const rightVisitResult = visit(root.right);
 
-        longestZigZagNodeNumber = Math.max(
-            longestZigZagNodeNumber,
-            1 + leftVisitResult[TO_RIGHT],
-            1 + rightVisitResult[TO_LEFT],
-            leftVisitResult[TO_LEFT],
-            rightVisitResult[TO_RIGHT],
-        );
+    longestZigZagNodeNumber = Math.max(
+      longestZigZagNodeNumber,
+      1 + leftVisitResult[TO_RIGHT],
+      1 + rightVisitResult[TO_LEFT],
+      leftVisitResult[TO_LEFT],
+      rightVisitResult[TO_RIGHT],
+    );
 
-        return [1 + leftVisitResult[TO_RIGHT], 1 + rightVisitResult[TO_LEFT]];
-    };
+    return [1 + leftVisitResult[TO_RIGHT], 1 + rightVisitResult[TO_LEFT]];
+  };
 
-    visit(root);
+  visit(root);
 
-    return longestZigZagNodeNumber - 1;
+  return longestZigZagNodeNumber - 1;
 };
 // @lc code=end

@@ -10,17 +10,17 @@
  * @return {boolean}
  */
 const checkPowersOfThree = function (n) {
-    let nLeft = n;
-    while (nLeft > 0) {
-        if (nLeft % 3 === 2) {
-            return false;
-        }
-        if (nLeft % 3 === 0) {
-            nLeft /= 3;
-        } else {
-            nLeft--;
-        }
+  let nLeft = n;
+  while (nLeft > 0) {
+    if (nLeft % 3 === 2) {
+      return false;
     }
-    return true;
+    if (nLeft % 3 === 0) {
+      nLeft /= 3;
+    } else {
+      nLeft--;
+    }
+  }
+  return true;
 };
 // @lc code=end

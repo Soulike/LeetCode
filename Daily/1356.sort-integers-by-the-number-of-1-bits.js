@@ -10,15 +10,15 @@
  * @return {number[]}
  */
 var sortByBits = function (arr) {
-    return arr.sort((a, b) => {
-        const a1BitCount = get1BitCount(a);
-        const b1BitCount = get1BitCount(b);
-        if (a1BitCount !== b1BitCount) {
-            return a1BitCount - b1BitCount;
-        } else {
-            return a - b;
-        }
-    });
+  return arr.sort((a, b) => {
+    const a1BitCount = get1BitCount(a);
+    const b1BitCount = get1BitCount(b);
+    if (a1BitCount !== b1BitCount) {
+      return a1BitCount - b1BitCount;
+    } else {
+      return a - b;
+    }
+  });
 };
 
 /** @type {number[]} */
@@ -29,21 +29,21 @@ const oneBitCountMemo = [];
  * @returns {number}
  */
 function get1BitCount(num) {
-    const memoKey = num;
-    if (oneBitCountMemo[memoKey] !== undefined) return oneBitCountMemo[memoKey];
+  const memoKey = num;
+  if (oneBitCountMemo[memoKey] !== undefined) return oneBitCountMemo[memoKey];
 
-    let oneBitCount = 0;
-    while (num > 0) {
-        while (num > 0 && (num & 0b1) === 0) {
-            num >>= 1;
-        }
-        if (num > 0) {
-            oneBitCount += 1;
-            num >>= 1;
-        }
+  let oneBitCount = 0;
+  while (num > 0) {
+    while (num > 0 && (num & 0b1) === 0) {
+      num >>= 1;
     }
-    oneBitCountMemo[memoKey] = oneBitCount;
-    return oneBitCount;
+    if (num > 0) {
+      oneBitCount += 1;
+      num >>= 1;
+    }
+  }
+  oneBitCountMemo[memoKey] = oneBitCount;
+  return oneBitCount;
 }
 // @lc code=end
 

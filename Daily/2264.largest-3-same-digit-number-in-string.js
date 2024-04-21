@@ -10,14 +10,14 @@
  * @return {string}
  */
 var largestGoodInteger = function (num) {
-    let maxInteger = -1;
+  let maxInteger = -1;
 
-    for (let i = 1; i < num.length - 1; i++) {
-        if (num[i - 1] === num[i] && num[i] === num[i + 1]) {
-            maxInteger = Math.max(maxInteger, Number.parseInt(num[i]));
-        }
+  for (let i = 1; i < num.length - 1; i++) {
+    if (num[i - 1] === num[i] && num[i] === num[i + 1]) {
+      maxInteger = Math.max(maxInteger, Number.parseInt(num[i]));
     }
+  }
 
-    return maxInteger === -1 ? '' : maxInteger.toString().repeat(3);
+  return maxInteger === -1 ? '' : maxInteger.toString().repeat(3);
 };
 // @lc code=end

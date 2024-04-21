@@ -10,39 +10,39 @@
  * @return {number}
  */
 var maxLength = function (arr) {
-    /** @type {Set<string>} */
-    const currentCharSet = new Set();
-    let maxUniqueLength = 0;
+  /** @type {Set<string>} */
+  const currentCharSet = new Set();
+  let maxUniqueLength = 0;
 
-    /**
-     * @param {number} index
-     * @returns {void}
-     */
-    const backtrack = (index) => {
-        if (index === arr.length) {
-            maxUniqueLength = Math.max(maxUniqueLength, currentCharSet.size);
-        } else {
-            const str = arr[index];
-            const strCharSet = new Set(str);
-            const isUniqueStr = str.length === strCharSet.size;
-            if (isUniqueStr && !hasIntersection(currentCharSet, strCharSet)) {
-                for (const c of str) {
-                    currentCharSet.add(c);
-                }
-                backtrack(index + 1);
-                for (const c of str) {
-                    currentCharSet.delete(c);
-                }
-
-                backtrack(index + 1);
-            } else {
-                backtrack(index + 1);
-            }
+  /**
+   * @param {number} index
+   * @returns {void}
+   */
+  const backtrack = (index) => {
+    if (index === arr.length) {
+      maxUniqueLength = Math.max(maxUniqueLength, currentCharSet.size);
+    } else {
+      const str = arr[index];
+      const strCharSet = new Set(str);
+      const isUniqueStr = str.length === strCharSet.size;
+      if (isUniqueStr && !hasIntersection(currentCharSet, strCharSet)) {
+        for (const c of str) {
+          currentCharSet.add(c);
         }
-    };
+        backtrack(index + 1);
+        for (const c of str) {
+          currentCharSet.delete(c);
+        }
 
-    backtrack(0);
-    return maxUniqueLength;
+        backtrack(index + 1);
+      } else {
+        backtrack(index + 1);
+      }
+    }
+  };
+
+  backtrack(0);
+  return maxUniqueLength;
 };
 
 /**
@@ -52,11 +52,11 @@ var maxLength = function (arr) {
  * @returns {boolean}
  */
 function hasIntersection(set1, set2) {
-    for (const element of set1) {
-        if (set2.has(element)) {
-            return true;
-        }
+  for (const element of set1) {
+    if (set2.has(element)) {
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 // @lc code=end

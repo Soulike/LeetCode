@@ -19,9 +19,9 @@
  * @return {number}
  */
 var kthSmallest = function (root, k) {
-    const resultWrapper = {result: NaN};
-    inorderTraverse(root, k, resultWrapper);
-    return resultWrapper.result;
+  const resultWrapper = {result: NaN};
+  inorderTraverse(root, k, resultWrapper);
+  return resultWrapper.result;
 };
 
 /**
@@ -32,16 +32,16 @@ var kthSmallest = function (root, k) {
  * @returns {number} - How many iteration positions left after traveling `root`
  */
 function inorderTraverse(root, k, resultWrapper) {
-    if (root === null) return k;
+  if (root === null) return k;
 
-    k = inorderTraverse(root.left, k, resultWrapper);
-    k--;
-    // the current root uses the last position, stop traveling and output result
-    if (k === 0) {
-        resultWrapper.result = root.val;
-    } else {
-        k = inorderTraverse(root.right, k, resultWrapper);
-    }
-    return k;
+  k = inorderTraverse(root.left, k, resultWrapper);
+  k--;
+  // the current root uses the last position, stop traveling and output result
+  if (k === 0) {
+    resultWrapper.result = root.val;
+  } else {
+    k = inorderTraverse(root.right, k, resultWrapper);
+  }
+  return k;
 }
 // @lc code=end

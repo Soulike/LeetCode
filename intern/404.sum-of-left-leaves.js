@@ -18,26 +18,26 @@
  * @return {number}
  */
 const sumOfLeftLeaves = function (root) {
-    let prevLayerNodes = [root];
-    let currentLayerNodes = [];
-    let sum = 0;
+  let prevLayerNodes = [root];
+  let currentLayerNodes = [];
+  let sum = 0;
 
-    while (prevLayerNodes.length > 0) {
-        for (const node of prevLayerNodes) {
-            if (node.left !== null) {
-                if (node.left.left === null && node.left.right === null) {
-                    sum += node.left.val;
-                } else {
-                    currentLayerNodes.push(node.left);
-                }
-            }
-            if (node.right !== null) {
-                currentLayerNodes.push(node.right);
-            }
+  while (prevLayerNodes.length > 0) {
+    for (const node of prevLayerNodes) {
+      if (node.left !== null) {
+        if (node.left.left === null && node.left.right === null) {
+          sum += node.left.val;
+        } else {
+          currentLayerNodes.push(node.left);
         }
-        prevLayerNodes = currentLayerNodes;
-        currentLayerNodes = [];
+      }
+      if (node.right !== null) {
+        currentLayerNodes.push(node.right);
+      }
     }
-    return sum;
+    prevLayerNodes = currentLayerNodes;
+    currentLayerNodes = [];
+  }
+  return sum;
 };
 // @lc code=end

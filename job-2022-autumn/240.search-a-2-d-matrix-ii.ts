@@ -6,22 +6,22 @@
 
 // @lc code=start
 function searchMatrix(matrix: number[][], target: number): boolean {
-    const m = matrix.length;
-    const n = matrix[0].length;
+  const m = matrix.length;
+  const n = matrix[0].length;
 
-    let x = m - 1;
-    let y = 0;
+  let x = m - 1;
+  let y = 0;
 
-    while (x >= 0 && y < n) {
-        if (matrix[x][y] > target) {
-            x--;
-        } else if (matrix[x][y] < target) {
-            y++;
-        } else {
-            return true;
-        }
+  while (x >= 0 && y < n) {
+    if (matrix[x][y] > target) {
+      x--;
+    } else if (matrix[x][y] < target) {
+      y++;
+    } else {
+      return true;
     }
+  }
 
-    return false;
+  return false;
 }
 // @lc code=end

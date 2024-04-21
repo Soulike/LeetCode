@@ -11,24 +11,24 @@
  * @return {string}
  */
 var removeDuplicates = function (s, k) {
-    const stack = [];
-    for (const c of s) {
-        if (stack.length === 0) {
-            stack.push([c, 1]);
+  const stack = [];
+  for (const c of s) {
+    if (stack.length === 0) {
+      stack.push([c, 1]);
+    } else {
+      const [topC, len] = stack[stack.length - 1];
+      if (topC !== c) {
+        stack.push([c, 1]);
+      } else {
+        if (len === k - 1) {
+          stack.length -= k - 1;
         } else {
-            const [topC, len] = stack[stack.length - 1];
-            if (topC !== c) {
-                stack.push([c, 1]);
-            } else {
-                if (len === k - 1) {
-                    stack.length -= k - 1;
-                } else {
-                    stack.push([c, len + 1]);
-                }
-            }
+          stack.push([c, len + 1]);
         }
+      }
     }
+  }
 
-    return stack.map(([c]) => c).join('');
+  return stack.map(([c]) => c).join('');
 };
 // @lc code=end

@@ -11,13 +11,13 @@
  * @return {number[]}
  */
 var shuffle = function (nums, n) {
-    /** @type {number[]} */
-    const result = [];
+  /** @type {number[]} */
+  const result = [];
 
-    for (let i = 0; i < n; i++) {
-        result.push(nums[i], nums[i + n]);
-    }
+  for (let i = 0; i < n; i++) {
+    result.push(nums[i], nums[i + n]);
+  }
 
-    return result;
+  return result;
 };
 // @lc code=end

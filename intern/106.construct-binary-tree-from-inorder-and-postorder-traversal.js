@@ -19,42 +19,42 @@
  * @return {TreeNode}
  */
 var buildTree = function (inorder, postorder) {
-    /**
-     * @param {[number, number]} inorderRange
-     * @param {[number, number]} postorderRange
-     */
-    function helper(inorderRange, postorderRange) {
-        const [inorderStart, inorderEnd] = inorderRange;
-        const [postorderStart, postorderEnd] = postorderRange;
-        if (inorderStart === inorderEnd) {
-            return null;
-        }
-
-        const rootVal = postorder[postorderEnd - 1];
-        let rootIndexInInorder = inorderStart;
-        for (let i = inorderStart; i < inorderEnd; i++) {
-            if (inorder[i] === rootVal) {
-                rootIndexInInorder = i;
-                break;
-            }
-        }
-
-        const leftChildNodeCount = rootIndexInInorder - inorderStart;
-
-        const leftChild = helper(
-            [inorderStart, inorderStart + leftChildNodeCount],
-            [postorderStart, postorderStart + leftChildNodeCount],
-        );
-        const rightChild = helper(
-            [rootIndexInInorder + 1, inorderEnd],
-            [postorderStart + leftChildNodeCount, postorderEnd - 1],
-        );
-
-        const root = new TreeNode(rootVal, leftChild, rightChild);
-
-        return root;
+  /**
+   * @param {[number, number]} inorderRange
+   * @param {[number, number]} postorderRange
+   */
+  function helper(inorderRange, postorderRange) {
+    const [inorderStart, inorderEnd] = inorderRange;
+    const [postorderStart, postorderEnd] = postorderRange;
+    if (inorderStart === inorderEnd) {
+      return null;
     }
 
-    return helper([0, inorder.length], [0, postorder.length]);
+    const rootVal = postorder[postorderEnd - 1];
+    let rootIndexInInorder = inorderStart;
+    for (let i = inorderStart; i < inorderEnd; i++) {
+      if (inorder[i] === rootVal) {
+        rootIndexInInorder = i;
+        break;
+      }
+    }
+
+    const leftChildNodeCount = rootIndexInInorder - inorderStart;
+
+    const leftChild = helper(
+      [inorderStart, inorderStart + leftChildNodeCount],
+      [postorderStart, postorderStart + leftChildNodeCount],
+    );
+    const rightChild = helper(
+      [rootIndexInInorder + 1, inorderEnd],
+      [postorderStart + leftChildNodeCount, postorderEnd - 1],
+    );
+
+    const root = new TreeNode(rootVal, leftChild, rightChild);
+
+    return root;
+  }
+
+  return helper([0, inorder.length], [0, postorder.length]);
 };
 // @lc code=end

@@ -17,19 +17,19 @@
  * @return {ListNode}
  */
 const middleNode = function (head) {
-    let slow = head;
-    let fast = head;
+  let slow = head;
+  let fast = head;
 
-    while (true) {
-        if (fast.next === null) {
-            return slow;
-        }
-        slow = slow.next;
-        fast = fast.next;
-        if (fast.next === null) {
-            return slow;
-        }
-        fast = fast.next;
+  while (true) {
+    if (fast.next === null) {
+      return slow;
     }
+    slow = slow.next;
+    fast = fast.next;
+    if (fast.next === null) {
+      return slow;
+    }
+    fast = fast.next;
+  }
 };
 // @lc code=end

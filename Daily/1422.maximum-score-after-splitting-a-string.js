@@ -10,32 +10,32 @@
  * @return {number}
  */
 var maxScore = function (s) {
-    /*
+  /*
     score = leftZeros + rightOnes
           = leftZeros + (totalOnes - leftOnes)
           = totalOnes + (leftZeros - leftOnes)
     => Max(score) = totalOnes + Max(leftZeros - leftOnes)
     */
 
-    let totalOnes = 0;
-    let leftZeros = 0;
-    let leftOnes = 0;
+  let totalOnes = 0;
+  let leftZeros = 0;
+  let leftOnes = 0;
 
-    let maxLeftZeroOneDiff = -Infinity;
+  let maxLeftZeroOneDiff = -Infinity;
 
-    for (let i = 0; i < s.length - 1; i++) {
-        if (s[i] === '1') {
-            totalOnes++;
-            leftOnes++;
-        } else {
-            leftZeros++;
-        }
-
-        maxLeftZeroOneDiff = Math.max(maxLeftZeroOneDiff, leftZeros - leftOnes);
+  for (let i = 0; i < s.length - 1; i++) {
+    if (s[i] === '1') {
+      totalOnes++;
+      leftOnes++;
+    } else {
+      leftZeros++;
     }
 
-    if (s[s.length - 1] === '1') totalOnes++;
+    maxLeftZeroOneDiff = Math.max(maxLeftZeroOneDiff, leftZeros - leftOnes);
+  }
 
-    return totalOnes + maxLeftZeroOneDiff;
+  if (s[s.length - 1] === '1') totalOnes++;
+
+  return totalOnes + maxLeftZeroOneDiff;
 };
 // @lc code=end

@@ -18,31 +18,31 @@
  * @return {number[]}
  */
 var preorderTraversal = function (root) {
-    /** @type {number[]} */
-    const traverseResult = [];
+  /** @type {number[]} */
+  const traverseResult = [];
 
-    /** @type {TreeNode[]} */
-    const stack = [];
+  /** @type {TreeNode[]} */
+  const stack = [];
 
-    /**
-     * @param {TreeNode} root
-     */
-    const traverseLeftChild = (root) => {
-        while (root !== null) {
-            stack.push(root);
-            traverseResult.push(root.val);
-            root = root.left;
-        }
-    };
-
-    traverseLeftChild(root);
-    while (stack.length > 0) {
-        const top = stack.pop();
-        if (top.right !== null) {
-            traverseLeftChild(top.right);
-        }
+  /**
+   * @param {TreeNode} root
+   */
+  const traverseLeftChild = (root) => {
+    while (root !== null) {
+      stack.push(root);
+      traverseResult.push(root.val);
+      root = root.left;
     }
+  };
 
-    return traverseResult;
+  traverseLeftChild(root);
+  while (stack.length > 0) {
+    const top = stack.pop();
+    if (top.right !== null) {
+      traverseLeftChild(top.right);
+    }
+  }
+
+  return traverseResult;
 };
 // @lc code=end

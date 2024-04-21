@@ -11,24 +11,24 @@
  * @return {number[][]}
  */
 const combine = function (n, k) {
-    const results = [];
-    let current = [];
+  const results = [];
+  let current = [];
 
-    function backtrack(startIndex) {
-        if (current.length === k) {
-            results.push([...current]);
-        } else {
-            for (let i = startIndex; i <= n; i++) {
-                current.push(i);
-                backtrack(i + 1);
-                current.pop();
-            }
-        }
+  function backtrack(startIndex) {
+    if (current.length === k) {
+      results.push([...current]);
+    } else {
+      for (let i = startIndex; i <= n; i++) {
+        current.push(i);
+        backtrack(i + 1);
+        current.pop();
+      }
     }
+  }
 
-    backtrack(1);
+  backtrack(1);
 
-    return results;
+  return results;
 };
 
 // @lc code=end

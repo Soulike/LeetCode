@@ -5,8 +5,8 @@
  */
 
 function ListNode(val) {
-    this.val = val;
-    this.next = null;
+  this.val = val;
+  this.next = null;
 }
 
 // @lc code=start
@@ -16,33 +16,33 @@ function ListNode(val) {
  * @return {ListNode | null}
  */
 var detectCycle = function (head) {
-    if (head === null) {
-        return null;
-    }
-    let slow = head;
-    let fast = head;
+  if (head === null) {
+    return null;
+  }
+  let slow = head;
+  let fast = head;
 
-    while (true) {
-        slow = slow.next;
+  while (true) {
+    slow = slow.next;
 
-        fast = fast.next;
-        if (fast === null) {
-            return null;
-        }
-        fast = fast.next;
-        if (fast === null) {
-            return null;
-        }
-        if (fast === slow) {
-            break;
-        }
+    fast = fast.next;
+    if (fast === null) {
+      return null;
     }
-    let currentNode = head;
-    while (currentNode !== slow) {
-        currentNode = currentNode.next;
-        slow = slow.next;
+    fast = fast.next;
+    if (fast === null) {
+      return null;
     }
+    if (fast === slow) {
+      break;
+    }
+  }
+  let currentNode = head;
+  while (currentNode !== slow) {
+    currentNode = currentNode.next;
+    slow = slow.next;
+  }
 
-    return currentNode;
+  return currentNode;
 };
 // @lc code=end

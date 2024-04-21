@@ -10,22 +10,22 @@
  * @return {string[][]}
  */
 const groupAnagrams = function (strs) {
-    /**@type {Map<string, string[]>} */
-    const sortedStrToStrs = new Map();
-    let sortedStr = '';
-    /**@type {string[] | undefined} */
-    let sortedStrs = undefined;
-    for (const str of strs) {
-        sortedStr = strSort(str);
-        sortedStrs = sortedStrToStrs.get(sortedStr);
-        if (sortedStrs === undefined) {
-            sortedStrToStrs.set(sortedStr, [str]);
-        } else {
-            sortedStrs.push(str);
-        }
+  /**@type {Map<string, string[]>} */
+  const sortedStrToStrs = new Map();
+  let sortedStr = '';
+  /**@type {string[] | undefined} */
+  let sortedStrs = undefined;
+  for (const str of strs) {
+    sortedStr = strSort(str);
+    sortedStrs = sortedStrToStrs.get(sortedStr);
+    if (sortedStrs === undefined) {
+      sortedStrToStrs.set(sortedStr, [str]);
+    } else {
+      sortedStrs.push(str);
     }
+  }
 
-    return Array.from(sortedStrToStrs.values());
+  return Array.from(sortedStrToStrs.values());
 };
 
 /**
@@ -33,6 +33,6 @@ const groupAnagrams = function (strs) {
  * @return {string}
  */
 function strSort(str) {
-    return str.split('').sort().join('');
+  return str.split('').sort().join('');
 }
 // @lc code=end

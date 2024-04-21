@@ -12,50 +12,50 @@
  * @param {TreeNode} right
  */
 function TreeNode(val, left, right) {
-    this.val = val === undefined ? 0 : val;
-    this.left = left === undefined ? null : left;
-    this.right = right === undefined ? null : right;
+  this.val = val === undefined ? 0 : val;
+  this.left = left === undefined ? null : left;
+  this.right = right === undefined ? null : right;
 }
 class BSTIterator {
-    /**
-     * @type {TreeNode[]}
-     */
-    #stack;
+  /**
+   * @type {TreeNode[]}
+   */
+  #stack;
 
-    /**
-     * @param {TreeNode} root
-     */
-    constructor(root) {
-        this.#stack = [];
-        this.#pushLeft(root);
-    }
+  /**
+   * @param {TreeNode} root
+   */
+  constructor(root) {
+    this.#stack = [];
+    this.#pushLeft(root);
+  }
 
-    /**
-     * @return {number}
-     */
-    next() {
-        const topNode = this.#stack.pop();
-        this.#pushLeft(topNode.right);
-        return topNode.val;
-    }
+  /**
+   * @return {number}
+   */
+  next() {
+    const topNode = this.#stack.pop();
+    this.#pushLeft(topNode.right);
+    return topNode.val;
+  }
 
-    /**
-     * @return {boolean}
-     */
-    hasNext() {
-        return this.#stack.length > 0;
-    }
+  /**
+   * @return {boolean}
+   */
+  hasNext() {
+    return this.#stack.length > 0;
+  }
 
-    /**
-     * @param {TreeNode|null} root
-     */
-    #pushLeft(root) {
-        let currentNode = root;
-        while (currentNode !== null) {
-            this.#stack.push(currentNode);
-            currentNode = currentNode.left;
-        }
+  /**
+   * @param {TreeNode|null} root
+   */
+  #pushLeft(root) {
+    let currentNode = root;
+    while (currentNode !== null) {
+      this.#stack.push(currentNode);
+      currentNode = currentNode.left;
     }
+  }
 }
 
 /**

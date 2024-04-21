@@ -18,8 +18,8 @@
  * @return {boolean}
  */
 var isValidBST = function (root) {
-    const result = helper(root);
-    return result.isValid;
+  const result = helper(root);
+  return result.isValid;
 };
 
 /**
@@ -28,28 +28,28 @@ var isValidBST = function (root) {
  * @returns {{isValid: true, maxVal: number, minVal: number}|{isValid: false}}
  */
 function helper(root) {
-    if (root.left === null && root.right === null) {
-        return {isValid: true, minVal: root.val, maxVal: root.val};
-    }
+  if (root.left === null && root.right === null) {
+    return {isValid: true, minVal: root.val, maxVal: root.val};
+  }
 
-    let minVal = root.val;
-    let maxVal = root.val;
+  let minVal = root.val;
+  let maxVal = root.val;
 
-    if (root.left !== null) {
-        const leftResult = helper(root.left);
-        if (!leftResult.isValid || root.val <= leftResult.maxVal) {
-            return {isValid: false};
-        }
-        minVal = leftResult.minVal;
+  if (root.left !== null) {
+    const leftResult = helper(root.left);
+    if (!leftResult.isValid || root.val <= leftResult.maxVal) {
+      return {isValid: false};
     }
-    if (root.right !== null) {
-        const rightResult = helper(root.right);
-        if (!rightResult.isValid || root.val >= rightResult.minVal) {
-            return {isValid: false};
-        }
-        maxVal = rightResult.maxVal;
+    minVal = leftResult.minVal;
+  }
+  if (root.right !== null) {
+    const rightResult = helper(root.right);
+    if (!rightResult.isValid || root.val >= rightResult.minVal) {
+      return {isValid: false};
     }
+    maxVal = rightResult.maxVal;
+  }
 
-    return {isValid: true, minVal, maxVal};
+  return {isValid: true, minVal, maxVal};
 }
 // @lc code=end

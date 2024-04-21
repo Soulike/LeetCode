@@ -10,46 +10,42 @@
  * @return {number}
  */
 var numSpecial = function (mat) {
-    const M = mat.length;
-    const N = mat[0].length;
+  const M = mat.length;
+  const N = mat[0].length;
 
-    /** @type {number[]} */
-    const rowOneCounts = new Array(M);
-    rowOneCounts.fill(0);
+  /** @type {number[]} */
+  const rowOneCounts = new Array(M);
+  rowOneCounts.fill(0);
 
-    /** @type {number[]} */
-    const colOneCounts = new Array(N);
-    colOneCounts.fill(0);
+  /** @type {number[]} */
+  const colOneCounts = new Array(N);
+  colOneCounts.fill(0);
 
-    for (let i = 0; i < M; i++) {
-        for (let j = 0; j < N; j++) {
-            if (mat[i][j] === 1) {
-                rowOneCounts[i]++;
-                colOneCounts[j]++;
-            }
-        }
+  for (let i = 0; i < M; i++) {
+    for (let j = 0; j < N; j++) {
+      if (mat[i][j] === 1) {
+        rowOneCounts[i]++;
+        colOneCounts[j]++;
+      }
     }
+  }
 
-    let specialPositionCount = 0;
+  let specialPositionCount = 0;
 
-    for (let i = 0; i < M; i++) {
-        for (let j = 0; j < N; j++) {
-            if (
-                mat[i][j] === 1 &&
-                rowOneCounts[i] === 1 &&
-                colOneCounts[j] === 1
-            ) {
-                specialPositionCount++;
-            }
-        }
+  for (let i = 0; i < M; i++) {
+    for (let j = 0; j < N; j++) {
+      if (mat[i][j] === 1 && rowOneCounts[i] === 1 && colOneCounts[j] === 1) {
+        specialPositionCount++;
+      }
     }
+  }
 
-    return specialPositionCount;
+  return specialPositionCount;
 };
 // @lc code=end
 
 numSpecial([
-    [1, 0, 0],
-    [0, 0, 1],
-    [1, 0, 0],
+  [1, 0, 0],
+  [0, 0, 1],
+  [1, 0, 0],
 ]);

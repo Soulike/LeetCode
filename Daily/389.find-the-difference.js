@@ -11,7 +11,7 @@
  * @return {string}
  */
 var findTheDifference = function (s, t) {
-    return String.fromCharCode(getASCIISum(t) - getASCIISum(s));
+  return String.fromCharCode(getASCIISum(t) - getASCIISum(s));
 };
 
 /**
@@ -19,10 +19,10 @@ var findTheDifference = function (s, t) {
  * @returns {number}
  */
 function getASCIISum(s) {
-    let sum = 0;
-    for (let i = 0; i < s.length; i++) {
-        sum += s.charCodeAt(i);
-    }
-    return sum;
+  let sum = 0;
+  for (let i = 0; i < s.length; i++) {
+    sum += s.charCodeAt(i);
+  }
+  return sum;
 }
 // @lc code=end

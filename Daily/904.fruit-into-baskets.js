@@ -10,48 +10,48 @@
  * @return {number}
  */
 var totalFruit = function (fruits) {
-    // find the longest subarray having <=2 types of fruits
-    const N = fruits.length;
+  // find the longest subarray having <=2 types of fruits
+  const N = fruits.length;
 
-    let left = 0;
-    let right = 0;
+  let left = 0;
+  let right = 0;
 
-    let maxLen = 0;
+  let maxLen = 0;
 
-    /** @type {Map<number, number>} */
-    const fruitTypesToNumber = new Map();
+  /** @type {Map<number, number>} */
+  const fruitTypesToNumber = new Map();
 
-    // slide window. maintain fruitTypesToNumber.size <= 2
-    while (right < N) {
+  // slide window. maintain fruitTypesToNumber.size <= 2
+  while (right < N) {
+    fruitTypesToNumber.set(
+      fruits[right],
+      (fruitTypesToNumber.get(fruits[right]) ?? 0) + 1,
+    );
+
+    if (fruitTypesToNumber.size > 2) {
+      maxLen = Math.max(maxLen, right - left);
+
+      while (fruitTypesToNumber.size > 2) {
+        // move left
         fruitTypesToNumber.set(
-            fruits[right],
-            (fruitTypesToNumber.get(fruits[right]) ?? 0) + 1,
+          fruits[left],
+          (fruitTypesToNumber.get(fruits[left]) ?? 0) - 1,
         );
 
-        if (fruitTypesToNumber.size > 2) {
-            maxLen = Math.max(maxLen, right - left);
-
-            while (fruitTypesToNumber.size > 2) {
-                // move left
-                fruitTypesToNumber.set(
-                    fruits[left],
-                    (fruitTypesToNumber.get(fruits[left]) ?? 0) - 1,
-                );
-
-                if (fruitTypesToNumber.get(fruits[left]) === 0) {
-                    fruitTypesToNumber.delete(fruits[left]);
-                }
-
-                left++;
-            }
+        if (fruitTypesToNumber.get(fruits[left]) === 0) {
+          fruitTypesToNumber.delete(fruits[left]);
         }
 
-        right++;
+        left++;
+      }
     }
 
-    maxLen = Math.max(maxLen, right - left);
+    right++;
+  }
 
-    return maxLen;
+  maxLen = Math.max(maxLen, right - left);
+
+  return maxLen;
 };
 // @lc code=end
 

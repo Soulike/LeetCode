@@ -10,14 +10,14 @@
  * @return {number}
  */
 const maxSubArray = function (nums) {
-    let maxSum = nums[0];
-    let lastSum = nums[0];
+  let maxSum = nums[0];
+  let lastSum = nums[0];
 
-    for (let i = 1; i < nums.length; i++) {
-        lastSum = Math.max(lastSum + nums[i], nums[i]);
-        maxSum = Math.max(maxSum, lastSum);
-    }
+  for (let i = 1; i < nums.length; i++) {
+    lastSum = Math.max(lastSum + nums[i], nums[i]);
+    maxSum = Math.max(maxSum, lastSum);
+  }
 
-    return maxSum;
+  return maxSum;
 };
 // @lc code=end

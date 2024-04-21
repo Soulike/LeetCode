@@ -17,23 +17,23 @@
  * @return {ListNode}
  */
 var deleteDuplicates = function (head) {
-    if (head === null) {
-        return null;
+  if (head === null) {
+    return null;
+  }
+
+  let slow = head;
+  let fast = head;
+
+  while (fast !== null) {
+    if (fast.val !== slow.val) {
+      slow = slow.next;
+      slow.val = fast.val;
     }
+    fast = fast.next;
+  }
 
-    let slow = head;
-    let fast = head;
+  slow.next = null;
 
-    while (fast !== null) {
-        if (fast.val !== slow.val) {
-            slow = slow.next;
-            slow.val = fast.val;
-        }
-        fast = fast.next;
-    }
-
-    slow.next = null;
-
-    return head;
+  return head;
 };
 // @lc code=end

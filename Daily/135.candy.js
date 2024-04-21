@@ -10,22 +10,22 @@
  * @return {number}
  */
 var candy = function (ratings) {
-    const N = ratings.length;
-    const candies = new Array(N);
-    candies.fill(1);
+  const N = ratings.length;
+  const candies = new Array(N);
+  candies.fill(1);
 
-    for (let i = 1; i < N; i++) {
-        if (ratings[i - 1] < ratings[i]) {
-            candies[i] = candies[i - 1] + 1;
-        }
+  for (let i = 1; i < N; i++) {
+    if (ratings[i - 1] < ratings[i]) {
+      candies[i] = candies[i - 1] + 1;
     }
+  }
 
-    for (let i = N - 1; i > 0; i--) {
-        if (ratings[i - 1] > ratings[i]) {
-            candies[i - 1] = Math.max(candies[i] + 1, candies[i - 1]);
-        }
+  for (let i = N - 1; i > 0; i--) {
+    if (ratings[i - 1] > ratings[i]) {
+      candies[i - 1] = Math.max(candies[i] + 1, candies[i - 1]);
     }
+  }
 
-    return candies.reduce((prev, curr) => prev + curr);
+  return candies.reduce((prev, curr) => prev + curr);
 };
 // @lc code=end

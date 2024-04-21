@@ -10,23 +10,23 @@
  * @return {number}
  */
 const uniquePathsIII = function (grid) {
-    const m = grid.length;
-    const n = grid[0].length;
-    let i = 0;
-    let j = 0;
-    let emptyGridCount = 1; // including start grid
+  const m = grid.length;
+  const n = grid[0].length;
+  let i = 0;
+  let j = 0;
+  let emptyGridCount = 1; // including start grid
 
-    for (let k = 0; k < m; k++) {
-        for (let l = 0; l < n; l++) {
-            if (grid[k][l] === 0) {
-                emptyGridCount++;
-            } else if (grid[k][l] === 1) {
-                i = k;
-                j = l;
-            }
-        }
+  for (let k = 0; k < m; k++) {
+    for (let l = 0; l < n; l++) {
+      if (grid[k][l] === 0) {
+        emptyGridCount++;
+      } else if (grid[k][l] === 1) {
+        i = k;
+        j = l;
+      }
     }
-    return helper(grid, i, j, 0, emptyGridCount);
+  }
+  return helper(grid, i, j, 0, emptyGridCount);
 };
 
 /**
@@ -39,31 +39,31 @@ const uniquePathsIII = function (grid) {
  * @returns {number}
  */
 function helper(grid, i, j, walkedGridCount, emptyGridCount) {
-    if (grid[i][j] === 2) {
-        return walkedGridCount === emptyGridCount ? 1 : 0;
-    }
+  if (grid[i][j] === 2) {
+    return walkedGridCount === emptyGridCount ? 1 : 0;
+  }
 
-    const m = grid.length;
-    const n = grid[0].length;
-    grid[i][j] = -1; // 已经路过，设置为障碍物
-    walkedGridCount++;
-    let pathCount = 0;
+  const m = grid.length;
+  const n = grid[0].length;
+  grid[i][j] = -1; // 已经路过，设置为障碍物
+  walkedGridCount++;
+  let pathCount = 0;
 
-    if (i > 0 && grid[i - 1][j] !== -1) {
-        pathCount += helper(grid, i - 1, j, walkedGridCount, emptyGridCount);
-    }
-    if (i < m - 1 && grid[i + 1][j] !== -1) {
-        pathCount += helper(grid, i + 1, j, walkedGridCount, emptyGridCount);
-    }
+  if (i > 0 && grid[i - 1][j] !== -1) {
+    pathCount += helper(grid, i - 1, j, walkedGridCount, emptyGridCount);
+  }
+  if (i < m - 1 && grid[i + 1][j] !== -1) {
+    pathCount += helper(grid, i + 1, j, walkedGridCount, emptyGridCount);
+  }
 
-    if (j > 0 && grid[i][j - 1] !== -1) {
-        pathCount += helper(grid, i, j - 1, walkedGridCount, emptyGridCount);
-    }
-    if (j < n - 1 && grid[i][j + 1] !== -1) {
-        pathCount += helper(grid, i, j + 1, walkedGridCount, emptyGridCount);
-    }
+  if (j > 0 && grid[i][j - 1] !== -1) {
+    pathCount += helper(grid, i, j - 1, walkedGridCount, emptyGridCount);
+  }
+  if (j < n - 1 && grid[i][j + 1] !== -1) {
+    pathCount += helper(grid, i, j + 1, walkedGridCount, emptyGridCount);
+  }
 
-    grid[i][j] = 0; // 路过完成，恢复
-    return pathCount;
+  grid[i][j] = 0; // 路过完成，恢复
+  return pathCount;
 }
 // @lc code=end

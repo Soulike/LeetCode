@@ -26,40 +26,40 @@
  * @return {TreeNode}
  */
 var sortedListToBST = function (head) {
-    function buildAVL(head) {
-        if (head === null) {
-            return null;
-        }
-        if (head.next === null) {
-            return new TreeNode(head.val);
-        }
-
-        let fast = head;
-        let slow = head;
-        let beforeSlow = null;
-        while (fast.next !== null) {
-            fast = fast.next;
-            if (fast.next === null) {
-                break;
-            }
-            fast = fast.next;
-            beforeSlow = slow;
-            slow = slow.next;
-        }
-
-        if (beforeSlow !== null) {
-            beforeSlow.next = null;
-        }
-
-        const left = beforeSlow === null ? null : buildAVL(head);
-        const right = buildAVL(slow.next);
-
-        const root = new TreeNode(slow.val);
-        root.left = left;
-        root.right = right;
-        return root;
+  function buildAVL(head) {
+    if (head === null) {
+      return null;
+    }
+    if (head.next === null) {
+      return new TreeNode(head.val);
     }
 
-    return buildAVL(head);
+    let fast = head;
+    let slow = head;
+    let beforeSlow = null;
+    while (fast.next !== null) {
+      fast = fast.next;
+      if (fast.next === null) {
+        break;
+      }
+      fast = fast.next;
+      beforeSlow = slow;
+      slow = slow.next;
+    }
+
+    if (beforeSlow !== null) {
+      beforeSlow.next = null;
+    }
+
+    const left = beforeSlow === null ? null : buildAVL(head);
+    const right = buildAVL(slow.next);
+
+    const root = new TreeNode(slow.val);
+    root.left = left;
+    root.right = right;
+    return root;
+  }
+
+  return buildAVL(head);
 };
 // @lc code=end

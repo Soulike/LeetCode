@@ -10,30 +10,30 @@
  * @return {number[][]}
  */
 var subsets = function (nums) {
-    /** @type {number[][]} */
-    const results = [];
-    /** @type {number[]} */
-    const result = [];
+  /** @type {number[][]} */
+  const results = [];
+  /** @type {number[]} */
+  const result = [];
 
-    /**
-     * @param {number} startIndex
-     */
-    const backtrack = (startIndex) => {
-        results.push([...result]);
+  /**
+   * @param {number} startIndex
+   */
+  const backtrack = (startIndex) => {
+    results.push([...result]);
 
-        if (startIndex === nums.length) {
-            return;
-        }
+    if (startIndex === nums.length) {
+      return;
+    }
 
-        for (let i = startIndex; i < nums.length; i++) {
-            result.push(nums[i]);
-            backtrack(i + 1);
-            result.pop();
-        }
-    };
+    for (let i = startIndex; i < nums.length; i++) {
+      result.push(nums[i]);
+      backtrack(i + 1);
+      result.pop();
+    }
+  };
 
-    backtrack(0);
+  backtrack(0);
 
-    return results;
+  return results;
 };
 // @lc code=end

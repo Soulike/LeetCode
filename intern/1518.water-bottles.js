@@ -11,19 +11,17 @@
  * @return {number}
  */
 var numWaterBottles = function (numBottles, numExchange) {
-    let currentEmptyBottleNum = numBottles;
-    let drunkBottleNum = numBottles;
+  let currentEmptyBottleNum = numBottles;
+  let drunkBottleNum = numBottles;
 
-    while (currentEmptyBottleNum >= numExchange) {
-        const exchangedBottleNum = Math.floor(
-            currentEmptyBottleNum / numExchange,
-        );
-        drunkBottleNum += exchangedBottleNum;
+  while (currentEmptyBottleNum >= numExchange) {
+    const exchangedBottleNum = Math.floor(currentEmptyBottleNum / numExchange);
+    drunkBottleNum += exchangedBottleNum;
 
-        currentEmptyBottleNum =
-            exchangedBottleNum + (currentEmptyBottleNum % numExchange);
-    }
+    currentEmptyBottleNum =
+      exchangedBottleNum + (currentEmptyBottleNum % numExchange);
+  }
 
-    return drunkBottleNum;
+  return drunkBottleNum;
 };
 // @lc code=end

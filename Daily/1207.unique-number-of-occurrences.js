@@ -10,14 +10,14 @@
  * @return {boolean}
  */
 var uniqueOccurrences = function (arr) {
-    /** @type {Map<number, number>} */
-    const numberFrequencies = new Map();
-    for (const num of arr) {
-        numberFrequencies.set(num, (numberFrequencies.get(num) ?? 0) + 1);
-    }
+  /** @type {Map<number, number>} */
+  const numberFrequencies = new Map();
+  for (const num of arr) {
+    numberFrequencies.set(num, (numberFrequencies.get(num) ?? 0) + 1);
+  }
 
-    const frequencies = Array.from(numberFrequencies.values());
-    const uniqueFrequencies = new Set(frequencies);
-    return uniqueFrequencies.size === frequencies.length;
+  const frequencies = Array.from(numberFrequencies.values());
+  const uniqueFrequencies = new Set(frequencies);
+  return uniqueFrequencies.size === frequencies.length;
 };
 // @lc code=end

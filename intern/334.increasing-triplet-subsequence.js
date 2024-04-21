@@ -10,21 +10,21 @@
  * @return {boolean}
  */
 var increasingTriplet = function (nums) {
-    let num1 = Infinity;
-    let num2 = Infinity;
+  let num1 = Infinity;
+  let num2 = Infinity;
 
-    for (const num of nums) {
-        if (num1 >= num) {
-            num1 = num;
-        } else if (num2 >= num) {
-            // num1 < num
-            num2 = num;
-        } // num1 < num && num2 < num
-        else {
-            return true;
-        }
+  for (const num of nums) {
+    if (num1 >= num) {
+      num1 = num;
+    } else if (num2 >= num) {
+      // num1 < num
+      num2 = num;
+    } // num1 < num && num2 < num
+    else {
+      return true;
     }
+  }
 
-    return false;
+  return false;
 };
 // @lc code=end

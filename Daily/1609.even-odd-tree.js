@@ -18,32 +18,32 @@
  * @return {boolean}
  */
 var isEvenOddTree = function (root) {
-    /** @type {TreeNode[]} */
-    let currentLevel = [root];
-    /** @type {TreeNode[]} */
-    let nextLevel = [];
+  /** @type {TreeNode[]} */
+  let currentLevel = [root];
+  /** @type {TreeNode[]} */
+  let nextLevel = [];
 
-    for (let level = 0; currentLevel.length > 0; level++) {
-        const currentLevelNumbers = currentLevel.map((node) => node.val);
-        if (isEven(level)) {
-            if (!isOddIncreasingArray(currentLevelNumbers)) {
-                return false;
-            }
-        } else {
-            if (!isEvenDecreasingArray(currentLevelNumbers)) {
-                return false;
-            }
-        }
-        for (const node of currentLevel) {
-            if (node.left) nextLevel.push(node.left);
-            if (node.right) nextLevel.push(node.right);
-        }
-
-        currentLevel = nextLevel;
-        nextLevel = [];
+  for (let level = 0; currentLevel.length > 0; level++) {
+    const currentLevelNumbers = currentLevel.map((node) => node.val);
+    if (isEven(level)) {
+      if (!isOddIncreasingArray(currentLevelNumbers)) {
+        return false;
+      }
+    } else {
+      if (!isEvenDecreasingArray(currentLevelNumbers)) {
+        return false;
+      }
+    }
+    for (const node of currentLevel) {
+      if (node.left) nextLevel.push(node.left);
+      if (node.right) nextLevel.push(node.right);
     }
 
-    return true;
+    currentLevel = nextLevel;
+    nextLevel = [];
+  }
+
+  return true;
 };
 
 /**
@@ -51,13 +51,13 @@ var isEvenOddTree = function (root) {
  * @returns {boolean}
  */
 function isOddIncreasingArray(arr) {
-    if (!isOdd(arr[0])) return false;
-    for (let i = 1; i < arr.length; i++) {
-        if (arr[i] <= arr[i - 1] || !isOdd(arr[i])) {
-            return false;
-        }
+  if (!isOdd(arr[0])) return false;
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] <= arr[i - 1] || !isOdd(arr[i])) {
+      return false;
     }
-    return true;
+  }
+  return true;
 }
 
 /**
@@ -65,13 +65,13 @@ function isOddIncreasingArray(arr) {
  * @returns {boolean}
  */
 function isEvenDecreasingArray(arr) {
-    if (!isEven(arr[0])) return false;
-    for (let i = 1; i < arr.length; i++) {
-        if (arr[i] >= arr[i - 1] || !isEven(arr[i])) {
-            return false;
-        }
+  if (!isEven(arr[0])) return false;
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] >= arr[i - 1] || !isEven(arr[i])) {
+      return false;
     }
-    return true;
+  }
+  return true;
 }
 
 /**
@@ -79,7 +79,7 @@ function isEvenDecreasingArray(arr) {
  * @returns {boolean}
  */
 function isOdd(number) {
-    return (number & 0b1) === 0b1;
+  return (number & 0b1) === 0b1;
 }
 
 /**
@@ -87,6 +87,6 @@ function isOdd(number) {
  * @returns {boolean}
  */
 function isEven(number) {
-    return !isOdd(number);
+  return !isOdd(number);
 }
 // @lc code=end

@@ -18,23 +18,23 @@
  * @return {number[]}
  */
 var inorderTraversal = function (root) {
-    /** @type {number[]} */
-    const result = [];
-    /** @type {TreeNode[]} */
-    const stack = [];
-    let currNode = root;
+  /** @type {number[]} */
+  const result = [];
+  /** @type {TreeNode[]} */
+  const stack = [];
+  let currNode = root;
 
-    while (currNode !== null || stack.length > 0) {
-        while (currNode !== null) {
-            stack.push(currNode);
-            currNode = currNode.left;
-        }
-
-        const top = stack.pop();
-        result.push(top?.val);
-        currNode = top?.right;
+  while (currNode !== null || stack.length > 0) {
+    while (currNode !== null) {
+      stack.push(currNode);
+      currNode = currNode.left;
     }
 
-    return result;
+    const top = stack.pop();
+    result.push(top?.val);
+    currNode = top?.right;
+  }
+
+  return result;
 };
 // @lc code=end

@@ -10,9 +10,9 @@
  * @return {void} Do not return anything, modify nums in-place instead.
  */
 var moveZeroes = function (nums) {
-    const k = removeElement(nums, 0);
+  const k = removeElement(nums, 0);
 
-    nums.fill(0, k);
+  nums.fill(0, k);
 };
 
 /**
@@ -21,17 +21,17 @@ var moveZeroes = function (nums) {
  * @return {number}
  */
 function removeElement(nums, val) {
-    let left = 0;
-    let right = 0;
+  let left = 0;
+  let right = 0;
 
-    while (right < nums.length) {
-        if (nums[right] !== val) {
-            nums[left] = nums[right];
-            left++;
-        }
-        right++;
+  while (right < nums.length) {
+    if (nums[right] !== val) {
+      nums[left] = nums[right];
+      left++;
     }
+    right++;
+  }
 
-    return left;
+  return left;
 }
 // @lc code=end

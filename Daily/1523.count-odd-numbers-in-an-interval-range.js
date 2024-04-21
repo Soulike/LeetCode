@@ -11,14 +11,14 @@
  * @return {number}
  */
 var countOdds = function (low, high) {
-    if (isEven(low)) {
-        low++;
-    }
-    if (isEven(high)) {
-        high--;
-    }
+  if (isEven(low)) {
+    low++;
+  }
+  if (isEven(high)) {
+    high--;
+  }
 
-    return (high - low) / 2 + 1;
+  return (high - low) / 2 + 1;
 };
 
 /**
@@ -26,6 +26,6 @@ var countOdds = function (low, high) {
  * @returns {boolean}
  */
 function isEven(number) {
-    return (number & 0b1) === 0;
+  return (number & 0b1) === 0;
 }
 // @lc code=end

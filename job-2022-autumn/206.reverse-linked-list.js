@@ -17,17 +17,17 @@
  * @return {ListNode | null}
  */
 var reverseList = function (head) {
-    if (head === null) {
-        return null;
-    }
-    if (head.next === null) {
-        return head;
-    }
+  if (head === null) {
+    return null;
+  }
+  if (head.next === null) {
+    return head;
+  }
 
-    const restReversedTail = head.next;
-    const restReversedHead = reverseList(head.next);
-    head.next = null;
-    restReversedTail.next = head;
-    return restReversedHead;
+  const restReversedTail = head.next;
+  const restReversedHead = reverseList(head.next);
+  head.next = null;
+  restReversedTail.next = head;
+  return restReversedHead;
 };
 // @lc code=end

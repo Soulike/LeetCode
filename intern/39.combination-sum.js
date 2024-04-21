@@ -11,25 +11,25 @@
  * @return {number[][]}
  */
 const combinationSum = function (candidates, target) {
-    const results = [];
-    const current = [];
+  const results = [];
+  const current = [];
 
-    function backtrack(startIndex, target) {
-        if (target === 0) {
-            results.push([...current]);
-        } else if (target < 0) {
-            return;
-        } else {
-            for (let i = startIndex; i < candidates.length; i++) {
-                current.push(candidates[i]);
-                backtrack(i, target - candidates[i]);
-                current.pop();
-            }
-        }
+  function backtrack(startIndex, target) {
+    if (target === 0) {
+      results.push([...current]);
+    } else if (target < 0) {
+      return;
+    } else {
+      for (let i = startIndex; i < candidates.length; i++) {
+        current.push(candidates[i]);
+        backtrack(i, target - candidates[i]);
+        current.pop();
+      }
     }
+  }
 
-    backtrack(0, target);
+  backtrack(0, target);
 
-    return results;
+  return results;
 };
 // @lc code=end

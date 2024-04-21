@@ -10,17 +10,17 @@
  * @return {number}
  */
 var numberOfSteps = function (num) {
-    let stepCount = 0;
+  let stepCount = 0;
 
-    while (num > 0) {
-        if (num % 2) {
-            num--;
-        } else {
-            num /= 2;
-        }
-        stepCount++;
+  while (num > 0) {
+    if (num % 2) {
+      num--;
+    } else {
+      num /= 2;
     }
+    stepCount++;
+  }
 
-    return stepCount;
+  return stepCount;
 };
 // @lc code=end

@@ -10,21 +10,21 @@
  * @return {number}
  */
 var minAddToMakeValid = function (s) {
-    let addCount = 0;
-    let leftBracketCount = 0;
+  let addCount = 0;
+  let leftBracketCount = 0;
 
-    for (const c of s) {
-        if (c === '(') {
-            leftBracketCount++;
-        } else {
-            if (leftBracketCount === 0) {
-                addCount++;
-            } else {
-                leftBracketCount--;
-            }
-        }
+  for (const c of s) {
+    if (c === '(') {
+      leftBracketCount++;
+    } else {
+      if (leftBracketCount === 0) {
+        addCount++;
+      } else {
+        leftBracketCount--;
+      }
     }
+  }
 
-    return addCount + leftBracketCount;
+  return addCount + leftBracketCount;
 };
 // @lc code=end

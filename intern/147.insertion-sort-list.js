@@ -5,8 +5,8 @@
  */
 
 function ListNode(val, next) {
-    this.val = val === undefined ? 0 : val;
-    this.next = next === undefined ? null : next;
+  this.val = val === undefined ? 0 : val;
+  this.next = next === undefined ? null : next;
 }
 
 // @lc code=start
@@ -15,42 +15,42 @@ function ListNode(val, next) {
  * @return {ListNode}
  */
 const insertionSortList = function (head) {
-    const fakeHead = new ListNode(-5001, head);
-    let currentSortedListTail = head;
-    let currentNodeBefore = null;
-    while (currentSortedListTail.next !== null) {
-        currentNodeBefore = currentSortedListTail;
+  const fakeHead = new ListNode(-5001, head);
+  let currentSortedListTail = head;
+  let currentNodeBefore = null;
+  while (currentSortedListTail.next !== null) {
+    currentNodeBefore = currentSortedListTail;
 
-        const currentNode = pickNode(currentNodeBefore);
-        let currentComparedNodeBefore = fakeHead;
-        while (true) {
-            if (currentComparedNodeBefore === currentSortedListTail) {
-                insertNode(currentComparedNodeBefore, currentNode);
-                currentSortedListTail = currentNode;
-                break;
-            } else {
-                if (currentComparedNodeBefore.next.val >= currentNode.val) {
-                    insertNode(currentComparedNodeBefore, currentNode);
-                    break;
-                }
-            }
-            currentComparedNodeBefore = currentComparedNodeBefore.next;
+    const currentNode = pickNode(currentNodeBefore);
+    let currentComparedNodeBefore = fakeHead;
+    while (true) {
+      if (currentComparedNodeBefore === currentSortedListTail) {
+        insertNode(currentComparedNodeBefore, currentNode);
+        currentSortedListTail = currentNode;
+        break;
+      } else {
+        if (currentComparedNodeBefore.next.val >= currentNode.val) {
+          insertNode(currentComparedNodeBefore, currentNode);
+          break;
         }
+      }
+      currentComparedNodeBefore = currentComparedNodeBefore.next;
     }
+  }
 
-    return fakeHead.next;
+  return fakeHead.next;
 };
 
 function pickNode(nodeBefore) {
-    const pickedNode = nodeBefore.next;
-    nodeBefore.next = pickedNode.next;
-    pickedNode.next = null;
-    return pickedNode;
+  const pickedNode = nodeBefore.next;
+  nodeBefore.next = pickedNode.next;
+  pickedNode.next = null;
+  return pickedNode;
 }
 
 function insertNode(nodeBefore, insertedNode) {
-    const nextNode = nodeBefore.next;
-    nodeBefore.next = insertedNode;
-    insertedNode.next = nextNode;
+  const nextNode = nodeBefore.next;
+  nodeBefore.next = insertedNode;
+  insertedNode.next = nextNode;
 }
 // @lc code=end

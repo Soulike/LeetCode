@@ -10,38 +10,38 @@
  * @return {string}
  */
 var smallestSubsequence = function (s) {
-    const monostack = [];
+  const monostack = [];
 
-    const inStackLetters = new Set();
-    const letterLeftCount = new Map();
+  const inStackLetters = new Set();
+  const letterLeftCount = new Map();
 
-    for (const letter of s) {
-        letterLeftCount.set(letter, (letterLeftCount.get(letter) ?? 0) + 1);
-    }
+  for (const letter of s) {
+    letterLeftCount.set(letter, (letterLeftCount.get(letter) ?? 0) + 1);
+  }
 
-    for (const letter of s) {
-        if (!inStackLetters.has(letter)) {
-            if (monostack.length !== 0) {
-                let topLetter = monostack[monostack.length - 1];
-                while (topLetter.charCodeAt(0) >= letter.charCodeAt(0)) {
-                    if (letterLeftCount.get(topLetter) > 0) {
-                        monostack.pop();
-                        inStackLetters.delete(topLetter);
-                        if (monostack.length === 0) {
-                            break;
-                        }
-                        topLetter = monostack[monostack.length - 1];
-                    } else {
-                        break;
-                    }
-                }
+  for (const letter of s) {
+    if (!inStackLetters.has(letter)) {
+      if (monostack.length !== 0) {
+        let topLetter = monostack[monostack.length - 1];
+        while (topLetter.charCodeAt(0) >= letter.charCodeAt(0)) {
+          if (letterLeftCount.get(topLetter) > 0) {
+            monostack.pop();
+            inStackLetters.delete(topLetter);
+            if (monostack.length === 0) {
+              break;
             }
-            monostack.push(letter);
-            inStackLetters.add(letter);
+            topLetter = monostack[monostack.length - 1];
+          } else {
+            break;
+          }
         }
-        letterLeftCount.set(letter, letterLeftCount.get(letter) - 1);
+      }
+      monostack.push(letter);
+      inStackLetters.add(letter);
     }
+    letterLeftCount.set(letter, letterLeftCount.get(letter) - 1);
+  }
 
-    return monostack.join('');
+  return monostack.join('');
 };
 // @lc code=end

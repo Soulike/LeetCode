@@ -10,20 +10,20 @@
  * @return {number}
  */
 var removeDuplicates = function (nums) {
-    if (nums.length < 2) {
-        return nums.length;
-    }
-    let left = 0;
-    let right = 1;
+  if (nums.length < 2) {
+    return nums.length;
+  }
+  let left = 0;
+  let right = 1;
 
-    while (right < nums.length) {
-        if (nums[right] !== nums[left]) {
-            nums[left + 1] = nums[right];
-            left++;
-        }
-        right++;
+  while (right < nums.length) {
+    if (nums[right] !== nums[left]) {
+      nums[left + 1] = nums[right];
+      left++;
     }
+    right++;
+  }
 
-    return left + 1;
+  return left + 1;
 };
 // @lc code=end

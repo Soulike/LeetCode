@@ -10,22 +10,22 @@
  * @return {void} Do not return anything, modify matrix in-place instead.
  */
 const rotate = function (matrix) {
-    // 先关于主轴旋转，再关于 y 轴中心旋转
-    const n = matrix.length;
-    if (n === 0 || n === 1) {
-        return;
+  // 先关于主轴旋转，再关于 y 轴中心旋转
+  const n = matrix.length;
+  if (n === 0 || n === 1) {
+    return;
+  }
+  for (let x = 0; x < n; x++) {
+    for (let y = 0; y < x; y++) {
+      swap(matrix, x, y, y, x);
     }
-    for (let x = 0; x < n; x++) {
-        for (let y = 0; y < x; y++) {
-            swap(matrix, x, y, y, x);
-        }
-    }
+  }
 
-    for (let x = 0; x < n; x++) {
-        for (let y = 0; y < n / 2; y++) {
-            swap(matrix, x, y, x, n - y - 1);
-        }
+  for (let x = 0; x < n; x++) {
+    for (let y = 0; y < n / 2; y++) {
+      swap(matrix, x, y, x, n - y - 1);
     }
+  }
 };
 
 /**
@@ -36,13 +36,13 @@ const rotate = function (matrix) {
  * @param {number} y2
  */
 function swap(matrix, x, y, x2, y2) {
-    if (x !== x2 || y !== y2) {
-        [matrix[x][y], matrix[x2][y2]] = [matrix[x2][y2], matrix[x][y]];
-    }
+  if (x !== x2 || y !== y2) {
+    [matrix[x][y], matrix[x2][y2]] = [matrix[x2][y2], matrix[x][y]];
+  }
 }
 // @lc code=end
 
 rotate([
-    [1, 2],
-    [3, 4],
+  [1, 2],
+  [3, 4],
 ]);

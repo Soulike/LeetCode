@@ -10,12 +10,12 @@
  * @return {number}
  */
 var lengthOfLastWord = function (s) {
-    s = s.trimEnd();
-    let right = s.length - 1;
-    while (right >= 0 && s[right] !== ' ') {
-        right--;
-    }
+  s = s.trimEnd();
+  let right = s.length - 1;
+  while (right >= 0 && s[right] !== ' ') {
+    right--;
+  }
 
-    return s.length - right - 1;
+  return s.length - right - 1;
 };
 // @lc code=end

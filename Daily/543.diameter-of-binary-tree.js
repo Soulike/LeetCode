@@ -18,49 +18,49 @@
  * @return {number}
  */
 var diameterOfBinaryTree = function (root) {
-    /** @type {Map<TreeNode, [left: number, right: number]>} */
-    const subtreePathLengthsMemo = new Map();
-    /**
-     * @param {TreeNode} root
-     * @return {[left: number, right: number]} - The max length of the path from root to a leaf node in left / right subtree.
-     */
-    const maxSubtreePathLengthsOfRoot = (root) => {
-        if (root.left === null && root.right === null) return [0, 0];
+  /** @type {Map<TreeNode, [left: number, right: number]>} */
+  const subtreePathLengthsMemo = new Map();
+  /**
+   * @param {TreeNode} root
+   * @return {[left: number, right: number]} - The max length of the path from root to a leaf node in left / right subtree.
+   */
+  const maxSubtreePathLengthsOfRoot = (root) => {
+    if (root.left === null && root.right === null) return [0, 0];
 
-        if (subtreePathLengthsMemo.has(root))
-            return subtreePathLengthsMemo.get(root);
-        const leftSubtreeMaxPathLength = root.left
-            ? Math.max(...maxSubtreePathLengthsOfRoot(root.left))
-            : -1;
-        const rightSubtreeMaxPathLength = root.right
-            ? Math.max(...maxSubtreePathLengthsOfRoot(root.right))
-            : -1;
+    if (subtreePathLengthsMemo.has(root))
+      return subtreePathLengthsMemo.get(root);
+    const leftSubtreeMaxPathLength = root.left
+      ? Math.max(...maxSubtreePathLengthsOfRoot(root.left))
+      : -1;
+    const rightSubtreeMaxPathLength = root.right
+      ? Math.max(...maxSubtreePathLengthsOfRoot(root.right))
+      : -1;
 
-        /** @type {[number, number]} */
-        const result = [
-            1 + leftSubtreeMaxPathLength,
-            1 + rightSubtreeMaxPathLength,
-        ];
-        subtreePathLengthsMemo.set(root, result);
-        return result;
-    };
+    /** @type {[number, number]} */
+    const result = [
+      1 + leftSubtreeMaxPathLength,
+      1 + rightSubtreeMaxPathLength,
+    ];
+    subtreePathLengthsMemo.set(root, result);
+    return result;
+  };
 
-    let maxDiameter = 0;
+  let maxDiameter = 0;
 
-    /**
-     * @param {TreeNode | null} root
-     * @return {void}
-     */
-    const postOrderTraverse = (root) => {
-        if (root === null) return;
-        postOrderTraverse(root.left);
-        postOrderTraverse(root.right);
+  /**
+   * @param {TreeNode | null} root
+   * @return {void}
+   */
+  const postOrderTraverse = (root) => {
+    if (root === null) return;
+    postOrderTraverse(root.left);
+    postOrderTraverse(root.right);
 
-        const [left, right] = maxSubtreePathLengthsOfRoot(root);
-        maxDiameter = Math.max(maxDiameter, left + right);
-    };
+    const [left, right] = maxSubtreePathLengthsOfRoot(root);
+    maxDiameter = Math.max(maxDiameter, left + right);
+  };
 
-    postOrderTraverse(root);
-    return maxDiameter;
+  postOrderTraverse(root);
+  return maxDiameter;
 };
 // @lc code=end

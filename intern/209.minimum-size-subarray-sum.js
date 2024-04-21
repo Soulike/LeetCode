@@ -11,33 +11,33 @@
  * @return {number}
  */
 const minSubArrayLen = function (target, nums) {
-    let left = 0;
-    let right = 0;
-    let sum = nums[0];
-    let minSubArrayLength = Number.POSITIVE_INFINITY;
-    const LENGTH = nums.length;
-    while (right < LENGTH) {
-        if (sum >= target) {
-            minSubArrayLength = Math.min(minSubArrayLength, right - left + 1);
+  let left = 0;
+  let right = 0;
+  let sum = nums[0];
+  let minSubArrayLength = Number.POSITIVE_INFINITY;
+  const LENGTH = nums.length;
+  while (right < LENGTH) {
+    if (sum >= target) {
+      minSubArrayLength = Math.min(minSubArrayLength, right - left + 1);
 
-            sum -= nums[left];
-            left++;
-            if (right < left) {
-                right = left;
-                sum = nums[right];
-            }
-        } // sum < target
-        else {
-            right++;
-            if (right >= LENGTH) {
-                break;
-            }
-            sum += nums[right];
-        }
+      sum -= nums[left];
+      left++;
+      if (right < left) {
+        right = left;
+        sum = nums[right];
+      }
+    } // sum < target
+    else {
+      right++;
+      if (right >= LENGTH) {
+        break;
+      }
+      sum += nums[right];
     }
-    if (minSubArrayLength === Number.POSITIVE_INFINITY) {
-        minSubArrayLength = 0;
-    }
-    return minSubArrayLength;
+  }
+  if (minSubArrayLength === Number.POSITIVE_INFINITY) {
+    minSubArrayLength = 0;
+  }
+  return minSubArrayLength;
 };
 // @lc code=end

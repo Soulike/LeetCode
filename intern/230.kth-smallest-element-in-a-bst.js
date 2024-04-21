@@ -19,10 +19,10 @@
  * @return {number}
  */
 const kthSmallest = function (root, k) {
-    /**@type {number[]} */
-    const store = [k];
-    helper(root, store);
-    return store[1];
+  /**@type {number[]} */
+  const store = [k];
+  helper(root, store);
+  return store[1];
 };
 
 /**
@@ -31,16 +31,16 @@ const kthSmallest = function (root, k) {
  * @return {void}
  */
 function helper(root, store) {
-    if (root.left !== null) {
-        helper(root.left, store);
-    }
-    store[0]--;
-    if (store[0] === 0) {
-        store.push(root.val);
-        return;
-    }
-    if (root.right !== null) {
-        helper(root.right, store);
-    }
+  if (root.left !== null) {
+    helper(root.left, store);
+  }
+  store[0]--;
+  if (store[0] === 0) {
+    store.push(root.val);
+    return;
+  }
+  if (root.right !== null) {
+    helper(root.right, store);
+  }
 }
 // @lc code=end

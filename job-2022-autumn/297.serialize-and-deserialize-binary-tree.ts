@@ -23,49 +23,46 @@
  * Encodes a tree to a single string.
  */
 function serialize(root: TreeNode | null): string {
-    const preorder: string[] = [];
-    preorderTraverse(root, preorder);
-    return preorder.join(',');
+  const preorder: string[] = [];
+  preorderTraverse(root, preorder);
+  return preorder.join(',');
 }
 
 function preorderTraverse(root: TreeNode | null, result: string[]) {
-    if (root === null) {
-        result.push('#');
-    } else {
-        result.push(root.val.toString());
-        preorderTraverse(root.left, result);
-        preorderTraverse(root.right, result);
-    }
+  if (root === null) {
+    result.push('#');
+  } else {
+    result.push(root.val.toString());
+    preorderTraverse(root.left, result);
+    preorderTraverse(root.right, result);
+  }
 }
 
 /*
  * Decodes your encoded data to tree.
  */
 function deserialize(data: string): TreeNode | null {
-    const preorder = data.split(',');
-    return preorderConstruct(preorder, 0)[0];
+  const preorder = data.split(',');
+  return preorderConstruct(preorder, 0)[0];
 }
 
 function preorderConstruct(
-    preorder: string[],
-    start: number,
+  preorder: string[],
+  start: number,
 ): [root: TreeNode | null, nextStart: number] {
-    const rootVal = preorder[start];
-    if (rootVal === '#') {
-        return [null, start + 1];
-    }
-    const root = new TreeNode(Number.parseInt(rootVal));
+  const rootVal = preorder[start];
+  if (rootVal === '#') {
+    return [null, start + 1];
+  }
+  const root = new TreeNode(Number.parseInt(rootVal));
 
-    const [leftChild, rightChildStart] = preorderConstruct(preorder, start + 1);
-    const [rightChild, nextStart] = preorderConstruct(
-        preorder,
-        rightChildStart,
-    );
+  const [leftChild, rightChildStart] = preorderConstruct(preorder, start + 1);
+  const [rightChild, nextStart] = preorderConstruct(preorder, rightChildStart);
 
-    root.left = leftChild;
-    root.right = rightChild;
+  root.left = leftChild;
+  root.right = rightChild;
 
-    return [root, nextStart];
+  return [root, nextStart];
 }
 
 /**

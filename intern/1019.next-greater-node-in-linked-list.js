@@ -17,40 +17,40 @@
  * @return {number[]}
  */
 var nextLargerNodes = function (head) {
-    /**
-     * 从栈底到栈顶，不严格递减
-     * @type {[number, number][]} - [index, value]
-     */
-    const decreaseStack = [];
-    /** @type {number[]} */
-    const result = [];
+  /**
+   * 从栈底到栈顶，不严格递减
+   * @type {[number, number][]} - [index, value]
+   */
+  const decreaseStack = [];
+  /** @type {number[]} */
+  const result = [];
 
-    let currentIndex = 0;
-    let currentNode = head;
+  let currentIndex = 0;
+  let currentNode = head;
 
-    while (currentNode !== null) {
-        if (decreaseStack.length === 0) {
-            decreaseStack.push([currentIndex, currentNode.val]);
-        } else {
-            while (
-                decreaseStack.length > 0 &&
-                decreaseStack[decreaseStack.length - 1][1] < currentNode.val
-            ) {
-                const [index] = decreaseStack.pop();
-                result[index] = currentNode.val;
-            }
+  while (currentNode !== null) {
+    if (decreaseStack.length === 0) {
+      decreaseStack.push([currentIndex, currentNode.val]);
+    } else {
+      while (
+        decreaseStack.length > 0 &&
+        decreaseStack[decreaseStack.length - 1][1] < currentNode.val
+      ) {
+        const [index] = decreaseStack.pop();
+        result[index] = currentNode.val;
+      }
 
-            decreaseStack.push([currentIndex, currentNode.val]);
-        }
-
-        currentNode = currentNode.next;
-        currentIndex++;
+      decreaseStack.push([currentIndex, currentNode.val]);
     }
 
-    for (const [index] of decreaseStack) {
-        result[index] = 0;
-    }
+    currentNode = currentNode.next;
+    currentIndex++;
+  }
 
-    return result;
+  for (const [index] of decreaseStack) {
+    result[index] = 0;
+  }
+
+  return result;
 };
 // @lc code=end

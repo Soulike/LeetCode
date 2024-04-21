@@ -18,25 +18,25 @@
  * @return {boolean}
  */
 var isSymmetric = function (root) {
-    /**
-     * @param {TreeNode|null} leftRoot
-     * @param {TreeNode|null} rightRoot
-     * @returns {boolean}
-     */
-    const isSymmetricRecursive = (leftRoot, rightRoot) => {
-        if (leftRoot === null && rightRoot === null) {
-            return true;
-        } else if (leftRoot === null || rightRoot === null) {
-            return false;
-        } else {
-            return (
-                leftRoot.val === rightRoot.val &&
-                isSymmetricRecursive(leftRoot.left, rightRoot.right) &&
-                isSymmetricRecursive(leftRoot.right, rightRoot.left)
-            );
-        }
-    };
+  /**
+   * @param {TreeNode|null} leftRoot
+   * @param {TreeNode|null} rightRoot
+   * @returns {boolean}
+   */
+  const isSymmetricRecursive = (leftRoot, rightRoot) => {
+    if (leftRoot === null && rightRoot === null) {
+      return true;
+    } else if (leftRoot === null || rightRoot === null) {
+      return false;
+    } else {
+      return (
+        leftRoot.val === rightRoot.val &&
+        isSymmetricRecursive(leftRoot.left, rightRoot.right) &&
+        isSymmetricRecursive(leftRoot.right, rightRoot.left)
+      );
+    }
+  };
 
-    return isSymmetricRecursive(root.left, root.right);
+  return isSymmetricRecursive(root.left, root.right);
 };
 // @lc code=end

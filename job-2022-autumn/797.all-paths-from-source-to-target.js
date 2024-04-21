@@ -10,7 +10,7 @@
  * @return {number[][]}
  */
 var allPathsSourceTarget = function (graph) {
-    return allPathsFrom(0, graph.length - 1, graph);
+  return allPathsFrom(0, graph.length - 1, graph);
 };
 
 /**
@@ -20,20 +20,20 @@ var allPathsSourceTarget = function (graph) {
  * @returns {number[][]}
  */
 function allPathsFrom(from, to, graph) {
-    if (from === to) {
-        return [[to]];
-    }
-    const nextNodes = graph[from];
-    /** @type {number[][]} */
-    const paths = [];
-    for (const nextNode of nextNodes) {
-        paths.push(...allPathsFrom(nextNode, to, graph));
-    }
+  if (from === to) {
+    return [[to]];
+  }
+  const nextNodes = graph[from];
+  /** @type {number[][]} */
+  const paths = [];
+  for (const nextNode of nextNodes) {
+    paths.push(...allPathsFrom(nextNode, to, graph));
+  }
 
-    for (const path of paths) {
-        path.unshift(from);
-    }
+  for (const path of paths) {
+    path.unshift(from);
+  }
 
-    return paths;
+  return paths;
 }
 // @lc code=end

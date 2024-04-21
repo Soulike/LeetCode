@@ -20,23 +20,23 @@
  * @return {number}
  */
 const rangeSumBST = function (root, low, high) {
-    const stack = [root];
-    let sum = 0;
-    while (stack.length > 0) {
-        const top = stack.pop();
-        if (top === null) {
-            continue;
-        }
-
-        if (top.val < low) {
-            stack.push(top.right);
-        } else if (top.val > high) {
-            stack.push(top.left);
-        } else {
-            sum += top.val;
-            stack.push(top.left, top.right);
-        }
+  const stack = [root];
+  let sum = 0;
+  while (stack.length > 0) {
+    const top = stack.pop();
+    if (top === null) {
+      continue;
     }
-    return sum;
+
+    if (top.val < low) {
+      stack.push(top.right);
+    } else if (top.val > high) {
+      stack.push(top.left);
+    } else {
+      sum += top.val;
+      stack.push(top.left, top.right);
+    }
+  }
+  return sum;
 };
 // @lc code=end

@@ -18,23 +18,23 @@
  * @return {number}
  */
 const maxAncestorDiff = function (root) {
-    let maxDiff = 0;
+  let maxDiff = 0;
 
-    const dfs = (root, minValInAncestor, maxValInAncestor) => {
-        if (root !== null) {
-            maxDiff = Math.max(
-                maxDiff,
-                Math.abs(minValInAncestor - root.val),
-                Math.abs(maxValInAncestor - root.val),
-            );
-            minValInAncestor = Math.min(minValInAncestor, root.val);
-            maxValInAncestor = Math.max(maxValInAncestor, root.val);
-            dfs(root.left, minValInAncestor, maxValInAncestor);
-            dfs(root.right, minValInAncestor, maxValInAncestor);
-        }
-    };
+  const dfs = (root, minValInAncestor, maxValInAncestor) => {
+    if (root !== null) {
+      maxDiff = Math.max(
+        maxDiff,
+        Math.abs(minValInAncestor - root.val),
+        Math.abs(maxValInAncestor - root.val),
+      );
+      minValInAncestor = Math.min(minValInAncestor, root.val);
+      maxValInAncestor = Math.max(maxValInAncestor, root.val);
+      dfs(root.left, minValInAncestor, maxValInAncestor);
+      dfs(root.right, minValInAncestor, maxValInAncestor);
+    }
+  };
 
-    dfs(root, root.val, root.val);
-    return maxDiff;
+  dfs(root, root.val, root.val);
+  return maxDiff;
 };
 // @lc code=end

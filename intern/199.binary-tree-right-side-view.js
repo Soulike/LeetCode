@@ -18,25 +18,25 @@
  * @return {number[]}
  */
 const rightSideView = function (root) {
-    if (root === null) {
-        return [];
+  if (root === null) {
+    return [];
+  }
+  const output = [];
+  let currentLevelNodes = [root];
+  let nextLevelNodes = [];
+  while (currentLevelNodes.length !== 0) {
+    output.push(currentLevelNodes[currentLevelNodes.length - 1].val);
+    for (const node of currentLevelNodes) {
+      if (node.left !== null) {
+        nextLevelNodes.push(node.left);
+      }
+      if (node.right !== null) {
+        nextLevelNodes.push(node.right);
+      }
     }
-    const output = [];
-    let currentLevelNodes = [root];
-    let nextLevelNodes = [];
-    while (currentLevelNodes.length !== 0) {
-        output.push(currentLevelNodes[currentLevelNodes.length - 1].val);
-        for (const node of currentLevelNodes) {
-            if (node.left !== null) {
-                nextLevelNodes.push(node.left);
-            }
-            if (node.right !== null) {
-                nextLevelNodes.push(node.right);
-            }
-        }
-        currentLevelNodes = nextLevelNodes;
-        nextLevelNodes = [];
-    }
-    return output;
+    currentLevelNodes = nextLevelNodes;
+    nextLevelNodes = [];
+  }
+  return output;
 };
 // @lc code=end

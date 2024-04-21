@@ -10,6 +10,6 @@
  * @return {boolean}
  */
 const isPowerOfTwo = function (n) {
-    return n > 0 && !(n & (n - 1));
+  return n > 0 && !(n & (n - 1));
 };
 // @lc code=end

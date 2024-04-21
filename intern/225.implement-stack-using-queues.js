@@ -7,53 +7,53 @@
 // @lc code=start
 
 class MyStack {
-    /** @type {number[]} */
-    queue;
+  /** @type {number[]} */
+  queue;
 
-    /** @type {number[]} */
-    tempQueue;
+  /** @type {number[]} */
+  tempQueue;
 
-    constructor() {
-        this.queue = [];
-        this.tempQueue = [];
+  constructor() {
+    this.queue = [];
+    this.tempQueue = [];
+  }
+
+  /**
+   * @param {number} x
+   * @return {void}
+   */
+  push(x) {
+    this.queue.push(x);
+  }
+
+  /**
+   * @return {number}
+   */
+  pop() {
+    while (this.queue.length > 1) {
+      this.tempQueue.push(this.queue.shift());
     }
 
-    /**
-     * @param {number} x
-     * @return {void}
-     */
-    push(x) {
-        this.queue.push(x);
-    }
+    const top = this.queue.shift();
+    [this.queue, this.tempQueue] = [this.tempQueue, this.queue];
+    return top;
+  }
 
-    /**
-     * @return {number}
-     */
-    pop() {
-        while (this.queue.length > 1) {
-            this.tempQueue.push(this.queue.shift());
-        }
+  /**
+   * @return {number}
+   */
+  top() {
+    const top = this.pop();
+    this.queue.push(top);
+    return top;
+  }
 
-        const top = this.queue.shift();
-        [this.queue, this.tempQueue] = [this.tempQueue, this.queue];
-        return top;
-    }
-
-    /**
-     * @return {number}
-     */
-    top() {
-        const top = this.pop();
-        this.queue.push(top);
-        return top;
-    }
-
-    /**
-     * @return {boolean}
-     */
-    empty() {
-        return this.queue.length === 0;
-    }
+  /**
+   * @return {boolean}
+   */
+  empty() {
+    return this.queue.length === 0;
+  }
 }
 
 /**

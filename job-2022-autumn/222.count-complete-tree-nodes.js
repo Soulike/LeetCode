@@ -18,17 +18,17 @@
  * @return {number}
  */
 var countNodes = function (root) {
-    if (root === null) {
-        return 0;
-    }
+  if (root === null) {
+    return 0;
+  }
 
-    const [minHeight, maxHeight] = getHeights(root);
+  const [minHeight, maxHeight] = getHeights(root);
 
-    if (minHeight === maxHeight) {
-        return 2 ** maxHeight - 1;
-    } else {
-        return 1 + countNodes(root.left) + countNodes(root.right);
-    }
+  if (minHeight === maxHeight) {
+    return 2 ** maxHeight - 1;
+  } else {
+    return 1 + countNodes(root.left) + countNodes(root.right);
+  }
 };
 
 /**
@@ -37,26 +37,26 @@ var countNodes = function (root) {
  * @returns {[min:number, max: number]}
  */
 function getHeights(root) {
-    if (root === null) {
-        return [0, 0];
-    }
+  if (root === null) {
+    return [0, 0];
+  }
 
-    let max = 0;
-    /**@type {TreeNode|null}*/
-    let leftNode = root;
-    while (leftNode !== null) {
-        max++;
-        leftNode = leftNode.left;
-    }
+  let max = 0;
+  /**@type {TreeNode|null}*/
+  let leftNode = root;
+  while (leftNode !== null) {
+    max++;
+    leftNode = leftNode.left;
+  }
 
-    let min = 0;
-    /**@type {TreeNode|null}*/
-    let rightNode = root;
-    while (rightNode !== null) {
-        min++;
-        rightNode = rightNode.right;
-    }
+  let min = 0;
+  /**@type {TreeNode|null}*/
+  let rightNode = root;
+  while (rightNode !== null) {
+    min++;
+    rightNode = rightNode.right;
+  }
 
-    return [min, max];
+  return [min, max];
 }
 // @lc code=end

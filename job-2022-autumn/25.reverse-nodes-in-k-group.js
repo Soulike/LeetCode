@@ -18,35 +18,32 @@
  * @return {ListNode}
  */
 var reverseKGroup = function (head, k) {
-    if (k === 1) {
-        return head;
+  if (k === 1) {
+    return head;
+  }
+
+  const fakeHead = new TreeNode();
+  fakeHead.next = head;
+
+  /** The node before reversed start node */
+  let reverseBefore = fakeHead;
+  /** the node after reversed end node */
+  let reverseAfter = head;
+
+  while (true) {
+    // find reverseAfter
+    for (let i = 0; i < k; i++) {
+      // the list ends before we can move k steps, reverse is done
+      if (reverseAfter === null) {
+        return fakeHead.next;
+      }
+      reverseAfter = reverseAfter.next;
     }
 
-    const fakeHead = new TreeNode();
-    fakeHead.next = head;
-
-    /** The node before reversed start node */
-    let reverseBefore = fakeHead;
-    /** the node after reversed end node */
-    let reverseAfter = head;
-
-    while (true) {
-        // find reverseAfter
-        for (let i = 0; i < k; i++) {
-            // the list ends before we can move k steps, reverse is done
-            if (reverseAfter === null) {
-                return fakeHead.next;
-            }
-            reverseAfter = reverseAfter.next;
-        }
-
-        const newTail = reverseBefore.next;
-        reverseBefore.next = reverseBetweenNodes(
-            reverseBefore.next,
-            reverseAfter,
-        );
-        reverseBefore = newTail;
-    }
+    const newTail = reverseBefore.next;
+    reverseBefore.next = reverseBetweenNodes(reverseBefore.next, reverseAfter);
+    reverseBefore = newTail;
+  }
 };
 
 /**
@@ -55,18 +52,18 @@ var reverseKGroup = function (head, k) {
  * @param {TreeNode|null} endNode
  */
 function reverseBetweenNodes(startNode, endNode) {
-    const fakeHead = new TreeNode();
-    let currentNode = startNode;
+  const fakeHead = new TreeNode();
+  let currentNode = startNode;
 
-    while (currentNode !== endNode) {
-        let nextNode = currentNode.next;
-        currentNode.next = fakeHead.next;
-        fakeHead.next = currentNode;
-        currentNode = nextNode;
-    }
+  while (currentNode !== endNode) {
+    let nextNode = currentNode.next;
+    currentNode.next = fakeHead.next;
+    fakeHead.next = currentNode;
+    currentNode = nextNode;
+  }
 
-    startNode.next = endNode;
+  startNode.next = endNode;
 
-    return fakeHead.next;
+  return fakeHead.next;
 }
 // @lc code=end

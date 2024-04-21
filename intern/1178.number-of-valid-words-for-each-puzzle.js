@@ -11,38 +11,35 @@
  * @return {number[]}
  */
 const findNumOfValidWords = function (words, puzzles) {
-    const aCharCode = 'a'.charCodeAt(0);
+  const aCharCode = 'a'.charCodeAt(0);
 
-    const wordsMask = words.map((word) => {
-        let mask = 0;
-        for (const letter of word) {
-            mask |= 1 << (letter.charCodeAt(0) - aCharCode);
-        }
-        return mask;
-    });
+  const wordsMask = words.map((word) => {
+    let mask = 0;
+    for (const letter of word) {
+      mask |= 1 << (letter.charCodeAt(0) - aCharCode);
+    }
+    return mask;
+  });
 
-    const puzzlesMaskInfo = puzzles.map((puzzle) => {
-        let mask = 0;
-        for (const letter of puzzle) {
-            mask |= 1 << (letter.charCodeAt(0) - aCharCode);
-        }
-        return {
-            mask,
-            requiredMask: 1 << (puzzle[0].charCodeAt(0) - aCharCode),
-        };
-    });
+  const puzzlesMaskInfo = puzzles.map((puzzle) => {
+    let mask = 0;
+    for (const letter of puzzle) {
+      mask |= 1 << (letter.charCodeAt(0) - aCharCode);
+    }
+    return {
+      mask,
+      requiredMask: 1 << (puzzle[0].charCodeAt(0) - aCharCode),
+    };
+  });
 
-    return puzzlesMaskInfo.map(({mask, requiredMask}) => {
-        let count = 0;
-        for (const wordMask of wordsMask) {
-            if (
-                (requiredMask & wordMask) !== 0 &&
-                (wordMask & mask) === wordMask
-            ) {
-                count++;
-            }
-        }
-        return count;
-    });
+  return puzzlesMaskInfo.map(({mask, requiredMask}) => {
+    let count = 0;
+    for (const wordMask of wordsMask) {
+      if ((requiredMask & wordMask) !== 0 && (wordMask & mask) === wordMask) {
+        count++;
+      }
+    }
+    return count;
+  });
 };
 // @lc code=end

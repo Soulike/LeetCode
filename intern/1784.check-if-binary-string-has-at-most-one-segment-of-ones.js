@@ -10,6 +10,6 @@
  * @return {boolean}
  */
 var checkOnesSegment = function (s) {
-    return !s.includes('01');
+  return !s.includes('01');
 };
 // @lc code=end

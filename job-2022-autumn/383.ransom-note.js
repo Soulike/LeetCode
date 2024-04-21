@@ -11,27 +11,27 @@
  * @return {boolean}
  */
 var canConstruct = function (ransomNote, magazine) {
-    if (magazine.length < ransomNote.length) {
-        return false;
+  if (magazine.length < ransomNote.length) {
+    return false;
+  }
+
+  /** @type {Map<string, number>} */
+  const letterToCount = new Map();
+
+  for (const c of magazine) {
+    letterToCount.set(c, (letterToCount.get(c) ?? 0) + 1);
+  }
+
+  for (const c of ransomNote) {
+    const count = letterToCount.get(c) ?? 0;
+
+    if (count === 0) {
+      return false;
+    } else {
+      letterToCount.set(c, count - 1);
     }
+  }
 
-    /** @type {Map<string, number>} */
-    const letterToCount = new Map();
-
-    for (const c of magazine) {
-        letterToCount.set(c, (letterToCount.get(c) ?? 0) + 1);
-    }
-
-    for (const c of ransomNote) {
-        const count = letterToCount.get(c) ?? 0;
-
-        if (count === 0) {
-            return false;
-        } else {
-            letterToCount.set(c, count - 1);
-        }
-    }
-
-    return true;
+  return true;
 };
 // @lc code=end

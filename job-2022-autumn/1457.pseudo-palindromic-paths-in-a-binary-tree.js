@@ -18,52 +18,52 @@
  * @return {number}
  */
 var pseudoPalindromicPaths = function (root) {
-    const numToCount = new Array(10);
-    numToCount.fill(0);
+  const numToCount = new Array(10);
+  numToCount.fill(0);
 
-    let pathCount = 0;
+  let pathCount = 0;
 
-    const isPseudoPalindromic = () => {
-        let oddCount = 0;
-        for (const count of numToCount) {
-            if (count % 2) {
-                oddCount++;
-                if (oddCount > 1) {
-                    return false;
-                }
-            }
+  const isPseudoPalindromic = () => {
+    let oddCount = 0;
+    for (const count of numToCount) {
+      if (count % 2) {
+        oddCount++;
+        if (oddCount > 1) {
+          return false;
         }
+      }
+    }
 
-        return true;
-    };
+    return true;
+  };
 
-    /**
-     * @param {TreeNode} root
-     */
-    const backtrack = (root) => {
-        if (root.left === null && root.right === null) {
-            if (isPseudoPalindromic()) {
-                pathCount++;
-            }
-            return;
-        }
+  /**
+   * @param {TreeNode} root
+   */
+  const backtrack = (root) => {
+    if (root.left === null && root.right === null) {
+      if (isPseudoPalindromic()) {
+        pathCount++;
+      }
+      return;
+    }
 
-        if (root.left !== null) {
-            numToCount[root.left.val]++;
-            backtrack(root.left);
-            numToCount[root.left.val]--;
-        }
+    if (root.left !== null) {
+      numToCount[root.left.val]++;
+      backtrack(root.left);
+      numToCount[root.left.val]--;
+    }
 
-        if (root.right !== null) {
-            numToCount[root.right.val]++;
-            backtrack(root.right);
-            numToCount[root.right.val]--;
-        }
-    };
+    if (root.right !== null) {
+      numToCount[root.right.val]++;
+      backtrack(root.right);
+      numToCount[root.right.val]--;
+    }
+  };
 
-    numToCount[root.val]++;
-    backtrack(root);
+  numToCount[root.val]++;
+  backtrack(root);
 
-    return pathCount;
+  return pathCount;
 };
 // @lc code=end

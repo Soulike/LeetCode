@@ -18,48 +18,48 @@
  * @return {ListNode | null}
  */
 const detectCycle = function (head) {
-    /**
-     * 如果没有结点，返回 null
-     * 快慢指针，如果快指针到达 null，返回 null
-     * 如果快慢指针相等，慢指针返回 head，两个指针同速度前进，直到相遇，返回相遇的结点
-     */
+  /**
+   * 如果没有结点，返回 null
+   * 快慢指针，如果快指针到达 null，返回 null
+   * 如果快慢指针相等，慢指针返回 head，两个指针同速度前进，直到相遇，返回相遇的结点
+   */
 
-    if (head === null) {
-        return null;
+  if (head === null) {
+    return null;
+  }
+
+  let slow = head;
+  let fast = head;
+
+  while (true) {
+    fast = fast.next;
+    if (fast === null) {
+      return null;
+    }
+    fast = fast.next;
+    if (fast === null) {
+      return null;
     }
 
-    let slow = head;
-    let fast = head;
+    slow = slow.next;
 
-    while (true) {
-        fast = fast.next;
-        if (fast === null) {
-            return null;
-        }
-        fast = fast.next;
-        if (fast === null) {
-            return null;
-        }
-
-        slow = slow.next;
-
-        if (fast === slow) {
-            break;
-        }
+    if (fast === slow) {
+      break;
     }
+  }
 
-    // 特殊情况，整个链表就是个环
-    if (slow === head) {
-        return head;
-    }
+  // 特殊情况，整个链表就是个环
+  if (slow === head) {
+    return head;
+  }
 
-    slow = head;
+  slow = head;
 
-    while (fast !== slow) {
-        fast = fast.next;
-        slow = slow.next;
-    }
+  while (fast !== slow) {
+    fast = fast.next;
+    slow = slow.next;
+  }
 
-    return slow;
+  return slow;
 };
 // @lc code=end

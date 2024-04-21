@@ -11,23 +11,23 @@
  * @return {number}
  */
 var findPairs = function (nums, k) {
-    const numToCount = new Map();
+  const numToCount = new Map();
 
-    for (const num of nums) {
-        numToCount.set(num, (numToCount.get(num) ?? 0) + 1);
+  for (const num of nums) {
+    numToCount.set(num, (numToCount.get(num) ?? 0) + 1);
+  }
+
+  let result = 0;
+
+  for (const [num] of numToCount) {
+    numToCount.set(num, numToCount.get(num) - 1);
+    const nextKDiffNum = num + k;
+    const nextKDiffNumCount = numToCount.get(nextKDiffNum) ?? 0;
+    if (nextKDiffNumCount !== 0) {
+      result++;
     }
-
-    let result = 0;
-
-    for (const [num] of numToCount) {
-        numToCount.set(num, numToCount.get(num) - 1);
-        const nextKDiffNum = num + k;
-        const nextKDiffNumCount = numToCount.get(nextKDiffNum) ?? 0;
-        if (nextKDiffNumCount !== 0) {
-            result++;
-        }
-        numToCount.set(num, numToCount.get(num) + 1);
-    }
-    return result;
+    numToCount.set(num, numToCount.get(num) + 1);
+  }
+  return result;
 };
 // @lc code=end

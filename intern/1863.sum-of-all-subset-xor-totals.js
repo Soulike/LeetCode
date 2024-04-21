@@ -10,21 +10,21 @@
  * @return {number}
  */
 var subsetXORSum = function (nums) {
-    let currentXORSum = 0;
-    let result = 0;
+  let currentXORSum = 0;
+  let result = 0;
 
-    function backtrack(startIndex) {
-        result += currentXORSum;
+  function backtrack(startIndex) {
+    result += currentXORSum;
 
-        for (let i = startIndex; i < nums.length; i++) {
-            currentXORSum ^= nums[i];
-            backtrack(i + 1);
-            currentXORSum ^= nums[i];
-        }
+    for (let i = startIndex; i < nums.length; i++) {
+      currentXORSum ^= nums[i];
+      backtrack(i + 1);
+      currentXORSum ^= nums[i];
     }
+  }
 
-    backtrack(0);
+  backtrack(0);
 
-    return result;
+  return result;
 };
 // @lc code=end

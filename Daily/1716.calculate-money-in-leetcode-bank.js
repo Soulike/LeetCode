@@ -10,14 +10,13 @@
  * @return {number}
  */
 var totalMoney = function (n) {
-    const wholeWeeksNumber = Math.floor(n / 7);
-    let moneySum =
-        wholeWeeksNumber * 28 +
-        (wholeWeeksNumber - 1) * 7 * (wholeWeeksNumber / 2);
+  const wholeWeeksNumber = Math.floor(n / 7);
+  let moneySum =
+    wholeWeeksNumber * 28 + (wholeWeeksNumber - 1) * 7 * (wholeWeeksNumber / 2);
 
-    moneySum += getWeekSum(n % 7, wholeWeeksNumber + 1);
+  moneySum += getWeekSum(n % 7, wholeWeeksNumber + 1);
 
-    return moneySum;
+  return moneySum;
 };
 
 /**
@@ -26,9 +25,9 @@ var totalMoney = function (n) {
  * @returns {number}
  */
 function getWeekSum(dayNumber, weekNumber) {
-    const first = weekNumber;
-    const last = first + dayNumber - 1;
-    return ((first + last) * dayNumber) / 2;
+  const first = weekNumber;
+  const last = first + dayNumber - 1;
+  return ((first + last) * dayNumber) / 2;
 }
 // @lc code=end
 

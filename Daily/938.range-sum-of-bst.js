@@ -20,26 +20,26 @@
  * @return {number}
  */
 var rangeSumBST = function (root, low, high) {
-    let rangeSum = 0;
+  let rangeSum = 0;
 
-    /**
-     * @param {TreeNode | null} root
-     * @returns {void}
-     */
-    const inOrderTraverse = (root) => {
-        if (root === null) return;
-        if (root.val > low) {
-            inOrderTraverse(root.left);
-        }
-        if (root.val >= low && root.val <= high) {
-            rangeSum += root.val;
-        }
-        if (root.val < high) {
-            inOrderTraverse(root.right);
-        }
-    };
+  /**
+   * @param {TreeNode | null} root
+   * @returns {void}
+   */
+  const inOrderTraverse = (root) => {
+    if (root === null) return;
+    if (root.val > low) {
+      inOrderTraverse(root.left);
+    }
+    if (root.val >= low && root.val <= high) {
+      rangeSum += root.val;
+    }
+    if (root.val < high) {
+      inOrderTraverse(root.right);
+    }
+  };
 
-    inOrderTraverse(root);
-    return rangeSum;
+  inOrderTraverse(root);
+  return rangeSum;
 };
 // @lc code=end

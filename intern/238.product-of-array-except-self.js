@@ -10,20 +10,20 @@
  * @return {number[]}
  */
 const productExceptSelf = function (nums) {
-    const LENGTH = nums.length;
-    const output = new Array(LENGTH);
-    output.fill(1);
+  const LENGTH = nums.length;
+  const output = new Array(LENGTH);
+  output.fill(1);
 
-    for (let i = 0; i < LENGTH - 1; i++) {
-        output[i + 1] = output[i] * nums[i];
-    }
+  for (let i = 0; i < LENGTH - 1; i++) {
+    output[i + 1] = output[i] * nums[i];
+  }
 
-    let rightProduct = 1;
-    for (let i = LENGTH - 1; i >= 0; i--) {
-        output[i] *= rightProduct;
-        rightProduct *= nums[i];
-    }
+  let rightProduct = 1;
+  for (let i = LENGTH - 1; i >= 0; i--) {
+    output[i] *= rightProduct;
+    rightProduct *= nums[i];
+  }
 
-    return output;
+  return output;
 };
 // @lc code=end

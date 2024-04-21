@@ -19,17 +19,17 @@
  * @return {TreeNode}
  */
 var getTargetCopy = function (original, cloned, target) {
-    if (original === null) {
-        return null;
-    }
+  if (original === null) {
+    return null;
+  }
 
-    if (original === target) {
-        return cloned;
-    } else {
-        return (
-            getTargetCopy(original.left, cloned.left, target) ??
-            getTargetCopy(original.right, cloned.right, target)
-        );
-    }
+  if (original === target) {
+    return cloned;
+  } else {
+    return (
+      getTargetCopy(original.left, cloned.left, target) ??
+      getTargetCopy(original.right, cloned.right, target)
+    );
+  }
 };
 // @lc code=end

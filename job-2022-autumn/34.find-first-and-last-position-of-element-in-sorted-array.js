@@ -11,10 +11,10 @@
  * @return {number[]}
  */
 var searchRange = function (nums, target) {
-    return [
-        binarySearchLeftBoundary(nums, target),
-        binarySearchRightBoundary(nums, target),
-    ];
+  return [
+    binarySearchLeftBoundary(nums, target),
+    binarySearchRightBoundary(nums, target),
+  ];
 };
 
 /**
@@ -23,26 +23,26 @@ var searchRange = function (nums, target) {
  * @param {number} target
  */
 function binarySearchLeftBoundary(nums, target) {
-    let left = 0;
-    let right = nums.length - 1;
+  let left = 0;
+  let right = nums.length - 1;
 
-    while (right >= left) {
-        const mid = left + Math.floor((right - left) / 2);
+  while (right >= left) {
+    const mid = left + Math.floor((right - left) / 2);
 
-        if (nums[mid] > target) {
-            right = mid - 1;
-        } else if (nums[mid] < target) {
-            left = mid + 1;
-        } else if (nums[mid] === target) {
-            if (mid - 1 < 0 || nums[mid - 1] !== target) {
-                return mid;
-            } else {
-                right = mid - 1;
-            }
-        }
+    if (nums[mid] > target) {
+      right = mid - 1;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else if (nums[mid] === target) {
+      if (mid - 1 < 0 || nums[mid - 1] !== target) {
+        return mid;
+      } else {
+        right = mid - 1;
+      }
     }
+  }
 
-    return -1;
+  return -1;
 }
 
 /**
@@ -51,25 +51,25 @@ function binarySearchLeftBoundary(nums, target) {
  * @param {number} target
  */
 function binarySearchRightBoundary(nums, target) {
-    let left = 0;
-    let right = nums.length - 1;
+  let left = 0;
+  let right = nums.length - 1;
 
-    while (right >= left) {
-        const mid = left + Math.floor((right - left) / 2);
+  while (right >= left) {
+    const mid = left + Math.floor((right - left) / 2);
 
-        if (nums[mid] > target) {
-            right = mid - 1;
-        } else if (nums[mid] < target) {
-            left = mid + 1;
-        } else if (nums[mid] === target) {
-            if (mid + 1 > nums.length - 1 || nums[mid + 1] !== target) {
-                return mid;
-            } else {
-                left = mid + 1;
-            }
-        }
+    if (nums[mid] > target) {
+      right = mid - 1;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else if (nums[mid] === target) {
+      if (mid + 1 > nums.length - 1 || nums[mid + 1] !== target) {
+        return mid;
+      } else {
+        left = mid + 1;
+      }
     }
+  }
 
-    return -1;
+  return -1;
 }
 // @lc code=end

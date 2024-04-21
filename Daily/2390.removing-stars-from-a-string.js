@@ -10,14 +10,14 @@
  * @return {string}
  */
 var removeStars = function (s) {
-    /** @type {string[]} */
-    const stack = [];
+  /** @type {string[]} */
+  const stack = [];
 
-    for (const c of s) {
-        if (c === '*') stack.pop();
-        else stack.push(c);
-    }
+  for (const c of s) {
+    if (c === '*') stack.pop();
+    else stack.push(c);
+  }
 
-    return stack.join('');
+  return stack.join('');
 };
 // @lc code=end

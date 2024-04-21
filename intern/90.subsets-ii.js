@@ -10,24 +10,24 @@
  * @return {number[][]}
  */
 const subsetsWithDup = function (nums) {
-    nums.sort((a, b) => a - b);
-    let currentSubSet = [];
-    const subSets = [];
+  nums.sort((a, b) => a - b);
+  let currentSubSet = [];
+  const subSets = [];
 
-    function backtrack(index) {
-        subSets.push([...currentSubSet]);
+  function backtrack(index) {
+    subSets.push([...currentSubSet]);
 
-        for (let i = index; i < nums.length; i++) {
-            if (i === index || nums[i - 1] !== nums[i]) {
-                currentSubSet.push(nums[i]);
-                backtrack(i + 1);
-                currentSubSet.pop();
-            }
-        }
+    for (let i = index; i < nums.length; i++) {
+      if (i === index || nums[i - 1] !== nums[i]) {
+        currentSubSet.push(nums[i]);
+        backtrack(i + 1);
+        currentSubSet.pop();
+      }
     }
+  }
 
-    backtrack(0);
+  backtrack(0);
 
-    return subSets;
+  return subSets;
 };
 // @lc code=end

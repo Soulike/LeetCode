@@ -18,26 +18,24 @@
  * @return {number}
  */
 const sumEvenGrandparent = function (root) {
-    return helper(root, false);
+  return helper(root, false);
 };
 
 function helper(root, parentIsEven) {
-    if (root === null) {
-        return 0;
-    }
-    const currentIsEven = root.val % 2 === 0;
+  if (root === null) {
+    return 0;
+  }
+  const currentIsEven = root.val % 2 === 0;
 
-    if (parentIsEven) {
-        return (
-            (root.left?.val ?? 0) +
-            (root.right?.val ?? 0) +
-            helper(root.left, currentIsEven) +
-            helper(root.right, currentIsEven)
-        );
-    } else {
-        return (
-            helper(root.left, currentIsEven) + helper(root.right, currentIsEven)
-        );
-    }
+  if (parentIsEven) {
+    return (
+      (root.left?.val ?? 0) +
+      (root.right?.val ?? 0) +
+      helper(root.left, currentIsEven) +
+      helper(root.right, currentIsEven)
+    );
+  } else {
+    return helper(root.left, currentIsEven) + helper(root.right, currentIsEven);
+  }
 }
 // @lc code=end

@@ -3,9 +3,9 @@
  *
  * [205] Isomorphic Strings
  */
+#include <iostream>
 #include <map>
 #include <string>
-#include <iostream>
 
 using std::string;
 using std::unordered_map;

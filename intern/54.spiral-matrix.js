@@ -10,47 +10,47 @@
  * @return {number[]}
  */
 const spiralOrder = function (matrix) {
-    const m = matrix.length;
-    if (m === 0) {
-        return [];
+  const m = matrix.length;
+  if (m === 0) {
+    return [];
+  }
+  const n = matrix[0].length;
+  if (n === 0) {
+    return [];
+  }
+  let [top, right, bottom, left] = [0, n - 1, m - 1, 0];
+  /**@type {number[]} */
+  const result = [];
+  while (true) {
+    if (left <= right) {
+      getTop(matrix, top, left, right, result);
+      ++top;
+    } else {
+      break;
     }
-    const n = matrix[0].length;
-    if (n === 0) {
-        return [];
+
+    if (top <= bottom) {
+      getRight(matrix, right, top, bottom, result);
+      --right;
+    } else {
+      break;
     }
-    let [top, right, bottom, left] = [0, n - 1, m - 1, 0];
-    /**@type {number[]} */
-    const result = [];
-    while (true) {
-        if (left <= right) {
-            getTop(matrix, top, left, right, result);
-            ++top;
-        } else {
-            break;
-        }
 
-        if (top <= bottom) {
-            getRight(matrix, right, top, bottom, result);
-            --right;
-        } else {
-            break;
-        }
-
-        if (left <= right) {
-            getBottom(matrix, bottom, left, right, result);
-            --bottom;
-        } else {
-            break;
-        }
-
-        if (top <= bottom) {
-            getLeft(matrix, left, top, bottom, result);
-            ++left;
-        } else {
-            break;
-        }
+    if (left <= right) {
+      getBottom(matrix, bottom, left, right, result);
+      --bottom;
+    } else {
+      break;
     }
-    return result;
+
+    if (top <= bottom) {
+      getLeft(matrix, left, top, bottom, result);
+      ++left;
+    } else {
+      break;
+    }
+  }
+  return result;
 };
 
 /**
@@ -62,7 +62,7 @@ const spiralOrder = function (matrix) {
  * @return {void}
  */
 function getTop(matrix, top, left, right, array) {
-    array.push(...matrix[top].slice(left, right + 1));
+  array.push(...matrix[top].slice(left, right + 1));
 }
 
 /**
@@ -74,9 +74,9 @@ function getTop(matrix, top, left, right, array) {
  * @return {void}
  */
 function getRight(matrix, right, top, bottom, array) {
-    for (let i = top; i <= bottom; i++) {
-        array.push(matrix[i][right]);
-    }
+  for (let i = top; i <= bottom; i++) {
+    array.push(matrix[i][right]);
+  }
 }
 
 /**
@@ -88,7 +88,7 @@ function getRight(matrix, right, top, bottom, array) {
  * @return {void}
  */
 function getBottom(matrix, bottom, left, right, array) {
-    array.push(...matrix[bottom].slice(left, right + 1).reverse());
+  array.push(...matrix[bottom].slice(left, right + 1).reverse());
 }
 
 /**
@@ -100,9 +100,9 @@ function getBottom(matrix, bottom, left, right, array) {
  * @return {void}
  */
 function getLeft(matrix, left, top, bottom, array) {
-    for (let i = bottom; i >= top; i--) {
-        array.push(matrix[i][left]);
-    }
+  for (let i = bottom; i >= top; i--) {
+    array.push(matrix[i][left]);
+  }
 }
 // @lc code=end
 

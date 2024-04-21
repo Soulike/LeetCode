@@ -10,14 +10,14 @@
  * @return {boolean}
  */
 var isPowerOfFour = function (n) {
-    if (n === 0) {
-        return false;
-    }
+  if (n === 0) {
+    return false;
+  }
 
-    while (n % 4 === 0) {
-        n /= 4;
-    }
+  while (n % 4 === 0) {
+    n /= 4;
+  }
 
-    return n === 1;
+  return n === 1;
 };
 // @lc code=end

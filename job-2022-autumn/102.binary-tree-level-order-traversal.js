@@ -18,26 +18,26 @@
  * @return {number[][]}
  */
 var levelOrder = function (root) {
-    if (root === null) {
-        return [];
+  if (root === null) {
+    return [];
+  }
+  const result = [];
+  let currentLayer = [root];
+  let nextLayer = [];
+  while (currentLayer.length > 0) {
+    result.push(currentLayer.map((node) => node.val));
+    for (const node of currentLayer) {
+      if (node.left) {
+        nextLayer.push(node.left);
+      }
+      if (node.right) {
+        nextLayer.push(node.right);
+      }
     }
-    const result = [];
-    let currentLayer = [root];
-    let nextLayer = [];
-    while (currentLayer.length > 0) {
-        result.push(currentLayer.map((node) => node.val));
-        for (const node of currentLayer) {
-            if (node.left) {
-                nextLayer.push(node.left);
-            }
-            if (node.right) {
-                nextLayer.push(node.right);
-            }
-        }
-        currentLayer = nextLayer;
-        nextLayer = [];
-    }
+    currentLayer = nextLayer;
+    nextLayer = [];
+  }
 
-    return result;
+  return result;
 };
 // @lc code=end

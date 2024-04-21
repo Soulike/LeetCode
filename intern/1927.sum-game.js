@@ -10,41 +10,41 @@
  * @return {boolean}
  */
 var sumGame = function (num) {
-    /**
-     * 每次操作，值都只能变大
-     */
+  /**
+   * 每次操作，值都只能变大
+   */
 
-    const n = num.length;
-    let leftSum = 0;
-    let rightSum = 0;
-    let slotCount = 0;
+  const n = num.length;
+  let leftSum = 0;
+  let rightSum = 0;
+  let slotCount = 0;
 
-    for (let i = 0; i < n / 2; i++) {
-        if (num[i] === '?') {
-            slotCount++;
-        } else {
-            leftSum += Number.parseInt(num[i]);
-        }
-
-        if (num[n - i - 1] === '?') {
-            slotCount--;
-        } else {
-            rightSum += Number.parseInt(num[n - i - 1]);
-        }
+  for (let i = 0; i < n / 2; i++) {
+    if (num[i] === '?') {
+      slotCount++;
+    } else {
+      leftSum += Number.parseInt(num[i]);
     }
 
-    // 有问号的一侧和还大，那 alice 一定赢
-    if (
-        (leftSum >= rightSum && slotCount > 0) ||
-        (leftSum <= rightSum && slotCount < 0)
-    ) {
-        return true;
+    if (num[n - i - 1] === '?') {
+      slotCount--;
+    } else {
+      rightSum += Number.parseInt(num[n - i - 1]);
     }
+  }
 
-    slotCount = Math.abs(slotCount);
-    const smallerSum = Math.min(leftSum, rightSum);
-    const largerSum = Math.max(leftSum, rightSum);
+  // 有问号的一侧和还大，那 alice 一定赢
+  if (
+    (leftSum >= rightSum && slotCount > 0) ||
+    (leftSum <= rightSum && slotCount < 0)
+  ) {
+    return true;
+  }
 
-    return (slotCount * 9) / 2 !== largerSum - smallerSum;
+  slotCount = Math.abs(slotCount);
+  const smallerSum = Math.min(leftSum, rightSum);
+  const largerSum = Math.max(leftSum, rightSum);
+
+  return (slotCount * 9) / 2 !== largerSum - smallerSum;
 };
 // @lc code=end

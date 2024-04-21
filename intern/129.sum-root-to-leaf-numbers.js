@@ -4,16 +4,16 @@
  * [129] Sum Root to Leaf Numbers
  */
 class TreeNode {
-    /**
-     * @param {number} val
-     * @param {TreeNode|null} left
-     * @param {TreeNode|null} right
-     */
-    constructor(val, left, right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
+  /**
+   * @param {number} val
+   * @param {TreeNode|null} left
+   * @param {TreeNode|null} right
+   */
+  constructor(val, left, right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 // @lc code=start
 /**
@@ -21,7 +21,7 @@ class TreeNode {
  * @return {number}
  */
 const sumNumbers = function (root) {
-    return helper(root, 0);
+  return helper(root, 0);
 };
 
 /**
@@ -30,17 +30,17 @@ const sumNumbers = function (root) {
  * @return {number}
  */
 function helper(root, prevSum) {
-    const currentSum = prevSum * 10 + root.val;
-    if (root.left === null && root.right === null) {
-        return currentSum;
-    }
-    let result = 0;
-    if (root.left !== null) {
-        result += helper(root.left, currentSum);
-    }
-    if (root.right !== null) {
-        result += helper(root.right, currentSum);
-    }
-    return result;
+  const currentSum = prevSum * 10 + root.val;
+  if (root.left === null && root.right === null) {
+    return currentSum;
+  }
+  let result = 0;
+  if (root.left !== null) {
+    result += helper(root.left, currentSum);
+  }
+  if (root.right !== null) {
+    result += helper(root.right, currentSum);
+  }
+  return result;
 }
 // @lc code=end

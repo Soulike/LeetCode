@@ -10,34 +10,34 @@
  * @return {number[][]}
  */
 var subsetsWithDup = function (nums) {
-    nums.sort((a, b) => a - b);
+  nums.sort((a, b) => a - b);
 
-    /** @type {number[][]} */
-    const results = [];
-    /** @type {number[]} */
-    const result = [];
+  /** @type {number[][]} */
+  const results = [];
+  /** @type {number[]} */
+  const result = [];
 
-    /**
-     * @param {number} startIndex
-     */
-    const backtrack = (startIndex) => {
-        results.push([...result]);
+  /**
+   * @param {number} startIndex
+   */
+  const backtrack = (startIndex) => {
+    results.push([...result]);
 
-        if (startIndex === nums.length) {
-            return;
-        }
+    if (startIndex === nums.length) {
+      return;
+    }
 
-        for (let i = startIndex; i < nums.length; i++) {
-            if (i === startIndex || nums[i] !== nums[i - 1]) {
-                result.push(nums[i]);
-                backtrack(i + 1);
-                result.pop();
-            }
-        }
-    };
+    for (let i = startIndex; i < nums.length; i++) {
+      if (i === startIndex || nums[i] !== nums[i - 1]) {
+        result.push(nums[i]);
+        backtrack(i + 1);
+        result.pop();
+      }
+    }
+  };
 
-    backtrack(0);
+  backtrack(0);
 
-    return results;
+  return results;
 };
 // @lc code=end

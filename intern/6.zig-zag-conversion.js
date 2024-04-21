@@ -27,42 +27,42 @@ n-1         3n-3        5n-5  ...
  * @return {string}
  */
 const convert = function (s, numRows) {
-    if (numRows === 1) {
-        return s;
-    }
-    /**
-     * @type {string[]}
-     */
-    const result = [];
-    for (let rowNumber = 0; rowNumber < numRows; rowNumber++) {
-        if (rowNumber === 0 || rowNumber === numRows - 1) {
-            let currentIndex = rowNumber;
-            while (currentIndex < s.length) {
-                result.push(s[currentIndex]);
-                currentIndex += 2 * numRows - 2;
-            }
+  if (numRows === 1) {
+    return s;
+  }
+  /**
+   * @type {string[]}
+   */
+  const result = [];
+  for (let rowNumber = 0; rowNumber < numRows; rowNumber++) {
+    if (rowNumber === 0 || rowNumber === numRows - 1) {
+      let currentIndex = rowNumber;
+      while (currentIndex < s.length) {
+        result.push(s[currentIndex]);
+        currentIndex += 2 * numRows - 2;
+      }
+    } else {
+      let currentIndex = rowNumber;
+      let isCurrentColumnMain = true;
+      while (currentIndex < s.length) {
+        result.push(s[currentIndex]);
+        if (isCurrentColumnMain) {
+          currentIndex = getZigZagMidIndexFromMainIndex(
+            currentIndex,
+            rowNumber,
+            numRows,
+          );
         } else {
-            let currentIndex = rowNumber;
-            let isCurrentColumnMain = true;
-            while (currentIndex < s.length) {
-                result.push(s[currentIndex]);
-                if (isCurrentColumnMain) {
-                    currentIndex = getZigZagMidIndexFromMainIndex(
-                        currentIndex,
-                        rowNumber,
-                        numRows,
-                    );
-                } else {
-                    currentIndex = getZigZagMainIndexFromMidIndex(
-                        currentIndex,
-                        rowNumber,
-                    );
-                }
-                isCurrentColumnMain = !isCurrentColumnMain;
-            }
+          currentIndex = getZigZagMainIndexFromMidIndex(
+            currentIndex,
+            rowNumber,
+          );
         }
+        isCurrentColumnMain = !isCurrentColumnMain;
+      }
     }
-    return result.join('');
+  }
+  return result.join('');
 };
 
 /**
@@ -72,7 +72,7 @@ const convert = function (s, numRows) {
  * @returns {number}
  */
 function getZigZagMainIndexFromMidIndex(midIndex, rowNumber) {
-    return midIndex + 2 * rowNumber;
+  return midIndex + 2 * rowNumber;
 }
 
 /**
@@ -83,6 +83,6 @@ function getZigZagMainIndexFromMidIndex(midIndex, rowNumber) {
  * @returns {number}
  */
 function getZigZagMidIndexFromMainIndex(mainIndex, rowNumber, numRows) {
-    return mainIndex + 2 * numRows - 2 * (rowNumber + 1);
+  return mainIndex + 2 * numRows - 2 * (rowNumber + 1);
 }
 // @lc code=end

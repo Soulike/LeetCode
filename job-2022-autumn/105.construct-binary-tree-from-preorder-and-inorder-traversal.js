@@ -19,40 +19,40 @@
  * @return {TreeNode}
  */
 var buildTree = function (preorder, inorder) {
-    /**
-     * @param {number} preorderStart
-     * @param {number} inorderStart
-     * @param {number} length
-     * @returns {TreeNode|null}
-     */
-    function helper(preorderStartIndex, inorderStartIndex, length) {
-        if (length === 0) {
-            return null;
-        }
-        const rootValue = preorder[preorderStartIndex];
-
-        const rootValueIndexInInorder = inorder.indexOf(
-            rootValue,
-            inorderStartIndex,
-        );
-
-        const leftChildLength = rootValueIndexInInorder - inorderStartIndex;
-        const rightChildLength = length - leftChildLength - 1;
-
-        const root = new TreeNode(rootValue);
-        root.left = helper(
-            preorderStartIndex + 1,
-            inorderStartIndex,
-            leftChildLength,
-        );
-        root.right = helper(
-            preorderStartIndex + 1 + leftChildLength,
-            rootValueIndexInInorder + 1,
-            rightChildLength,
-        );
-        return root;
+  /**
+   * @param {number} preorderStart
+   * @param {number} inorderStart
+   * @param {number} length
+   * @returns {TreeNode|null}
+   */
+  function helper(preorderStartIndex, inorderStartIndex, length) {
+    if (length === 0) {
+      return null;
     }
+    const rootValue = preorder[preorderStartIndex];
 
-    return helper(0, 0, preorder.length);
+    const rootValueIndexInInorder = inorder.indexOf(
+      rootValue,
+      inorderStartIndex,
+    );
+
+    const leftChildLength = rootValueIndexInInorder - inorderStartIndex;
+    const rightChildLength = length - leftChildLength - 1;
+
+    const root = new TreeNode(rootValue);
+    root.left = helper(
+      preorderStartIndex + 1,
+      inorderStartIndex,
+      leftChildLength,
+    );
+    root.right = helper(
+      preorderStartIndex + 1 + leftChildLength,
+      rootValueIndexInInorder + 1,
+      rightChildLength,
+    );
+    return root;
+  }
+
+  return helper(0, 0, preorder.length);
 };
 // @lc code=end

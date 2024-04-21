@@ -11,20 +11,20 @@
  * @return {number}
  */
 var findKthPositive = function (arr, k) {
-    let left = 0;
-    let right = arr.length;
+  let left = 0;
+  let right = arr.length;
 
-    while (left < right) {
-        const mid = Math.floor((right - left) / 2) + left;
-        const missingNumbersCount = arr[mid] - mid - 1;
+  while (left < right) {
+    const mid = Math.floor((right - left) / 2) + left;
+    const missingNumbersCount = arr[mid] - mid - 1;
 
-        if (missingNumbersCount < k) {
-            left = mid + 1;
-        } else {
-            right = mid;
-        }
+    if (missingNumbersCount < k) {
+      left = mid + 1;
+    } else {
+      right = mid;
     }
+  }
 
-    return k + right;
+  return k + right;
 };
 // @lc code=end

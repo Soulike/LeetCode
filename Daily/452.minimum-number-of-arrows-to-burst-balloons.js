@@ -10,21 +10,21 @@
  * @return {number}
  */
 var findMinArrowShots = function (points) {
-    points.sort(([, end1], [, end2]) => end1 - end2);
+  points.sort(([, end1], [, end2]) => end1 - end2);
 
-    const START = 0;
-    const END = 1;
-    const N = points.length;
+  const START = 0;
+  const END = 1;
+  const N = points.length;
 
-    let arrowCount = 1;
-    let currentEnd = points[0][END];
-    for (let i = 1; i < N; i++) {
-        if (points[i][START] > currentEnd) {
-            currentEnd = points[i][END];
-            arrowCount++;
-        }
+  let arrowCount = 1;
+  let currentEnd = points[0][END];
+  for (let i = 1; i < N; i++) {
+    if (points[i][START] > currentEnd) {
+      currentEnd = points[i][END];
+      arrowCount++;
     }
+  }
 
-    return arrowCount;
+  return arrowCount;
 };
 // @lc code=end

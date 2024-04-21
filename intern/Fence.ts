@@ -44,65 +44,65 @@
  */
 
 class Fence {
-    #bool: boolean;
-    #queue: Fence[];
-    #type: 'and' | 'or' | 'not' | null;
+  #bool: boolean;
+  #queue: Fence[];
+  #type: 'and' | 'or' | 'not' | null;
 
-    constructor(bool: boolean) {
-        this.#bool = bool;
-        this.#type = null;
-        this.#queue = [];
+  constructor(bool: boolean) {
+    this.#bool = bool;
+    this.#type = null;
+    this.#queue = [];
+  }
+
+  check(): boolean {
+    if (this.#type === null) {
+      return this.#bool;
+    } else if (this.#type === 'not') {
+      return !this.#queue[0].check();
+    } else if (this.#type === 'and') {
+      return this.#queue.reduce(
+        (prev: boolean, curr: Fence) => prev && curr.check(),
+        true,
+      );
+    } // this.#type === 'or'
+    else {
+      return this.#queue.reduce(
+        (prev: boolean, curr: Fence) => prev || curr.check(),
+        false,
+      );
+    }
+  }
+
+  static and(...fences: Fence[]) {
+    const newFence = new Fence(true);
+    newFence.#type = 'and';
+
+    for (const fence of fences) {
+      newFence.#queue.push(fence);
     }
 
-    check(): boolean {
-        if (this.#type === null) {
-            return this.#bool;
-        } else if (this.#type === 'not') {
-            return !this.#queue[0].check();
-        } else if (this.#type === 'and') {
-            return this.#queue.reduce(
-                (prev: boolean, curr: Fence) => prev && curr.check(),
-                true,
-            );
-        } // this.#type === 'or'
-        else {
-            return this.#queue.reduce(
-                (prev: boolean, curr: Fence) => prev || curr.check(),
-                false,
-            );
-        }
+    return newFence;
+  }
+
+  static or(...fences: Fence[]) {
+    const newFence = new Fence(true);
+    newFence.#type = 'or';
+
+    for (const fence of fences) {
+      newFence.#queue.push(fence);
     }
 
-    static and(...fences: Fence[]) {
-        const newFence = new Fence(true);
-        newFence.#type = 'and';
+    return newFence;
+  }
 
-        for (const fence of fences) {
-            newFence.#queue.push(fence);
-        }
+  static not(fence: Fence) {
+    const newFence = new Fence(true);
+    newFence.#type = 'not';
 
-        return newFence;
-    }
+    newFence.#queue.push(fence);
 
-    static or(...fences: Fence[]) {
-        const newFence = new Fence(true);
-        newFence.#type = 'or';
-
-        for (const fence of fences) {
-            newFence.#queue.push(fence);
-        }
-
-        return newFence;
-    }
-
-    static not(fence: Fence) {
-        const newFence = new Fence(true);
-        newFence.#type = 'not';
-
-        newFence.#queue.push(fence);
-
-        return newFence;
-    }
+    return newFence;
+  }
 }
 
 const fence1 = new Fence(true);

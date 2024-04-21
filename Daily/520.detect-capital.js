@@ -10,8 +10,8 @@
  * @return {boolean}
  */
 var detectCapitalUse = function (word) {
-    const regex = /^(?:(?:[A-Z]+)|(?:[A-z][a-z]*))$/;
-    return regex.test(word);
+  const regex = /^(?:(?:[A-Z]+)|(?:[A-z][a-z]*))$/;
+  return regex.test(word);
 };
 
 // @lc code=end

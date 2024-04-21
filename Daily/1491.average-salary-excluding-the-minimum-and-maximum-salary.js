@@ -10,17 +10,17 @@
  * @return {number}
  */
 var average = function (salary) {
-    let aveSalary = 0;
-    let minSalary = Infinity;
-    let maxSalary = -Infinity;
-    const N = salary.length;
+  let aveSalary = 0;
+  let minSalary = Infinity;
+  let maxSalary = -Infinity;
+  const N = salary.length;
 
-    for (let i = 0; i < N; i++) {
-        aveSalary += salary[i] / (N - 2);
-        minSalary = Math.min(minSalary, salary[i]);
-        maxSalary = Math.max(maxSalary, salary[i]);
-    }
+  for (let i = 0; i < N; i++) {
+    aveSalary += salary[i] / (N - 2);
+    minSalary = Math.min(minSalary, salary[i]);
+    maxSalary = Math.max(maxSalary, salary[i]);
+  }
 
-    return aveSalary - (minSalary + maxSalary) / (N - 2);
+  return aveSalary - (minSalary + maxSalary) / (N - 2);
 };
 // @lc code=end

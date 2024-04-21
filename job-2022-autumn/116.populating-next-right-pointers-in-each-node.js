@@ -11,29 +11,29 @@
  * @return {Node | null}
  */
 var connect = function (root) {
-    if (root === null) {
-        return null;
+  if (root === null) {
+    return null;
+  }
+
+  let currentLevelFirstNode = root;
+  let currentLevelPrevNode = null;
+  let currentLevelNode = root;
+
+  while (currentLevelFirstNode.left !== null) {
+    while (currentLevelNode !== null) {
+      if (currentLevelPrevNode !== null) {
+        currentLevelPrevNode.right.next = currentLevelNode.left;
+      }
+      currentLevelNode.left.next = currentLevelNode.right;
+      currentLevelPrevNode = currentLevelNode;
+      currentLevelNode = currentLevelNode.next;
     }
 
-    let currentLevelFirstNode = root;
-    let currentLevelPrevNode = null;
-    let currentLevelNode = root;
+    currentLevelFirstNode = currentLevelFirstNode.left;
+    currentLevelNode = currentLevelFirstNode;
+    currentLevelPrevNode = null;
+  }
 
-    while (currentLevelFirstNode.left !== null) {
-        while (currentLevelNode !== null) {
-            if (currentLevelPrevNode !== null) {
-                currentLevelPrevNode.right.next = currentLevelNode.left;
-            }
-            currentLevelNode.left.next = currentLevelNode.right;
-            currentLevelPrevNode = currentLevelNode;
-            currentLevelNode = currentLevelNode.next;
-        }
-
-        currentLevelFirstNode = currentLevelFirstNode.left;
-        currentLevelNode = currentLevelFirstNode;
-        currentLevelPrevNode = null;
-    }
-
-    return root;
+  return root;
 };
 // @lc code=end

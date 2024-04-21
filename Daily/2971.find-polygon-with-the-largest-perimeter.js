@@ -10,20 +10,20 @@
  * @return {number}
  */
 var largestPerimeter = function (nums) {
-    nums.sort((a, b) => a - b);
-    const prefixSum = new Array(nums.length);
-    prefixSum[0] = nums[0];
-    for (let i = 1; i < nums.length; i++) {
-        prefixSum[i] = nums[i] + prefixSum[i - 1];
-    }
+  nums.sort((a, b) => a - b);
+  const prefixSum = new Array(nums.length);
+  prefixSum[0] = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    prefixSum[i] = nums[i] + prefixSum[i - 1];
+  }
 
-    for (let i = nums.length - 1; i >= 2; i--) {
-        if (nums[i] < prefixSum[i - 1]) {
-            return prefixSum[i];
-        }
+  for (let i = nums.length - 1; i >= 2; i--) {
+    if (nums[i] < prefixSum[i - 1]) {
+      return prefixSum[i];
     }
+  }
 
-    return -1;
+  return -1;
 };
 // @lc code=end
 

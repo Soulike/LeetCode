@@ -10,7 +10,7 @@
  * otherwise return 0
  **/
 var guess = function (num) {
-    return 0;
+  return 0;
 };
 
 // @lc code=start
@@ -19,22 +19,22 @@ var guess = function (num) {
  * @return {number}
  */
 var guessNumber = function (n) {
-    const HIGHER = -1;
-    const LOWER = 1;
-    const EQUAL = 0;
-    let min = 1;
-    let max = n;
-    let guessNum = min + Math.floor((max - min) / 2);
-    while (true) {
-        const guessResult = guess(guessNum);
-        if (guessResult === HIGHER) {
-            max = guessNum - 1;
-        } else if (guessResult === LOWER) {
-            min = guessNum + 1;
-        } else {
-            return guessNum;
-        }
-        guessNum = min + Math.floor((max - min) / 2);
+  const HIGHER = -1;
+  const LOWER = 1;
+  const EQUAL = 0;
+  let min = 1;
+  let max = n;
+  let guessNum = min + Math.floor((max - min) / 2);
+  while (true) {
+    const guessResult = guess(guessNum);
+    if (guessResult === HIGHER) {
+      max = guessNum - 1;
+    } else if (guessResult === LOWER) {
+      min = guessNum + 1;
+    } else {
+      return guessNum;
     }
+    guessNum = min + Math.floor((max - min) / 2);
+  }
 };
 // @lc code=end

@@ -11,19 +11,19 @@
  * @return {number[][]}
  */
 var divideArray = function (nums, k) {
-    nums.sort((a, b) => a - b);
+  nums.sort((a, b) => a - b);
 
-    /** @type {[number, number, number][]} */
-    const result = [];
+  /** @type {[number, number, number][]} */
+  const result = [];
 
-    for (let i = 0; i < nums.length - 2; i += 3) {
-        const min = nums[i];
-        const max = nums[i + 2];
-        if (max - min <= k) {
-            result.push([nums[i], nums[i + 1], nums[i + 2]]);
-        } else return [];
-    }
+  for (let i = 0; i < nums.length - 2; i += 3) {
+    const min = nums[i];
+    const max = nums[i + 2];
+    if (max - min <= k) {
+      result.push([nums[i], nums[i + 1], nums[i + 2]]);
+    } else return [];
+  }
 
-    return result;
+  return result;
 };
 // @lc code=end

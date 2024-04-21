@@ -10,30 +10,30 @@
  * @return {number}
  */
 var lengthOfLongestSubstring = function (s) {
-    if (s.length === 0) return 0;
+  if (s.length === 0) return 0;
 
-    let left = 0;
-    let right = 1;
-    let charSet = new Set(s[0]);
+  let left = 0;
+  let right = 1;
+  let charSet = new Set(s[0]);
 
-    let maxLength = 1;
+  let maxLength = 1;
 
-    while (true) {
-        while (right < s.length && !charSet.has(s[right])) {
-            charSet.add(s[right]);
-            right++;
-        }
-
-        maxLength = Math.max(maxLength, right - left);
-
-        if (right === s.length) {
-            return maxLength;
-        }
-
-        while (charSet.has(s[right])) {
-            charSet.delete(s[left]);
-            left++;
-        }
+  while (true) {
+    while (right < s.length && !charSet.has(s[right])) {
+      charSet.add(s[right]);
+      right++;
     }
+
+    maxLength = Math.max(maxLength, right - left);
+
+    if (right === s.length) {
+      return maxLength;
+    }
+
+    while (charSet.has(s[right])) {
+      charSet.delete(s[left]);
+      left++;
+    }
+  }
 };
 // @lc code=end

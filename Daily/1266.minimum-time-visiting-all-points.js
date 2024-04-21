@@ -12,11 +12,11 @@
  * @return {number}
  */
 var minTimeToVisitAllPoints = function (points) {
-    let minTime = 0;
-    for (let i = 0; i < points.length - 1; i++) {
-        minTime += minTimeBetween(points[i], points[i + 1]);
-    }
-    return minTime;
+  let minTime = 0;
+  for (let i = 0; i < points.length - 1; i++) {
+    minTime += minTimeBetween(points[i], points[i + 1]);
+  }
+  return minTime;
 };
 
 /**
@@ -26,10 +26,10 @@ var minTimeToVisitAllPoints = function (points) {
  * @returns {number}
  */
 function minTimeBetween(point1, point2) {
-    const xDiff = Math.abs(point1[0] - point2[0]);
-    const yDiff = Math.abs(point1[1] - point2[1]);
+  const xDiff = Math.abs(point1[0] - point2[0]);
+  const yDiff = Math.abs(point1[1] - point2[1]);
 
-    const diagonalTime = Math.min(xDiff, yDiff);
-    return diagonalTime + (xDiff - diagonalTime) + (yDiff - diagonalTime);
+  const diagonalTime = Math.min(xDiff, yDiff);
+  return diagonalTime + (xDiff - diagonalTime) + (yDiff - diagonalTime);
 }
 // @lc code=end

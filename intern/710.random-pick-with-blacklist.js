@@ -10,47 +10,47 @@
  * @param {number[]} blacklist
  */
 class Solution {
-    remap;
-    expectedSize;
+  remap;
+  expectedSize;
 
-    constructor(n, blacklist) {
-        this.remap = new Map();
+  constructor(n, blacklist) {
+    this.remap = new Map();
 
-        this.expectedSize = n - blacklist.length;
+    this.expectedSize = n - blacklist.length;
 
-        for (const num of blacklist) {
-            this.remap.set(num, -1);
-        }
-
-        let blackZoneIndex = n - 1;
-        for (const blackNum of blacklist) {
-            // 如果 num 已经在区间 [expectedSize, N)
-            // 可以直接忽略
-            if (blackNum >= this.expectedSize) {
-                continue;
-            }
-            while (this.remap.has(blackZoneIndex)) {
-                blackZoneIndex--;
-            }
-            this.remap.set(blackNum, blackZoneIndex);
-            blackZoneIndex--;
-        }
-    }
-    /**
-     * @return {number}
-     */
-    pick() {
-        const randomIndex = this.generateRandom(0, this.expectedSize - 1);
-        if (!this.remap.has(randomIndex)) {
-            return randomIndex;
-        } else {
-            return this.remap.get(randomIndex);
-        }
+    for (const num of blacklist) {
+      this.remap.set(num, -1);
     }
 
-    generateRandom(start, end) {
-        return Math.floor(start + Math.random() * (end + 1));
+    let blackZoneIndex = n - 1;
+    for (const blackNum of blacklist) {
+      // 如果 num 已经在区间 [expectedSize, N)
+      // 可以直接忽略
+      if (blackNum >= this.expectedSize) {
+        continue;
+      }
+      while (this.remap.has(blackZoneIndex)) {
+        blackZoneIndex--;
+      }
+      this.remap.set(blackNum, blackZoneIndex);
+      blackZoneIndex--;
     }
+  }
+  /**
+   * @return {number}
+   */
+  pick() {
+    const randomIndex = this.generateRandom(0, this.expectedSize - 1);
+    if (!this.remap.has(randomIndex)) {
+      return randomIndex;
+    } else {
+      return this.remap.get(randomIndex);
+    }
+  }
+
+  generateRandom(start, end) {
+    return Math.floor(start + Math.random() * (end + 1));
+  }
 }
 
 /**

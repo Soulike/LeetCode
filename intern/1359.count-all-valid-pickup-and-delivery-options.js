@@ -10,13 +10,13 @@
  * @return {number}
  */
 var countOrders = function (n) {
-    const MOD = 10 ** 9 + 7;
-    let result = 1;
-    for (let i = 1; i <= n; i++) {
-        result *= (i * (2 * i - 1)) % MOD;
-        result %= MOD;
-    }
-    return result;
+  const MOD = 10 ** 9 + 7;
+  let result = 1;
+  for (let i = 1; i <= n; i++) {
+    result *= (i * (2 * i - 1)) % MOD;
+    result %= MOD;
+  }
+  return result;
 };
 // @lc code=end
 

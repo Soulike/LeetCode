@@ -19,18 +19,18 @@
  * @return {TreeNode|null}
  */
 var searchBST = function (root, val) {
-    if (root === null) {
-        return null;
-    }
-    let result = null;
-    if (root.val < val) {
-        result = searchBST(root.right, val);
-    } else if (root.val > val) {
-        result = searchBST(root.left, val);
-    } else {
-        result = root;
-    }
+  if (root === null) {
+    return null;
+  }
+  let result = null;
+  if (root.val < val) {
+    result = searchBST(root.right, val);
+  } else if (root.val > val) {
+    result = searchBST(root.left, val);
+  } else {
+    result = root;
+  }
 
-    return result;
+  return result;
 };
 // @lc code=end

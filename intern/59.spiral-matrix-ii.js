@@ -10,47 +10,47 @@
  * @return {number[][]}
  */
 const generateMatrix = function (n) {
-    let [top, right, bottom, left] = [0, n - 1, n - 1, 0];
-    /**@type {number[][]} */
-    const result = new Array(n);
-    for (let i = 0; i < n; i++) {
-        result[i] = new Array(n);
+  let [top, right, bottom, left] = [0, n - 1, n - 1, 0];
+  /**@type {number[][]} */
+  const result = new Array(n);
+  for (let i = 0; i < n; i++) {
+    result[i] = new Array(n);
+  }
+  let currentNum = 1;
+  while (true) {
+    if (left <= right) {
+      generateTop(result, top, left, right, currentNum);
+      ++top;
+      currentNum += right - left + 1;
+    } else {
+      break;
     }
-    let currentNum = 1;
-    while (true) {
-        if (left <= right) {
-            generateTop(result, top, left, right, currentNum);
-            ++top;
-            currentNum += right - left + 1;
-        } else {
-            break;
-        }
 
-        if (top <= bottom) {
-            generateRight(result, right, top, bottom, currentNum);
-            --right;
-            currentNum += bottom - top + 1;
-        } else {
-            break;
-        }
-
-        if (left <= right) {
-            generateBottom(result, bottom, left, right, currentNum);
-            --bottom;
-            currentNum += right - left + 1;
-        } else {
-            break;
-        }
-
-        if (top <= bottom) {
-            generateLeft(result, left, top, bottom, currentNum);
-            ++left;
-            currentNum += bottom - top + 1;
-        } else {
-            break;
-        }
+    if (top <= bottom) {
+      generateRight(result, right, top, bottom, currentNum);
+      --right;
+      currentNum += bottom - top + 1;
+    } else {
+      break;
     }
-    return result;
+
+    if (left <= right) {
+      generateBottom(result, bottom, left, right, currentNum);
+      --bottom;
+      currentNum += right - left + 1;
+    } else {
+      break;
+    }
+
+    if (top <= bottom) {
+      generateLeft(result, left, top, bottom, currentNum);
+      ++left;
+      currentNum += bottom - top + 1;
+    } else {
+      break;
+    }
+  }
+  return result;
 };
 
 /**
@@ -61,9 +61,9 @@ const generateMatrix = function (n) {
  * @param {number} startNum
  */
 function generateTop(matrix, top, left, right, startNum) {
-    for (let i = left; i <= right; i++) {
-        matrix[top][i] = startNum++;
-    }
+  for (let i = left; i <= right; i++) {
+    matrix[top][i] = startNum++;
+  }
 }
 
 /**
@@ -74,9 +74,9 @@ function generateTop(matrix, top, left, right, startNum) {
  * @param {number} startNum
  */
 function generateRight(matrix, right, top, bottom, startNum) {
-    for (let i = top; i <= bottom; i++) {
-        matrix[i][right] = startNum++;
-    }
+  for (let i = top; i <= bottom; i++) {
+    matrix[i][right] = startNum++;
+  }
 }
 
 /**
@@ -87,9 +87,9 @@ function generateRight(matrix, right, top, bottom, startNum) {
  * @param {number} startNum
  */
 function generateBottom(matrix, bottom, left, right, startNum) {
-    for (let i = right; i >= left; i--) {
-        matrix[bottom][i] = startNum++;
-    }
+  for (let i = right; i >= left; i--) {
+    matrix[bottom][i] = startNum++;
+  }
 }
 
 /**
@@ -100,9 +100,9 @@ function generateBottom(matrix, bottom, left, right, startNum) {
  * @param {number} startNum
  */
 function generateLeft(matrix, left, top, bottom, startNum) {
-    for (let i = bottom; i >= top; i--) {
-        matrix[i][left] = startNum++;
-    }
+  for (let i = bottom; i >= top; i--) {
+    matrix[i][left] = startNum++;
+  }
 }
 // @lc code=end
 

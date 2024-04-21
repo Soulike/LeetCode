@@ -10,9 +10,9 @@
  * @return {number}
  */
 var numTrees = function (n) {
-    const cache = new Map();
-    const result = helper(n, cache);
-    return result;
+  const cache = new Map();
+  const result = helper(n, cache);
+  return result;
 };
 
 /**
@@ -21,15 +21,15 @@ var numTrees = function (n) {
  * @returns {number}
  */
 function helper(n, cache) {
-    if (n < 2) return 1;
-    if (cache.has(n)) {
-        return cache.get(n);
-    }
-    let sum = 0;
-    for (let i = 1; i <= n; i++) {
-        sum += helper(i - 1, cache) * helper(n - i, cache); // n-(i-1)-1
-    }
-    cache.set(n, sum);
-    return sum;
+  if (n < 2) return 1;
+  if (cache.has(n)) {
+    return cache.get(n);
+  }
+  let sum = 0;
+  for (let i = 1; i <= n; i++) {
+    sum += helper(i - 1, cache) * helper(n - i, cache); // n-(i-1)-1
+  }
+  cache.set(n, sum);
+  return sum;
 }
 // @lc code=end

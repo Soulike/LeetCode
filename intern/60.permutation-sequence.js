@@ -11,34 +11,34 @@
  * @return {string}
  */
 var getPermutation = function (n, k) {
-    let currentPermutation = [];
-    let permutationCount = 0;
-    const used = new Set();
+  let currentPermutation = [];
+  let permutationCount = 0;
+  const used = new Set();
 
-    function backtrack() {
-        if (currentPermutation.length === n) {
-            permutationCount++;
-            if (permutationCount === k) {
-                return false;
-            }
-            return true;
-        } else {
-            for (let j = 1; j <= n; j++) {
-                if (!used.has(j)) {
-                    used.add(j);
-                    currentPermutation.push(j);
-                    if (!backtrack()) {
-                        return false;
-                    }
-                    currentPermutation.pop();
-                    used.delete(j);
-                }
-            }
-            return true;
+  function backtrack() {
+    if (currentPermutation.length === n) {
+      permutationCount++;
+      if (permutationCount === k) {
+        return false;
+      }
+      return true;
+    } else {
+      for (let j = 1; j <= n; j++) {
+        if (!used.has(j)) {
+          used.add(j);
+          currentPermutation.push(j);
+          if (!backtrack()) {
+            return false;
+          }
+          currentPermutation.pop();
+          used.delete(j);
         }
+      }
+      return true;
     }
+  }
 
-    backtrack();
-    return currentPermutation.join('');
+  backtrack();
+  return currentPermutation.join('');
 };
 // @lc code=end

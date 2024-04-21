@@ -10,28 +10,28 @@
  * @return {number}
  */
 var minOperations = function (nums) {
-    const numsSet = new Set(nums);
-    const uniqueNums = Array.from(numsSet.values());
+  const numsSet = new Set(nums);
+  const uniqueNums = Array.from(numsSet.values());
 
-    uniqueNums.sort((a, b) => a - b);
+  uniqueNums.sort((a, b) => a - b);
 
-    let left = 0;
-    let right = 0;
-    let operationNum = nums.length;
+  let left = 0;
+  let right = 0;
+  let operationNum = nums.length;
 
-    while (left < uniqueNums.length) {
-        while (
-            right < uniqueNums.length &&
-            uniqueNums[right] - uniqueNums[left] <= nums.length - 1
-        ) {
-            right++;
-        }
-
-        const rangeCount = right - left;
-        operationNum = Math.min(operationNum, nums.length - rangeCount);
-        left++;
+  while (left < uniqueNums.length) {
+    while (
+      right < uniqueNums.length &&
+      uniqueNums[right] - uniqueNums[left] <= nums.length - 1
+    ) {
+      right++;
     }
 
-    return operationNum;
+    const rangeCount = right - left;
+    operationNum = Math.min(operationNum, nums.length - rangeCount);
+    left++;
+  }
+
+  return operationNum;
 };
 // @lc code=end

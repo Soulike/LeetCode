@@ -17,39 +17,39 @@
  * @return {boolean}
  */
 var isPalindrome = function (head) {
-    let fast = head;
-    let slow = head;
-    let slowBefore = null;
+  let fast = head;
+  let slow = head;
+  let slowBefore = null;
 
-    while (true) {
-        slowBefore = slow;
-        slow = slow.next;
-        fast = fast.next;
-        if (fast === null) {
-            break;
-        }
-        fast = fast.next;
-        if (fast === null) {
-            break;
-        }
+  while (true) {
+    slowBefore = slow;
+    slow = slow.next;
+    fast = fast.next;
+    if (fast === null) {
+      break;
     }
-
-    slowBefore.next = reverseList(slow);
-
-    let p1 = head;
-    let p2 = slowBefore.next;
-
-    while (p2 !== null) {
-        if (p1.val !== p2.val) {
-            return false;
-        }
-        p1 = p1.next;
-        p2 = p2.next;
+    fast = fast.next;
+    if (fast === null) {
+      break;
     }
+  }
 
-    slowBefore.next = reverseList(slowBefore.next);
+  slowBefore.next = reverseList(slow);
 
-    return true;
+  let p1 = head;
+  let p2 = slowBefore.next;
+
+  while (p2 !== null) {
+    if (p1.val !== p2.val) {
+      return false;
+    }
+    p1 = p1.next;
+    p2 = p2.next;
+  }
+
+  slowBefore.next = reverseList(slowBefore.next);
+
+  return true;
 };
 
 /**
@@ -57,17 +57,17 @@ var isPalindrome = function (head) {
  * @return {ListNode | null}
  */
 function reverseList(head) {
-    if (head === null) {
-        return null;
-    }
-    if (head.next === null) {
-        return head;
-    }
+  if (head === null) {
+    return null;
+  }
+  if (head.next === null) {
+    return head;
+  }
 
-    const restReversedTail = head.next;
-    const restReversedHead = reverseList(head.next);
-    head.next = null;
-    restReversedTail.next = head;
-    return restReversedHead;
+  const restReversedTail = head.next;
+  const restReversedHead = reverseList(head.next);
+  head.next = null;
+  restReversedTail.next = head;
+  return restReversedHead;
 }
 // @lc code=end

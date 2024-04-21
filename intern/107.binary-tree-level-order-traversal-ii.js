@@ -18,29 +18,29 @@
  * @return {number[][]}
  */
 var levelOrderBottom = function (root) {
+  if (root === null) {
+    return [];
+  }
+  const levelNodes = [];
+
+  function dfs(root, level) {
     if (root === null) {
-        return [];
-    }
-    const levelNodes = [];
-
-    function dfs(root, level) {
-        if (root === null) {
-            return;
-        }
-
-        const nodes = levelNodes[level] ?? [];
-        nodes.push(root.val);
-        levelNodes[level] = nodes;
-
-        dfs(root.left, level + 1);
-        dfs(root.right, level + 1);
+      return;
     }
 
-    dfs(root, 0);
+    const nodes = levelNodes[level] ?? [];
+    nodes.push(root.val);
+    levelNodes[level] = nodes;
 
-    return levelNodes.reduceRight((prev, curr) => {
-        prev.push(curr);
-        return prev;
-    }, []);
+    dfs(root.left, level + 1);
+    dfs(root.right, level + 1);
+  }
+
+  dfs(root, 0);
+
+  return levelNodes.reduceRight((prev, curr) => {
+    prev.push(curr);
+    return prev;
+  }, []);
 };
 // @lc code=end

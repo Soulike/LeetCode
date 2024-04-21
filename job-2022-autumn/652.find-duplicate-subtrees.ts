@@ -20,51 +20,51 @@
  */
 
 function findDuplicateSubtrees(root: TreeNode | null): Array<TreeNode | null> {
-    const traverseResults = new Set<string>();
-    const loggedSubtreeTraverseResults = new Set<string>();
-    const duplicateSubtrees: TreeNode[] = [];
+  const traverseResults = new Set<string>();
+  const loggedSubtreeTraverseResults = new Set<string>();
+  const duplicateSubtrees: TreeNode[] = [];
 
-    helper(
-        root,
-        traverseResults,
-        loggedSubtreeTraverseResults,
-        duplicateSubtrees,
-    );
+  helper(
+    root,
+    traverseResults,
+    loggedSubtreeTraverseResults,
+    duplicateSubtrees,
+  );
 
-    return duplicateSubtrees;
+  return duplicateSubtrees;
 }
 
 function helper(
-    root: TreeNode | null,
-    traverseResults: Set<string>,
-    loggedSubtreeTraverseResults: Set<string>,
-    duplicateSubtrees: TreeNode[],
+  root: TreeNode | null,
+  traverseResults: Set<string>,
+  loggedSubtreeTraverseResults: Set<string>,
+  duplicateSubtrees: TreeNode[],
 ): string {
-    if (root === null) return '#';
-    const leftChildPostorder = helper(
-        root.left,
-        traverseResults,
-        loggedSubtreeTraverseResults,
-        duplicateSubtrees,
-    );
-    const rightChildPostorder = helper(
-        root.right,
-        traverseResults,
-        loggedSubtreeTraverseResults,
-        duplicateSubtrees,
-    );
+  if (root === null) return '#';
+  const leftChildPostorder = helper(
+    root.left,
+    traverseResults,
+    loggedSubtreeTraverseResults,
+    duplicateSubtrees,
+  );
+  const rightChildPostorder = helper(
+    root.right,
+    traverseResults,
+    loggedSubtreeTraverseResults,
+    duplicateSubtrees,
+  );
 
-    const postorder = [leftChildPostorder, rightChildPostorder, root.val].join(
-        ',',
-    );
-    if (
-        !loggedSubtreeTraverseResults.has(postorder) &&
-        traverseResults.has(postorder)
-    ) {
-        duplicateSubtrees.push(root);
-        loggedSubtreeTraverseResults.add(postorder);
-    }
-    traverseResults.add(postorder);
-    return postorder;
+  const postorder = [leftChildPostorder, rightChildPostorder, root.val].join(
+    ',',
+  );
+  if (
+    !loggedSubtreeTraverseResults.has(postorder) &&
+    traverseResults.has(postorder)
+  ) {
+    duplicateSubtrees.push(root);
+    loggedSubtreeTraverseResults.add(postorder);
+  }
+  traverseResults.add(postorder);
+  return postorder;
 }
 // @lc code=end

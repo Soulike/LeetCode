@@ -11,17 +11,17 @@
  * @return {number[]}
  */
 var corpFlightBookings = function (bookings, n) {
-    const res = new Array(n);
-    res.fill(0);
-    for (const [first, last, seats] of bookings) {
-        res[first - 1] += seats;
-        last < n && (res[last] -= seats);
-    }
+  const res = new Array(n);
+  res.fill(0);
+  for (const [first, last, seats] of bookings) {
+    res[first - 1] += seats;
+    last < n && (res[last] -= seats);
+  }
 
-    for (let i = 1; i < n; i++) {
-        res[i] += res[i - 1];
-    }
+  for (let i = 1; i < n; i++) {
+    res[i] += res[i - 1];
+  }
 
-    return res;
+  return res;
 };
 // @lc code=end

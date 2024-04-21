@@ -11,30 +11,30 @@
  * @return {boolean}
  */
 var canPlaceFlowers = function (flowerbed, n) {
-    const UNPLANTED = 0;
-    const PLANTED = 1;
+  const UNPLANTED = 0;
+  const PLANTED = 1;
 
-    let prevFloweredIndex = -2;
-    let plantNumber = 0;
+  let prevFloweredIndex = -2;
+  let plantNumber = 0;
 
-    for (let i = 0; i < flowerbed.length; i++) {
-        if (flowerbed[i] === PLANTED) {
-            const canPlantRangeSize = Math.ceil(
-                Math.max(i - 1 - (prevFloweredIndex + 1) - 1, 0) / 2,
-            );
-            plantNumber += canPlantRangeSize;
+  for (let i = 0; i < flowerbed.length; i++) {
+    if (flowerbed[i] === PLANTED) {
+      const canPlantRangeSize = Math.ceil(
+        Math.max(i - 1 - (prevFloweredIndex + 1) - 1, 0) / 2,
+      );
+      plantNumber += canPlantRangeSize;
 
-            if (plantNumber >= n) return true;
+      if (plantNumber >= n) return true;
 
-            prevFloweredIndex = i;
-        }
+      prevFloweredIndex = i;
     }
+  }
 
-    const lastCanPlantRangeSize = Math.ceil(
-        Math.max(flowerbed.length + 1 - 1 - (prevFloweredIndex + 1) - 1, 0) / 2,
-    );
-    plantNumber += lastCanPlantRangeSize;
+  const lastCanPlantRangeSize = Math.ceil(
+    Math.max(flowerbed.length + 1 - 1 - (prevFloweredIndex + 1) - 1, 0) / 2,
+  );
+  plantNumber += lastCanPlantRangeSize;
 
-    return plantNumber >= n;
+  return plantNumber >= n;
 };
 // @lc code=end

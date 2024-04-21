@@ -10,17 +10,17 @@
  * @return {string}
  */
 var removeDuplicates = function (s) {
-    /** @type {string[]} */
-    const stack = [];
+  /** @type {string[]} */
+  const stack = [];
 
-    for (const c of s) {
-        if (stack.length === 0) stack.push(c);
-        else {
-            if (stack.at(-1) === c) stack.pop();
-            else stack.push(c);
-        }
+  for (const c of s) {
+    if (stack.length === 0) stack.push(c);
+    else {
+      if (stack.at(-1) === c) stack.pop();
+      else stack.push(c);
     }
+  }
 
-    return stack.join('');
+  return stack.join('');
 };
 // @lc code=end

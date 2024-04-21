@@ -9,11 +9,11 @@ const MOD = 10 ** 9 + 7;
 /** @type {('a'|'e'|'i'|'o'|'u')[]} */
 const vows = ['a', 'e', 'i', 'o', 'u'];
 const follows = {
-    a: ['e'],
-    e: ['a', 'i'],
-    i: ['a', 'e', 'o', 'u'],
-    o: ['i', 'u'],
-    u: ['a'],
+  a: ['e'],
+  e: ['a', 'i'],
+  i: ['a', 'e', 'o', 'u'],
+  o: ['i', 'u'],
+  u: ['a'],
 };
 const cache = new Map();
 
@@ -22,14 +22,14 @@ const cache = new Map();
  * @return {number}
  */
 var countVowelPermutation = function (n) {
-    let result = 0;
+  let result = 0;
 
-    for (const vow of vows) {
-        result += helper(vow, n, cache);
-        result %= MOD;
-    }
+  for (const vow of vows) {
+    result += helper(vow, n, cache);
+    result %= MOD;
+  }
 
-    return result;
+  return result;
 };
 
 /**
@@ -39,24 +39,24 @@ var countVowelPermutation = function (n) {
  * @returns {number}
  */
 function helper(currentVowel, leftLength, cache) {
-    if (leftLength === 1) {
-        return 1;
-    }
+  if (leftLength === 1) {
+    return 1;
+  }
 
-    const cacheKey = `${currentVowel}-${leftLength}`;
+  const cacheKey = `${currentVowel}-${leftLength}`;
 
-    if (cache.has(cacheKey)) {
-        return cache.get(cacheKey);
-    }
-    let result = 0;
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey);
+  }
+  let result = 0;
 
-    const follow = follows[currentVowel];
-    for (const vow of follow) {
-        result += helper(vow, leftLength - 1, cache);
-        result %= MOD;
-    }
+  const follow = follows[currentVowel];
+  for (const vow of follow) {
+    result += helper(vow, leftLength - 1, cache);
+    result %= MOD;
+  }
 
-    cache.set(cacheKey, result);
-    return result;
+  cache.set(cacheKey, result);
+  return result;
 }
 // @lc code=end

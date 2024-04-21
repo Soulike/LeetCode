@@ -11,10 +11,10 @@
  * @return {number}
  */
 const numTrees = function (n) {
-    /**@type {number[]} */
-    const cache = new Array(n);
-    cache.fill(0);
-    return helper(n, cache);
+  /**@type {number[]} */
+  const cache = new Array(n);
+  cache.fill(0);
+  return helper(n, cache);
 };
 
 /**
@@ -23,27 +23,27 @@ const numTrees = function (n) {
  * @return {number}
  */
 function helper(n, cache) {
-    if (n === 0 || n === 1) {
-        return 1;
-    }
-    let sum = 0;
-    let left = 0;
-    let right = 0;
+  if (n === 0 || n === 1) {
+    return 1;
+  }
+  let sum = 0;
+  let left = 0;
+  let right = 0;
 
-    for (let root = 1; root <= n; root++) {
-        left = cache[root - 1];
-        right = cache[n - root];
-        if (left === 0) {
-            left = helper(root - 1, cache);
-            cache[root - 1] = left;
-        }
-        if (right === 0) {
-            right = helper(n - root, cache);
-            cache[n - root] = right;
-        }
-        sum += left * right;
+  for (let root = 1; root <= n; root++) {
+    left = cache[root - 1];
+    right = cache[n - root];
+    if (left === 0) {
+      left = helper(root - 1, cache);
+      cache[root - 1] = left;
     }
-    return sum;
+    if (right === 0) {
+      right = helper(n - root, cache);
+      cache[n - root] = right;
+    }
+    sum += left * right;
+  }
+  return sum;
 }
 // @lc code=end
 

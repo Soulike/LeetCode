@@ -11,17 +11,17 @@
  * @return {number}
  */
 var countConsistentStrings = function (allowed, words) {
-    const allowedSet = new Set(allowed);
-    let count = 0;
-    OUT: for (const word of words) {
-        for (const letter of word) {
-            if (!allowedSet.has(letter)) {
-                continue OUT;
-            }
-        }
-        count++;
+  const allowedSet = new Set(allowed);
+  let count = 0;
+  OUT: for (const word of words) {
+    for (const letter of word) {
+      if (!allowedSet.has(letter)) {
+        continue OUT;
+      }
     }
+    count++;
+  }
 
-    return count;
+  return count;
 };
 // @lc code=end

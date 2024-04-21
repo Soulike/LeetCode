@@ -10,20 +10,20 @@
  * @return {number}
  */
 const maxPower = function (s) {
-    const LENGTH = s.length;
-    if (LENGTH < 2) {
-        return 1;
+  const LENGTH = s.length;
+  if (LENGTH < 2) {
+    return 1;
+  }
+  let leftIndex = 0;
+  let rightIndex = 0;
+  let maxPower = 0;
+  while (rightIndex < s.length) {
+    rightIndex++;
+    if (s[rightIndex] !== s[leftIndex]) {
+      maxPower = Math.max(maxPower, rightIndex - leftIndex);
+      leftIndex = rightIndex;
     }
-    let leftIndex = 0;
-    let rightIndex = 0;
-    let maxPower = 0;
-    while (rightIndex < s.length) {
-        rightIndex++;
-        if (s[rightIndex] !== s[leftIndex]) {
-            maxPower = Math.max(maxPower, rightIndex - leftIndex);
-            leftIndex = rightIndex;
-        }
-    }
-    return maxPower;
+  }
+  return maxPower;
 };
 // @lc code=end

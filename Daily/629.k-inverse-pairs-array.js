@@ -30,18 +30,18 @@
  * @return {number}
  */
 var kInversePairs = function (N, K) {
-    const dp = new Array(N + 1);
-    for (let i = 0; i < dp.length; i++) {
-        dp[i] = new Array(K + 1);
-        dp[i].fill(0);
-        dp[i][0] = 1;
-    }
-    dp[0].fill(0);
-    for (let n = 1; n <= N; n++)
-        for (let k = 1; k <= K; k++)
-            for (let i = 0; i <= Math.min(k, n - 1); i++)
-                dp[n][k] = (dp[n][k] + dp[n - 1][k - i]) % 1000000007;
-    return dp[N][K];
+  const dp = new Array(N + 1);
+  for (let i = 0; i < dp.length; i++) {
+    dp[i] = new Array(K + 1);
+    dp[i].fill(0);
+    dp[i][0] = 1;
+  }
+  dp[0].fill(0);
+  for (let n = 1; n <= N; n++)
+    for (let k = 1; k <= K; k++)
+      for (let i = 0; i <= Math.min(k, n - 1); i++)
+        dp[n][k] = (dp[n][k] + dp[n - 1][k - i]) % 1000000007;
+  return dp[N][K];
 };
 // @lc code=end
 

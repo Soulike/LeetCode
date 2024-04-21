@@ -6,30 +6,28 @@
 
 // @lc code=start
 class NumArray {
-    #nums;
-    #prefixSum;
+  #nums;
+  #prefixSum;
 
-    /**
-     * @param {number[]} nums
-     */
-    constructor(nums) {
-        this.#nums = nums;
-        this.#prefixSum = [];
-        nums.reduce((prev, curr) => {
-            this.#prefixSum.push(prev + curr);
-            return prev + curr;
-        }, 0);
-    }
-    /**
-     * @param {number} left
-     * @param {number} right
-     * @return {number}
-     */
-    sumRange(left, right) {
-        return (
-            this.#prefixSum[right] - this.#prefixSum[left] + this.#nums[left]
-        );
-    }
+  /**
+   * @param {number[]} nums
+   */
+  constructor(nums) {
+    this.#nums = nums;
+    this.#prefixSum = [];
+    nums.reduce((prev, curr) => {
+      this.#prefixSum.push(prev + curr);
+      return prev + curr;
+    }, 0);
+  }
+  /**
+   * @param {number} left
+   * @param {number} right
+   * @return {number}
+   */
+  sumRange(left, right) {
+    return this.#prefixSum[right] - this.#prefixSum[left] + this.#nums[left];
+  }
 }
 
 /**

@@ -20,20 +20,20 @@
  * @return {string}
  */
 var serialize = function (root) {
-    const nodeVals = [];
+  const nodeVals = [];
 
-    function helper(root) {
-        if (root === null) {
-            nodeVals.push('');
-        } else {
-            nodeVals.push(root.val);
-            helper(root.left);
-            helper(root.right);
-        }
+  function helper(root) {
+    if (root === null) {
+      nodeVals.push('');
+    } else {
+      nodeVals.push(root.val);
+      helper(root.left);
+      helper(root.right);
     }
+  }
 
-    helper(root);
-    return nodeVals.join(',');
+  helper(root);
+  return nodeVals.join(',');
 };
 
 /**
@@ -43,33 +43,33 @@ var serialize = function (root) {
  * @return {TreeNode}
  */
 var deserialize = function (data) {
-    const nodeVals = data.split(',').map((val) => {
-        if (val === '') {
-            return null;
-        } else {
-            return Number.parseInt(val);
-        }
-    });
-
-    // 当前要作为根结点的值的下标
-    let rootIndex = 0;
-    function helper() {
-        if (rootIndex === nodeVals.length) {
-            return null;
-        }
-        if (nodeVals[rootIndex] === null) {
-            rootIndex++;
-            return null;
-        } else {
-            const root = new TreeNode(nodeVals[rootIndex]);
-            rootIndex++;
-            root.left = helper();
-            root.right = helper();
-            return root;
-        }
+  const nodeVals = data.split(',').map((val) => {
+    if (val === '') {
+      return null;
+    } else {
+      return Number.parseInt(val);
     }
+  });
 
-    return helper();
+  // 当前要作为根结点的值的下标
+  let rootIndex = 0;
+  function helper() {
+    if (rootIndex === nodeVals.length) {
+      return null;
+    }
+    if (nodeVals[rootIndex] === null) {
+      rootIndex++;
+      return null;
+    } else {
+      const root = new TreeNode(nodeVals[rootIndex]);
+      rootIndex++;
+      root.left = helper();
+      root.right = helper();
+      return root;
+    }
+  }
+
+  return helper();
 };
 
 /**

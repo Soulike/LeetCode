@@ -7,145 +7,145 @@
 // @lc code=start
 
 class MyCalendar {
-    /** @type {[value: number, type: boolean][]} */
-    #arr;
+  /** @type {[value: number, type: boolean][]} */
+  #arr;
 
-    constructor() {
-        this.#arr = [];
-    }
-    /**
-     * @param {number} start
-     * @param {number} end
-     * @return {boolean}
-     */
-    book(start, end) {
-        end--;
+  constructor() {
+    this.#arr = [];
+  }
+  /**
+   * @param {number} start
+   * @param {number} end
+   * @return {boolean}
+   */
+  book(start, end) {
+    end--;
 
-        const startUpperBoundIndex = this.#getUpperBoundIndex(start);
-        if (startUpperBoundIndex !== -1) {
-            const startUpperBoundType = this.#arr[startUpperBoundIndex][1];
-            if (startUpperBoundType === true) {
-                if (end >= this.#arr[startUpperBoundIndex][0]) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
+    const startUpperBoundIndex = this.#getUpperBoundIndex(start);
+    if (startUpperBoundIndex !== -1) {
+      const startUpperBoundType = this.#arr[startUpperBoundIndex][1];
+      if (startUpperBoundType === true) {
+        if (end >= this.#arr[startUpperBoundIndex][0]) {
+          return false;
         }
-
-        const endLowerBoundIndex = this.#getLowerBoundIndex(end);
-
-        if (endLowerBoundIndex !== -1) {
-            const endUpperBoundType = this.#arr[endLowerBoundIndex][1];
-            if (endUpperBoundType === true) {
-                return false;
-            } else {
-                if (start <= this.#arr[endLowerBoundIndex][0]) {
-                    return false;
-                }
-            }
-        }
-
-        this.#insert(start, true);
-        this.#insert(end, false);
-
-        return true;
+      } else {
+        return false;
+      }
     }
 
-    /**
-     * @param {number} target
-     * @returns {number} - -1 if not exist
-     */
-    #getUpperBoundIndex(target) {
-        if (this.#arr.length === 0) {
-            return -1;
-        }
-        if (target > this.#arr[this.#arr.length - 1][0]) {
-            return -1;
-        }
-        if (target < this.#arr[0][0]) {
-            return 0;
-        }
+    const endLowerBoundIndex = this.#getLowerBoundIndex(end);
 
-        let left = 0;
-        let right = this.#arr.length - 1;
-
-        while (left <= right) {
-            const mid = left + Math.floor((right - left) / 2);
-
-            if (this.#arr[mid][0] > target) {
-                if (this.#arr[mid - 1][0] < target) {
-                    return mid;
-                } else {
-                    right = mid - 1;
-                }
-            } else if (this.#arr[mid][0] < target) {
-                left = mid + 1;
-            } else {
-                return mid;
-            }
+    if (endLowerBoundIndex !== -1) {
+      const endUpperBoundType = this.#arr[endLowerBoundIndex][1];
+      if (endUpperBoundType === true) {
+        return false;
+      } else {
+        if (start <= this.#arr[endLowerBoundIndex][0]) {
+          return false;
         }
-
-        return -1;
+      }
     }
 
-    /**
-     * @param {number} target
-     * @returns {number}
-     */
-    #getLowerBoundIndex(target) {
-        if (this.#arr.length === 0) {
-            return -1;
-        }
-        if (target < this.#arr[0][0]) {
-            return -1;
-        }
-        if (target > this.#arr[this.#arr.length - 1][0]) {
-            return this.#arr.length - 1;
-        }
+    this.#insert(start, true);
+    this.#insert(end, false);
 
-        let left = 0;
-        let right = this.#arr.length - 1;
+    return true;
+  }
 
-        while (left <= right) {
-            const mid = left + Math.floor((right - left) / 2);
-
-            if (this.#arr[mid][0] > target) {
-                right = mid - 1;
-            } else if (this.#arr[mid][0] < target) {
-                if (this.#arr[mid + 1][0] > target) {
-                    return mid;
-                } else {
-                    left = mid + 1;
-                }
-            } else {
-                return mid;
-            }
-        }
-
-        return -1;
+  /**
+   * @param {number} target
+   * @returns {number} - -1 if not exist
+   */
+  #getUpperBoundIndex(target) {
+    if (this.#arr.length === 0) {
+      return -1;
+    }
+    if (target > this.#arr[this.#arr.length - 1][0]) {
+      return -1;
+    }
+    if (target < this.#arr[0][0]) {
+      return 0;
     }
 
-    /**
-     * @param {number} value
-     * @param {boolean} type
-     */
-    #insert(value, type) {
-        if (this.#arr.length === 0 || this.#arr[0][0] > value) {
-            this.#arr.unshift([value, type]);
-            return;
-        }
+    let left = 0;
+    let right = this.#arr.length - 1;
 
-        this.#arr.push([value, type]);
-        for (let i = this.#arr.length - 2; i >= 0; i--) {
-            if (this.#arr[i][0] > value) {
-                this.#arr[i + 1] = this.#arr[i];
-            } else {
-                this.#arr[i + 1] = [value, type];
-                break;
-            }
+    while (left <= right) {
+      const mid = left + Math.floor((right - left) / 2);
+
+      if (this.#arr[mid][0] > target) {
+        if (this.#arr[mid - 1][0] < target) {
+          return mid;
+        } else {
+          right = mid - 1;
         }
+      } else if (this.#arr[mid][0] < target) {
+        left = mid + 1;
+      } else {
+        return mid;
+      }
     }
+
+    return -1;
+  }
+
+  /**
+   * @param {number} target
+   * @returns {number}
+   */
+  #getLowerBoundIndex(target) {
+    if (this.#arr.length === 0) {
+      return -1;
+    }
+    if (target < this.#arr[0][0]) {
+      return -1;
+    }
+    if (target > this.#arr[this.#arr.length - 1][0]) {
+      return this.#arr.length - 1;
+    }
+
+    let left = 0;
+    let right = this.#arr.length - 1;
+
+    while (left <= right) {
+      const mid = left + Math.floor((right - left) / 2);
+
+      if (this.#arr[mid][0] > target) {
+        right = mid - 1;
+      } else if (this.#arr[mid][0] < target) {
+        if (this.#arr[mid + 1][0] > target) {
+          return mid;
+        } else {
+          left = mid + 1;
+        }
+      } else {
+        return mid;
+      }
+    }
+
+    return -1;
+  }
+
+  /**
+   * @param {number} value
+   * @param {boolean} type
+   */
+  #insert(value, type) {
+    if (this.#arr.length === 0 || this.#arr[0][0] > value) {
+      this.#arr.unshift([value, type]);
+      return;
+    }
+
+    this.#arr.push([value, type]);
+    for (let i = this.#arr.length - 2; i >= 0; i--) {
+      if (this.#arr[i][0] > value) {
+        this.#arr[i + 1] = this.#arr[i];
+      } else {
+        this.#arr[i + 1] = [value, type];
+        break;
+      }
+    }
+  }
 }
 
 /**

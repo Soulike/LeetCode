@@ -11,14 +11,14 @@
  * @return {string}
  */
 var findTheDifference = function (s, t) {
-    let c = 0;
-    for (let i = 0; i < s.length; i++) {
-        c ^= s.charCodeAt(i);
-    }
-    for (let i = 0; i < t.length; i++) {
-        c ^= t.charCodeAt(i);
-    }
+  let c = 0;
+  for (let i = 0; i < s.length; i++) {
+    c ^= s.charCodeAt(i);
+  }
+  for (let i = 0; i < t.length; i++) {
+    c ^= t.charCodeAt(i);
+  }
 
-    return String.fromCharCode(c);
+  return String.fromCharCode(c);
 };
 // @lc code=end

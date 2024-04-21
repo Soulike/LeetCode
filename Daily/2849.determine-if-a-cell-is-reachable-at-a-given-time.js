@@ -14,13 +14,13 @@
  * @return {boolean}
  */
 var isReachableAtTime = function (sx, sy, fx, fy, t) {
-    if (sx === fx && sy === fy) {
-        return t !== 1;
-    }
-    const xDiff = Math.abs(sx - fx);
-    const yDiff = Math.abs(sy - fy);
+  if (sx === fx && sy === fy) {
+    return t !== 1;
+  }
+  const xDiff = Math.abs(sx - fx);
+  const yDiff = Math.abs(sy - fy);
 
-    const minSeconds = Math.max(xDiff, yDiff);
-    return t >= minSeconds;
+  const minSeconds = Math.max(xDiff, yDiff);
+  return t >= minSeconds;
 };
 // @lc code=end

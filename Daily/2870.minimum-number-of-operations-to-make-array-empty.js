@@ -10,19 +10,19 @@
  * @return {number}
  */
 var minOperations = function (nums) {
-    /** @type {Map<number, number>} */
-    const numCounts = new Map();
+  /** @type {Map<number, number>} */
+  const numCounts = new Map();
 
-    for (const num of nums) {
-        numCounts.set(num, (numCounts.get(num) ?? 0) + 1);
-    }
+  for (const num of nums) {
+    numCounts.set(num, (numCounts.get(num) ?? 0) + 1);
+  }
 
-    let operationCount = 0;
-    for (const [_, numCount] of numCounts) {
-        if (numCount === 1) return -1;
-        else operationCount += Math.ceil(numCount / 3);
-    }
+  let operationCount = 0;
+  for (const [_, numCount] of numCounts) {
+    if (numCount === 1) return -1;
+    else operationCount += Math.ceil(numCount / 3);
+  }
 
-    return operationCount;
+  return operationCount;
 };
 // @lc code=end

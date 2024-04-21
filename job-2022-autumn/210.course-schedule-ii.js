@@ -11,29 +11,29 @@
  * @return {number[]}
  */
 var findOrder = function (numCourses, prerequisites) {
-    /**@type {number[][]} */
-    const graph = new Array(numCourses);
-    for (let i = 0; i < numCourses; i++) {
-        graph[i] = [];
+  /**@type {number[][]} */
+  const graph = new Array(numCourses);
+  for (let i = 0; i < numCourses; i++) {
+    graph[i] = [];
+  }
+
+  for (const [to, from] of prerequisites) {
+    graph[from].push(to);
+  }
+
+  const onPathNodes = new Set();
+  const visited = new Set();
+  /** @type {number[]} */
+  const result = [];
+
+  for (let i = 0; i < numCourses; i++) {
+    onPathNodes.clear();
+    if (!postorderTraverse(i, graph, onPathNodes, visited, result)) {
+      return [];
     }
+  }
 
-    for (const [to, from] of prerequisites) {
-        graph[from].push(to);
-    }
-
-    const onPathNodes = new Set();
-    const visited = new Set();
-    /** @type {number[]} */
-    const result = [];
-
-    for (let i = 0; i < numCourses; i++) {
-        onPathNodes.clear();
-        if (!postorderTraverse(i, graph, onPathNodes, visited, result)) {
-            return [];
-        }
-    }
-
-    return result.reverse();
+  return result.reverse();
 };
 
 /**
@@ -46,38 +46,38 @@ var findOrder = function (numCourses, prerequisites) {
  * @returns {boolean} - Whether the traverse encounters a loop
  */
 function postorderTraverse(node, graph, onPathNodes, visited, result) {
-    if (onPathNodes.has(node)) {
-        return false;
-    }
-    onPathNodes.add(node);
+  if (onPathNodes.has(node)) {
+    return false;
+  }
+  onPathNodes.add(node);
 
-    if (visited.has(node)) {
-        onPathNodes.delete(node);
-        return true;
-    }
-    visited.add(node);
-
-    const neighbors = graph[node];
-    for (const neighbor of neighbors) {
-        if (!postorderTraverse(neighbor, graph, onPathNodes, visited, result)) {
-            onPathNodes.delete(node);
-            return false;
-        }
-    }
-
-    result.push(node);
-
+  if (visited.has(node)) {
     onPathNodes.delete(node);
     return true;
+  }
+  visited.add(node);
+
+  const neighbors = graph[node];
+  for (const neighbor of neighbors) {
+    if (!postorderTraverse(neighbor, graph, onPathNodes, visited, result)) {
+      onPathNodes.delete(node);
+      return false;
+    }
+  }
+
+  result.push(node);
+
+  onPathNodes.delete(node);
+  return true;
 }
 // @lc code=end
 
 console.log(
-    findOrder(4, [
-        [1, 0],
-        [2, 0],
-        [3, 1],
-        [3, 2],
-        [0, 3],
-    ]),
+  findOrder(4, [
+    [1, 0],
+    [2, 0],
+    [3, 1],
+    [3, 2],
+    [0, 3],
+  ]),
 );

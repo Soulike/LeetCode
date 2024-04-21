@@ -6,128 +6,128 @@
 
 // @lc code=start
 class ListNode {
-    key;
-    value;
-    prev;
-    next;
+  key;
+  value;
+  prev;
+  next;
 
-    constructor(key, value) {
-        this.key = key;
-        this.value = value;
-        this.prev = null;
-        this.next = null;
-    }
+  constructor(key, value) {
+    this.key = key;
+    this.value = value;
+    this.prev = null;
+    this.next = null;
+  }
 }
 class LinkedHashMap {
-    /**
-     * 越靠近链表尾部越新
-     */
+  /**
+   * 越靠近链表尾部越新
+   */
 
-    fakeHead;
-    tail;
-    capacity;
-    keyToListNode;
+  fakeHead;
+  tail;
+  capacity;
+  keyToListNode;
 
-    constructor(capacity) {
-        this.capacity = capacity;
+  constructor(capacity) {
+    this.capacity = capacity;
 
-        this.fakeHead = new ListNode(-1, -1);
-        this.tail = this.fakeHead;
-        this.keyToListNode = new Map();
+    this.fakeHead = new ListNode(-1, -1);
+    this.tail = this.fakeHead;
+    this.keyToListNode = new Map();
+  }
+
+  size() {
+    return this.keyToListNode.size;
+  }
+
+  removeOldest() {
+    if (this.size() !== 0) {
+      const removedNode = this.fakeHead.next;
+      const prevNode = removedNode.prev;
+      const nextNode = removedNode.next;
+
+      prevNode.next = nextNode;
+      if (nextNode !== null) {
+        nextNode.prev = prevNode;
+      }
+
+      if (removedNode === this.tail) {
+        this.tail = prevNode;
+      }
+
+      this.keyToListNode.delete(removedNode.key);
     }
+  }
 
-    size() {
-        return this.keyToListNode.size;
+  add(key, value) {
+    if (!this.keyToListNode.has(key)) {
+      if (this.size() === this.capacity) {
+        this.removeOldest();
+      }
+      const newNode = new ListNode(key, value);
+      this.tail.next = newNode;
+      newNode.prev = this.tail;
+      this.tail = newNode;
+      this.keyToListNode.set(key, newNode);
+    } else {
+      this.touch(key);
+      this.keyToListNode.get(key).value = value;
     }
+  }
 
-    removeOldest() {
-        if (this.size() !== 0) {
-            const removedNode = this.fakeHead.next;
-            const prevNode = removedNode.prev;
-            const nextNode = removedNode.next;
+  getValue(key) {
+    if (this.keyToListNode.has(key)) {
+      this.touch(key);
+      return this.keyToListNode.get(key).value;
+    } else {
+      return -1;
+    }
+  }
 
-            prevNode.next = nextNode;
-            if (nextNode !== null) {
-                nextNode.prev = prevNode;
-            }
+  touch(key) {
+    const touchedNode = this.keyToListNode.get(key);
+    if (touchedNode !== undefined) {
+      // 已经是 tail 则无需调整
+      if (this.tail !== touchedNode) {
+        const prevNode = touchedNode.prev;
+        const nextNode = touchedNode.next;
 
-            if (removedNode === this.tail) {
-                this.tail = prevNode;
-            }
-
-            this.keyToListNode.delete(removedNode.key);
+        prevNode.next = nextNode;
+        if (nextNode !== null) {
+          nextNode.prev = prevNode;
         }
+
+        this.tail.next = touchedNode;
+        touchedNode.prev = this.tail;
+        touchedNode.next = null;
+        this.tail = touchedNode;
+      }
     }
-
-    add(key, value) {
-        if (!this.keyToListNode.has(key)) {
-            if (this.size() === this.capacity) {
-                this.removeOldest();
-            }
-            const newNode = new ListNode(key, value);
-            this.tail.next = newNode;
-            newNode.prev = this.tail;
-            this.tail = newNode;
-            this.keyToListNode.set(key, newNode);
-        } else {
-            this.touch(key);
-            this.keyToListNode.get(key).value = value;
-        }
-    }
-
-    getValue(key) {
-        if (this.keyToListNode.has(key)) {
-            this.touch(key);
-            return this.keyToListNode.get(key).value;
-        } else {
-            return -1;
-        }
-    }
-
-    touch(key) {
-        const touchedNode = this.keyToListNode.get(key);
-        if (touchedNode !== undefined) {
-            // 已经是 tail 则无需调整
-            if (this.tail !== touchedNode) {
-                const prevNode = touchedNode.prev;
-                const nextNode = touchedNode.next;
-
-                prevNode.next = nextNode;
-                if (nextNode !== null) {
-                    nextNode.prev = prevNode;
-                }
-
-                this.tail.next = touchedNode;
-                touchedNode.prev = this.tail;
-                touchedNode.next = null;
-                this.tail = touchedNode;
-            }
-        }
-    }
+  }
 }
 
 class LRUCache {
-    linkedHashMap;
+  linkedHashMap;
 
-    constructor(capacity) {
-        this.linkedHashMap = new LinkedHashMap(capacity);
-    }
+  constructor(capacity) {
+    this.linkedHashMap = new LinkedHashMap(capacity);
+  }
 
-    /**
-     * @param {number} key
-     * @return {number}
-     */
-    get(key) {
-        return this.linkedHashMap.getValue(key);
-    }
-    /**
-     * @param {number} key
-     * @param {number} value
-     * @return {void}
-     */
-    put(key, value) {
-        return this.linkedHashMap.add(key, value);
-    }
+  /**
+   * @param {number} key
+   * @return {number}
+   */
+  get(key) {
+    return this.linkedHashMap.getValue(key);
+  }
+  /**
+   * @param {number} key
+   * @param {number} value
+   * @return {void}
+   */
+  put(key, value) {
+    return this.linkedHashMap.add(key, value);
+  }
 }
 
 /**

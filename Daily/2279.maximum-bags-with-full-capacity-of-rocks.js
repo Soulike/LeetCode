@@ -12,20 +12,20 @@
  * @return {number}
  */
 var maximumBags = function (capacity, rocks, additionalRocks) {
-    const N = capacity.length;
-    const leftCapacities = new Array(N);
-    for (let i = 0; i < N; i++) {
-        leftCapacities[i] = capacity[i] - rocks[i];
-    }
+  const N = capacity.length;
+  const leftCapacities = new Array(N);
+  for (let i = 0; i < N; i++) {
+    leftCapacities[i] = capacity[i] - rocks[i];
+  }
 
-    leftCapacities.sort((a, b) => a - b);
-    let filledBagNumber = 0;
-    for (const leftCapacity of leftCapacities) {
-        if (additionalRocks < leftCapacity) break;
-        additionalRocks -= leftCapacity;
-        filledBagNumber += 1;
-    }
+  leftCapacities.sort((a, b) => a - b);
+  let filledBagNumber = 0;
+  for (const leftCapacity of leftCapacities) {
+    if (additionalRocks < leftCapacity) break;
+    additionalRocks -= leftCapacity;
+    filledBagNumber += 1;
+  }
 
-    return filledBagNumber;
+  return filledBagNumber;
 };
 // @lc code=end

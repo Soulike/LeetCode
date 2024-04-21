@@ -18,27 +18,27 @@
  * @return {number}
  */
 var sumRootToLeaf = function (root) {
-    let sum = 0;
-    let path = root.val;
+  let sum = 0;
+  let path = root.val;
 
-    helper(root);
-    return sum;
+  helper(root);
+  return sum;
 
-    function helper(root) {
-        if (root.left === null && root.right === null) {
-            sum += path;
-        } else {
-            if (root.left !== null) {
-                path = path * 2 + root.left.val;
-                helper(root.left);
-                path = (path - root.left.val) / 2;
-            }
-            if (root.right !== null) {
-                path = path * 2 + root.right.val;
-                helper(root.right);
-                path = (path - root.right.val) / 2;
-            }
-        }
+  function helper(root) {
+    if (root.left === null && root.right === null) {
+      sum += path;
+    } else {
+      if (root.left !== null) {
+        path = path * 2 + root.left.val;
+        helper(root.left);
+        path = (path - root.left.val) / 2;
+      }
+      if (root.right !== null) {
+        path = path * 2 + root.right.val;
+        helper(root.right);
+        path = (path - root.right.val) / 2;
+      }
     }
+  }
 };
 // @lc code=end

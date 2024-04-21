@@ -11,7 +11,7 @@
  * @return {number}
  */
 var numSubarraysWithSum = function (nums, goal) {
-    return atMostSubarray(nums, goal) - atMostSubarray(nums, goal - 1);
+  return atMostSubarray(nums, goal) - atMostSubarray(nums, goal - 1);
 };
 
 /**
@@ -20,26 +20,26 @@ var numSubarraysWithSum = function (nums, goal) {
  * @return {number}
  */
 function atMostSubarray(nums, goal) {
-    if (goal < 0) return 0;
+  if (goal < 0) return 0;
 
-    let left = 0;
-    let right = 0;
-    let currentSum = 0;
-    let result = 0;
+  let left = 0;
+  let right = 0;
+  let currentSum = 0;
+  let result = 0;
 
-    while (right < nums.length) {
-        currentSum += nums[right];
+  while (right < nums.length) {
+    currentSum += nums[right];
 
-        while (currentSum > goal) {
-            currentSum -= nums[left];
-            left++;
-        }
-
-        result += right - left + 1;
-        right++;
+    while (currentSum > goal) {
+      currentSum -= nums[left];
+      left++;
     }
 
-    return result;
+    result += right - left + 1;
+    right++;
+  }
+
+  return result;
 }
 // @lc code=end
 

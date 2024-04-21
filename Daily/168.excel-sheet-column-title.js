@@ -10,23 +10,23 @@
  * @return {string}
  */
 var convertToTitle = function (columnNumber) {
-    /** @type {string[]} */
-    const numToLetter = [];
-    for (let i = 0; i < 26; i++) {
-        numToLetter[i] = String.fromCharCode('A'.charCodeAt(0) + i);
-    }
+  /** @type {string[]} */
+  const numToLetter = [];
+  for (let i = 0; i < 26; i++) {
+    numToLetter[i] = String.fromCharCode('A'.charCodeAt(0) + i);
+  }
 
-    /** @type {string[]} */
-    const columnName = [];
+  /** @type {string[]} */
+  const columnName = [];
 
-    while (columnNumber > 0) {
-        columnNumber--;
-        const remainder = columnNumber % 26;
-        columnNumber = (columnNumber - remainder) / 26;
-        columnName.unshift(numToLetter[remainder]);
-    }
+  while (columnNumber > 0) {
+    columnNumber--;
+    const remainder = columnNumber % 26;
+    columnNumber = (columnNumber - remainder) / 26;
+    columnName.unshift(numToLetter[remainder]);
+  }
 
-    return columnName.join('');
+  return columnName.join('');
 };
 // @lc code=end
 convertToTitle(701); // ZY

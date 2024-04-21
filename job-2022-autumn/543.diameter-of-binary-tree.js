@@ -18,33 +18,33 @@
  * @return {number}
  */
 var diameterOfBinaryTree = function (root) {
+  if (root === null) {
+    return 0;
+  }
+
+  let maxDiameter = 0;
+
+  /**
+   * @param {TreeNode | null} root
+   * @return {number}
+   */
+  function maxTreeDepth(root) {
     if (root === null) {
-        return 0;
+      return 0;
     }
 
-    let maxDiameter = 0;
+    const leftMaxDepth = maxTreeDepth(root.left);
+    const rightMaxDepth = maxTreeDepth(root.right);
 
-    /**
-     * @param {TreeNode | null} root
-     * @return {number}
-     */
-    function maxTreeDepth(root) {
-        if (root === null) {
-            return 0;
-        }
+    maxDiameter = Math.max(maxDiameter, leftMaxDepth + rightMaxDepth);
 
-        const leftMaxDepth = maxTreeDepth(root.left);
-        const rightMaxDepth = maxTreeDepth(root.right);
+    const result = 1 + Math.max(leftMaxDepth, rightMaxDepth);
 
-        maxDiameter = Math.max(maxDiameter, leftMaxDepth + rightMaxDepth);
+    return result;
+  }
 
-        const result = 1 + Math.max(leftMaxDepth, rightMaxDepth);
+  maxTreeDepth(root);
 
-        return result;
-    }
-
-    maxTreeDepth(root);
-
-    return maxDiameter;
+  return maxDiameter;
 };
 // @lc code=end

@@ -5,8 +5,8 @@
  */
 
 #include <cmath>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 using std::vector;
 

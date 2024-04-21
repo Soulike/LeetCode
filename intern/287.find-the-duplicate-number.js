@@ -10,19 +10,19 @@
  * @return {number}
  */
 const findDuplicate = function (nums) {
-    let slow = 0,
-        fast = 0,
-        t = 0;
-    while (true) {
-        slow = nums[slow];
-        fast = nums[nums[fast]];
-        if (slow === fast) break;
-    }
-    while (true) {
-        slow = nums[slow];
-        t = nums[t];
-        if (slow === t) break;
-    }
-    return slow;
+  let slow = 0,
+    fast = 0,
+    t = 0;
+  while (true) {
+    slow = nums[slow];
+    fast = nums[nums[fast]];
+    if (slow === fast) break;
+  }
+  while (true) {
+    slow = nums[slow];
+    t = nums[t];
+    if (slow === t) break;
+  }
+  return slow;
 };
 // @lc code=end

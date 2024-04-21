@@ -4,68 +4,60 @@
  * [380] Insert Delete GetRandom O(1)
  */
 
-#include <map>
-#include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <map>
+#include <vector>
 
 // @lc code=start
 using std::map;
 using std::vector;
 
-class RandomizedSet
-{
-private:
-    vector<int> elements;
-    map<int, int> elementToIndex;
+class RandomizedSet {
+ private:
+  vector<int> elements;
+  map<int, int> elementToIndex;
 
-    int getRandomNumber(int start, int end)
-    {
-        const int diff = end - start;
-        return std::rand() % (diff + 1) + start;
+  int getRandomNumber(int start, int end) {
+    const int diff = end - start;
+    return std::rand() % (diff + 1) + start;
+  }
+
+ public:
+  bool insert(int val) {
+    if (!this->elementToIndex.contains(val)) {
+      this->elements.push_back(val);
+      this->elementToIndex[val] = this->elements.size() - 1;
+      return true;
+    }
+    return false;
+  }
+
+  bool remove(int val) {
+    if (!this->elementToIndex.contains(val)) {
+      return false;
     }
 
-public:
-    bool insert(int val)
-    {
-        if (!this->elementToIndex.contains(val))
-        {
-            this->elements.push_back(val);
-            this->elementToIndex[val] = this->elements.size() - 1;
-            return true;
-        }
-        return false;
+    const int lastElementIndex = this->elements.size() - 1;
+    const int lastElement = this->elements.at(lastElementIndex);
+    const int valIndex = this->elementToIndex[val];
+
+    if (valIndex != lastElement) {
+      this->elements[lastElementIndex] = val;
+      this->elements[valIndex] = lastElement;
+      this->elementToIndex[val] = lastElementIndex;
+      this->elementToIndex[lastElement] = valIndex;
     }
 
-    bool remove(int val)
-    {
-        if (!this->elementToIndex.contains(val))
-        {
-            return false;
-        }
+    this->elements.pop_back();
+    this->elementToIndex.erase(val);
+    return true;
+  }
 
-        const int lastElementIndex = this->elements.size() - 1;
-        const int lastElement = this->elements.at(lastElementIndex);
-        const int valIndex = this->elementToIndex[val];
-
-        if (valIndex != lastElement)
-        {
-            this->elements[lastElementIndex] = val;
-            this->elements[valIndex] = lastElement;
-            this->elementToIndex[val] = lastElementIndex;
-            this->elementToIndex[lastElement] = valIndex;
-        }
-
-        this->elements.pop_back();
-        this->elementToIndex.erase(val);
-        return true;
-    }
-
-    int getRandom()
-    {
-        const int randomIndex = this->getRandomNumber(0, this->elements.size() - 1);
-        return this->elements[randomIndex];
-    }
+  int getRandom() {
+    const int randomIndex = this->getRandomNumber(0, this->elements.size() - 1);
+    return this->elements[randomIndex];
+  }
 };
 
 /**
@@ -77,14 +69,13 @@ public:
  */
 // @lc code=end
 
-int main()
-{
-    RandomizedSet *rset = new RandomizedSet();
-    rset->insert(1);
-    rset->remove(2);
-    rset->insert(2);
-    rset->getRandom();
-    rset->remove(1);
-    rset->insert(2);
-    rset->getRandom();
+int main() {
+  RandomizedSet* rset = new RandomizedSet();
+  rset->insert(1);
+  rset->remove(2);
+  rset->insert(2);
+  rset->getRandom();
+  rset->remove(1);
+  rset->insert(2);
+  rset->getRandom();
 }

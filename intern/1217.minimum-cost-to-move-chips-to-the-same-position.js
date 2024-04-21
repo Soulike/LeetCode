@@ -10,15 +10,15 @@
  * @return {number}
  */
 const minCostToMoveChips = function (position) {
-    let oddCoinCount = 0;
-    let evenCoinCount = 0;
-    for (const pos of position) {
-        if (pos % 2) {
-            oddCoinCount++;
-        } else {
-            evenCoinCount++;
-        }
+  let oddCoinCount = 0;
+  let evenCoinCount = 0;
+  for (const pos of position) {
+    if (pos % 2) {
+      oddCoinCount++;
+    } else {
+      evenCoinCount++;
     }
-    return Math.min(oddCoinCount, evenCoinCount);
+  }
+  return Math.min(oddCoinCount, evenCoinCount);
 };
 // @lc code=end

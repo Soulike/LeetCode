@@ -18,32 +18,32 @@
  * @return {number[]}
  */
 var averageOfLevels = function (root) {
-    let lastLevelNodes = [root];
-    /** @type {TreeNode[]} */
-    let currentLevelNodes = [];
-    /** @type {number[]} */
-    const averages = [];
+  let lastLevelNodes = [root];
+  /** @type {TreeNode[]} */
+  let currentLevelNodes = [];
+  /** @type {number[]} */
+  const averages = [];
 
-    while (lastLevelNodes.length > 0) {
-        const lastLevelAverage =
-            lastLevelNodes.reduce((prev, curr) => prev + curr.val, 0) /
-            lastLevelNodes.length;
+  while (lastLevelNodes.length > 0) {
+    const lastLevelAverage =
+      lastLevelNodes.reduce((prev, curr) => prev + curr.val, 0) /
+      lastLevelNodes.length;
 
-        averages.push(lastLevelAverage);
+    averages.push(lastLevelAverage);
 
-        for (const node of lastLevelNodes) {
-            if (node.left) {
-                currentLevelNodes.push(node.left);
-            }
-            if (node.right) {
-                currentLevelNodes.push(node.right);
-            }
-        }
-
-        lastLevelNodes = currentLevelNodes;
-        currentLevelNodes = [];
+    for (const node of lastLevelNodes) {
+      if (node.left) {
+        currentLevelNodes.push(node.left);
+      }
+      if (node.right) {
+        currentLevelNodes.push(node.right);
+      }
     }
 
-    return averages;
+    lastLevelNodes = currentLevelNodes;
+    currentLevelNodes = [];
+  }
+
+  return averages;
 };
 // @lc code=end

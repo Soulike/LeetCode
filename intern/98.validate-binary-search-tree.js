@@ -11,11 +11,11 @@
  * @param {TreeNode|undefined|null} right
  */
 function TreeNode(val, left, right) {
-    this.val = val === undefined ? 0 : val;
-    /**@type {TreeNode|null} */
-    this.left = left === undefined ? null : left;
-    /**@type {TreeNode|null} */
-    this.right = right === undefined ? null : right;
+  this.val = val === undefined ? 0 : val;
+  /**@type {TreeNode|null} */
+  this.left = left === undefined ? null : left;
+  /**@type {TreeNode|null} */
+  this.right = right === undefined ? null : right;
 }
 
 // @lc code=start
@@ -32,20 +32,18 @@ function TreeNode(val, left, right) {
  * @return {boolean}
  */
 const isValidBST = function (root) {
-    return visit(root, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
+  return visit(root, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
 };
 
 function visit(root, min, max) {
-    if (root === null) {
-        return true;
-    }
+  if (root === null) {
+    return true;
+  }
 
-    if (root.val <= min || root.val >= max) {
-        return false;
-    } else {
-        return (
-            visit(root.left, min, root.val) && visit(root.right, root.val, max)
-        );
-    }
+  if (root.val <= min || root.val >= max) {
+    return false;
+  } else {
+    return visit(root.left, min, root.val) && visit(root.right, root.val, max);
+  }
 }
 // @lc code=end

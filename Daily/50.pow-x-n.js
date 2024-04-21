@@ -11,31 +11,31 @@
  * @return {number}
  */
 var myPow = function (x, n) {
-    /** @type {{[key: string]: number}} */
-    const memo = {};
-    /**
-     * @param {number} x
-     * @param {number} n
-     * @returns {number}
-     */
-    const helper = (x, n) => {
-        if (n === 0) return 1;
-        if (n === 1) return x;
-        if (n === -1) return 1 / x;
+  /** @type {{[key: string]: number}} */
+  const memo = {};
+  /**
+   * @param {number} x
+   * @param {number} n
+   * @returns {number}
+   */
+  const helper = (x, n) => {
+    if (n === 0) return 1;
+    if (n === 1) return x;
+    if (n === -1) return 1 / x;
 
-        const memoKey = `${x}-${n}`;
-        if (memo[memoKey] !== undefined) {
-            return memo[memoKey];
-        }
+    const memoKey = `${x}-${n}`;
+    if (memo[memoKey] !== undefined) {
+      return memo[memoKey];
+    }
 
-        const halfN = Math.floor(n / 2);
+    const halfN = Math.floor(n / 2);
 
-        const result = helper(x, halfN) * helper(x, n - halfN);
-        memo[memoKey] = result;
-        return result;
-    };
+    const result = helper(x, halfN) * helper(x, n - halfN);
+    memo[memoKey] = result;
+    return result;
+  };
 
-    return helper(x, n);
+  return helper(x, n);
 };
 // @lc code=end
 

@@ -10,27 +10,27 @@
  * @return {number}
  */
 var maxProductDifference = function (nums) {
-    let min = Infinity;
-    let secondMin = Infinity;
-    let max = -Infinity;
-    let secondMax = -Infinity;
+  let min = Infinity;
+  let secondMin = Infinity;
+  let max = -Infinity;
+  let secondMax = -Infinity;
 
-    for (const num of nums) {
-        if (num <= min) {
-            secondMin = min;
-            min = num;
-        } else if (num < secondMin) {
-            secondMin = num;
-        }
-
-        if (num >= max) {
-            secondMax = max;
-            max = num;
-        } else if (num > secondMax) {
-            secondMax = num;
-        }
+  for (const num of nums) {
+    if (num <= min) {
+      secondMin = min;
+      min = num;
+    } else if (num < secondMin) {
+      secondMin = num;
     }
 
-    return max * secondMax - min * secondMin;
+    if (num >= max) {
+      secondMax = max;
+      max = num;
+    } else if (num > secondMax) {
+      secondMax = num;
+    }
+  }
+
+  return max * secondMax - min * secondMin;
 };
 // @lc code=end

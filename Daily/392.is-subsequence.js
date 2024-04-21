@@ -11,13 +11,13 @@
  * @return {boolean}
  */
 var isSubsequence = function (s, t) {
-    let sIndex = 0;
+  let sIndex = 0;
 
-    for (let i = 0; i < t.length; i++) {
-        if (t[i] === s[sIndex]) sIndex++;
-        if (sIndex === s.length) break;
-    }
+  for (let i = 0; i < t.length; i++) {
+    if (t[i] === s[sIndex]) sIndex++;
+    if (sIndex === s.length) break;
+  }
 
-    return sIndex === s.length;
+  return sIndex === s.length;
 };
 // @lc code=end

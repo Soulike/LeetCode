@@ -18,42 +18,39 @@
  * @return {number}
  */
 var widthOfBinaryTree = function (root) {
-    /** @type {[node: TreeNode, index: number][]} */
-    let currLevelNodes = [];
-    /** @type {[node: TreeNode, index: number][]} */
-    let nextLevelNodes = [[root, 0]];
-    const NODE = 0;
-    const INDEX = 1;
+  /** @type {[node: TreeNode, index: number][]} */
+  let currLevelNodes = [];
+  /** @type {[node: TreeNode, index: number][]} */
+  let nextLevelNodes = [[root, 0]];
+  const NODE = 0;
+  const INDEX = 1;
 
-    let maxWidth = 0;
+  let maxWidth = 0;
 
-    while (nextLevelNodes.length !== 0) {
-        const nextLevelFirstNode = nextLevelNodes[0];
-        const nextLevelLastNode = nextLevelNodes[nextLevelNodes.length - 1];
-        maxWidth = Math.max(
-            maxWidth,
-            nextLevelLastNode[INDEX] - nextLevelFirstNode[INDEX] + 1,
-        );
+  while (nextLevelNodes.length !== 0) {
+    const nextLevelFirstNode = nextLevelNodes[0];
+    const nextLevelLastNode = nextLevelNodes[nextLevelNodes.length - 1];
+    maxWidth = Math.max(
+      maxWidth,
+      nextLevelLastNode[INDEX] - nextLevelFirstNode[INDEX] + 1,
+    );
 
-        currLevelNodes = nextLevelNodes;
-        nextLevelNodes = [];
+    currLevelNodes = nextLevelNodes;
+    nextLevelNodes = [];
 
-        const currLevelFirstNodeIndex = currLevelNodes[0][INDEX];
-        const nextIndexDiff = currLevelFirstNodeIndex * 2 + 1;
+    const currLevelFirstNodeIndex = currLevelNodes[0][INDEX];
+    const nextIndexDiff = currLevelFirstNodeIndex * 2 + 1;
 
-        for (const [node, index] of currLevelNodes) {
-            if (node.left !== null) {
-                nextLevelNodes.push([node.left, index * 2 + 1 - nextIndexDiff]);
-            }
-            if (node.right !== null) {
-                nextLevelNodes.push([
-                    node.right,
-                    index * 2 + 2 - nextIndexDiff,
-                ]);
-            }
-        }
+    for (const [node, index] of currLevelNodes) {
+      if (node.left !== null) {
+        nextLevelNodes.push([node.left, index * 2 + 1 - nextIndexDiff]);
+      }
+      if (node.right !== null) {
+        nextLevelNodes.push([node.right, index * 2 + 2 - nextIndexDiff]);
+      }
     }
+  }
 
-    return maxWidth;
+  return maxWidth;
 };
 // @lc code=end

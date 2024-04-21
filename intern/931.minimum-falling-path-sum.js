@@ -10,7 +10,7 @@
  * @return {number}
  */
 var minFallingPathSum = function (matrix) {
-    /*
+  /*
      // dp[i][j] 以 i,j 为终点，能够得到的最小下降路径
 
       base case
@@ -27,26 +27,26 @@ var minFallingPathSum = function (matrix) {
       newDp = Math.min(dp[j-1], dp[j], dp[j+1]) + matrix[i][j]
      */
 
-    let dp = new Array(matrix[0].length);
+  let dp = new Array(matrix[0].length);
 
+  for (let j = 0; j < matrix[0].length; j++) {
+    dp[j] = matrix[0][j];
+  }
+
+  for (let i = 1; i < matrix.length; i++) {
+    const newDp = new Array(matrix[0].length);
     for (let j = 0; j < matrix[0].length; j++) {
-        dp[j] = matrix[0][j];
+      if (j > 0 && j < matrix[0].length - 1) {
+        newDp[j] = Math.min(dp[j - 1], dp[j], dp[j + 1]) + matrix[i][j];
+      } else if (j === 0) {
+        newDp[j] = Math.min(dp[j], dp[j + 1]) + matrix[i][j];
+      } else {
+        newDp[j] = Math.min(dp[j - 1], dp[j]) + matrix[i][j];
+      }
     }
+    dp = newDp;
+  }
 
-    for (let i = 1; i < matrix.length; i++) {
-        const newDp = new Array(matrix[0].length);
-        for (let j = 0; j < matrix[0].length; j++) {
-            if (j > 0 && j < matrix[0].length - 1) {
-                newDp[j] = Math.min(dp[j - 1], dp[j], dp[j + 1]) + matrix[i][j];
-            } else if (j === 0) {
-                newDp[j] = Math.min(dp[j], dp[j + 1]) + matrix[i][j];
-            } else {
-                newDp[j] = Math.min(dp[j - 1], dp[j]) + matrix[i][j];
-            }
-        }
-        dp = newDp;
-    }
-
-    return Math.min(...dp);
+  return Math.min(...dp);
 };
 // @lc code=end

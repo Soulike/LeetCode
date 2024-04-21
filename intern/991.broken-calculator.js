@@ -11,16 +11,16 @@
  * @return {number}
  */
 var brokenCalc = function (startValue, target) {
-    let step = 0;
-    while (target > startValue) {
-        step++;
-        if (target % 2 === 0) {
-            target /= 2;
-        } else {
-            target += 1;
-        }
+  let step = 0;
+  while (target > startValue) {
+    step++;
+    if (target % 2 === 0) {
+      target /= 2;
+    } else {
+      target += 1;
     }
+  }
 
-    return step + startValue - target;
+  return step + startValue - target;
 };
 // @lc code=end

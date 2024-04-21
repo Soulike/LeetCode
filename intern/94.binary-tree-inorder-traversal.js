@@ -18,41 +18,38 @@
  * @return {number[]}
  */
 var inorderTraversal = function (root) {
-    const result = [];
+  const result = [];
 
-    const stack = [];
+  const stack = [];
 
-    function traverseLeft(root) {
-        let currentNode = root;
-        while (currentNode !== null) {
-            // 前序遍历
-            stack.push(currentNode);
-            currentNode = currentNode.left;
-        }
+  function traverseLeft(root) {
+    let currentNode = root;
+    while (currentNode !== null) {
+      // 前序遍历
+      stack.push(currentNode);
+      currentNode = currentNode.left;
+    }
+  }
+
+  traverseLeft(root);
+
+  let visited = new TreeNode();
+
+  while (stack.length > 0) {
+    const top = stack[stack.length - 1];
+
+    if ((top.left === null || top.left === visited) && top.right !== visited) {
+      // 中序遍历代码
+      result.push(top.val);
+      traverseLeft(top.right);
     }
 
-    traverseLeft(root);
-
-    let visited = new TreeNode();
-
-    while (stack.length > 0) {
-        const top = stack[stack.length - 1];
-
-        if (
-            (top.left === null || top.left === visited) &&
-            top.right !== visited
-        ) {
-            // 中序遍历代码
-            result.push(top.val);
-            traverseLeft(top.right);
-        }
-
-        if (top.right === null || top.right === visited) {
-            visited = stack.pop();
-            // 后序遍历代码
-        }
+    if (top.right === null || top.right === visited) {
+      visited = stack.pop();
+      // 后序遍历代码
     }
+  }
 
-    return result;
+  return result;
 };
 // @lc code=end

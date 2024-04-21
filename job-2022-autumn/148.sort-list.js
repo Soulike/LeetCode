@@ -17,7 +17,7 @@
  * @return {ListNode}
  */
 var sortList = function (head) {
-    return mergeSort(head);
+  return mergeSort(head);
 };
 
 /**
@@ -25,14 +25,14 @@ var sortList = function (head) {
  * @return {ListNode}
  */
 function mergeSort(head) {
-    if (head === null || head.next === null) return head;
+  if (head === null || head.next === null) return head;
 
-    const [head1, head2] = split(head);
+  const [head1, head2] = split(head);
 
-    const result1 = mergeSort(head1);
-    const result2 = mergeSort(head2);
+  const result1 = mergeSort(head1);
+  const result2 = mergeSort(head2);
 
-    return mergeLists(result1, result2);
+  return mergeLists(result1, result2);
 }
 
 /**
@@ -40,25 +40,25 @@ function mergeSort(head) {
  * @return {[ListNode, ListNode]}
  */
 function split(head) {
-    /** @type {ListNode|null} */
-    let fast = head;
-    /** @type {ListNode} */
-    let slow = head;
+  /** @type {ListNode|null} */
+  let fast = head;
+  /** @type {ListNode} */
+  let slow = head;
 
-    while (true) {
-        fast = fast.next;
-        if (fast === null) break;
-        fast = fast.next;
-        if (fast === null) break;
+  while (true) {
+    fast = fast.next;
+    if (fast === null) break;
+    fast = fast.next;
+    if (fast === null) break;
 
-        slow = slow.next;
-    }
+    slow = slow.next;
+  }
 
-    const slowNext = slow.next;
+  const slowNext = slow.next;
 
-    slow.next = null;
+  slow.next = null;
 
-    return [head, slowNext];
+  return [head, slowNext];
 }
 
 /**
@@ -67,34 +67,34 @@ function split(head) {
  * @return {ListNode}
  */
 function mergeLists(head1, head2) {
-    /** @type {ListNode|null} */
-    let node1 = head1;
-    /** @type {ListNode|null} */
-    let node2 = head2;
+  /** @type {ListNode|null} */
+  let node1 = head1;
+  /** @type {ListNode|null} */
+  let node2 = head2;
 
-    const fakeHead = new ListNode();
-    let currentNode = fakeHead;
+  const fakeHead = new ListNode();
+  let currentNode = fakeHead;
 
-    while (node1 !== null || node2 !== null) {
-        if (node1 !== null && node2 !== null) {
-            if (node1.val < node2.val) {
-                currentNode.next = node1;
-                node1 = node1.next;
-            } else {
-                currentNode.next = node2;
-                node2 = node2.next;
-            }
-        } else if (node1 === null) {
-            currentNode.next = node2;
-            node2 = node2.next;
-        } else if (node2 === null) {
-            currentNode.next = node1;
-            node1 = node1.next;
-        }
-
-        currentNode = currentNode.next;
+  while (node1 !== null || node2 !== null) {
+    if (node1 !== null && node2 !== null) {
+      if (node1.val < node2.val) {
+        currentNode.next = node1;
+        node1 = node1.next;
+      } else {
+        currentNode.next = node2;
+        node2 = node2.next;
+      }
+    } else if (node1 === null) {
+      currentNode.next = node2;
+      node2 = node2.next;
+    } else if (node2 === null) {
+      currentNode.next = node1;
+      node1 = node1.next;
     }
 
-    return fakeHead.next;
+    currentNode = currentNode.next;
+  }
+
+  return fakeHead.next;
 }
 // @lc code=end

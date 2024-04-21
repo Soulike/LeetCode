@@ -11,23 +11,23 @@
  * @return {boolean}
  */
 var isAnagram = function (s, t) {
-    if (s.length !== t.length) return false;
+  if (s.length !== t.length) return false;
 
-    /** @type {Map<string, number>} */
-    const letterToFeq = new Map();
+  /** @type {Map<string, number>} */
+  const letterToFeq = new Map();
 
-    for (const letter of s) {
-        letterToFeq.set(letter, (letterToFeq.get(letter) ?? 0) + 1);
+  for (const letter of s) {
+    letterToFeq.set(letter, (letterToFeq.get(letter) ?? 0) + 1);
+  }
+
+  for (const letter of t) {
+    if (!letterToFeq.has(letter)) return false;
+    letterToFeq.set(letter, (letterToFeq.get(letter) ?? 0) - 1);
+    if (letterToFeq.get(letter) === 0) {
+      letterToFeq.delete(letter);
     }
+  }
 
-    for (const letter of t) {
-        if (!letterToFeq.has(letter)) return false;
-        letterToFeq.set(letter, (letterToFeq.get(letter) ?? 0) - 1);
-        if (letterToFeq.get(letter) === 0) {
-            letterToFeq.delete(letter);
-        }
-    }
-
-    return letterToFeq.size === 0;
+  return letterToFeq.size === 0;
 };
 // @lc code=end

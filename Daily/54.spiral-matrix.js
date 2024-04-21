@@ -10,48 +10,48 @@
  * @return {number[]}
  */
 var spiralOrder = function (matrix) {
-    const M = matrix.length;
-    const N = matrix[0].length;
+  const M = matrix.length;
+  const N = matrix[0].length;
 
-    let horizontalSteps = N;
-    let verticalSteps = M;
+  let horizontalSteps = N;
+  let verticalSteps = M;
 
-    /** @type {number[]} */
-    const answer = [];
+  /** @type {number[]} */
+  const answer = [];
 
-    let x = 0;
-    let y = -1;
+  let x = 0;
+  let y = -1;
 
-    while (true) {
-        if (horizontalSteps === 0) break;
-        for (let i = 0; i < horizontalSteps; i++) {
-            y++;
-            answer.push(matrix[x][y]);
-        }
-        verticalSteps--;
-
-        if (verticalSteps === 0) break;
-        for (let i = 0; i < verticalSteps; i++) {
-            x++;
-            answer.push(matrix[x][y]);
-        }
-        horizontalSteps--;
-
-        if (horizontalSteps === 0) break;
-        for (let i = 0; i < horizontalSteps; i++) {
-            y--;
-            answer.push(matrix[x][y]);
-        }
-        verticalSteps--;
-
-        if (verticalSteps === 0) break;
-        for (let i = 0; i < verticalSteps; i++) {
-            x--;
-            answer.push(matrix[x][y]);
-        }
-        horizontalSteps--;
+  while (true) {
+    if (horizontalSteps === 0) break;
+    for (let i = 0; i < horizontalSteps; i++) {
+      y++;
+      answer.push(matrix[x][y]);
     }
+    verticalSteps--;
 
-    return answer;
+    if (verticalSteps === 0) break;
+    for (let i = 0; i < verticalSteps; i++) {
+      x++;
+      answer.push(matrix[x][y]);
+    }
+    horizontalSteps--;
+
+    if (horizontalSteps === 0) break;
+    for (let i = 0; i < horizontalSteps; i++) {
+      y--;
+      answer.push(matrix[x][y]);
+    }
+    verticalSteps--;
+
+    if (verticalSteps === 0) break;
+    for (let i = 0; i < verticalSteps; i++) {
+      x--;
+      answer.push(matrix[x][y]);
+    }
+    horizontalSteps--;
+  }
+
+  return answer;
 };
 // @lc code=end

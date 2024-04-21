@@ -10,16 +10,16 @@
  * @return {number}
  */
 var missingNumber = function (nums) {
-    const n = nums.length;
+  const n = nums.length;
 
-    let result = 0;
-    for (let i = 0; i < n; i++) {
-        result ^= i;
-        result ^= nums[i];
-    }
+  let result = 0;
+  for (let i = 0; i < n; i++) {
+    result ^= i;
+    result ^= nums[i];
+  }
 
-    result ^= n;
+  result ^= n;
 
-    return result;
+  return result;
 };
 // @lc code=end

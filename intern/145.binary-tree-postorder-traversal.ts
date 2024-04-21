@@ -20,42 +20,42 @@
  */
 
 function postorderTraversal(root: TreeNode | null): number[] {
-    if (root === null) {
-        return [];
-    }
-    const stack: {
-        hasVisited: boolean;
-        node: TreeNode;
-    }[] = [
-        {
-            hasVisited: false,
-            node: root,
-        },
-    ];
-    const result: number[] = [];
+  if (root === null) {
+    return [];
+  }
+  const stack: {
+    hasVisited: boolean;
+    node: TreeNode;
+  }[] = [
+    {
+      hasVisited: false,
+      node: root,
+    },
+  ];
+  const result: number[] = [];
 
-    while (stack.length > 0) {
-        const top = stack[stack.length - 1];
-        if (top.hasVisited) {
-            result.push(top.node.val);
-            stack.pop();
-        } else {
-            top.hasVisited = true;
-            if (top.node.right) {
-                stack.push({
-                    hasVisited: false,
-                    node: top.node.right,
-                });
-            }
-            if (top.node.left) {
-                stack.push({
-                    hasVisited: false,
-                    node: top.node.left,
-                });
-            }
-        }
+  while (stack.length > 0) {
+    const top = stack[stack.length - 1];
+    if (top.hasVisited) {
+      result.push(top.node.val);
+      stack.pop();
+    } else {
+      top.hasVisited = true;
+      if (top.node.right) {
+        stack.push({
+          hasVisited: false,
+          node: top.node.right,
+        });
+      }
+      if (top.node.left) {
+        stack.push({
+          hasVisited: false,
+          node: top.node.left,
+        });
+      }
     }
+  }
 
-    return result;
+  return result;
 }
 // @lc code=end

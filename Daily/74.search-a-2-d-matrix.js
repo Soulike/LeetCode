@@ -11,24 +11,24 @@
  * @return {boolean}
  */
 var searchMatrix = function (matrix, target) {
-    const rowNum = matrix.length;
-    const colNum = matrix[0].length;
+  const rowNum = matrix.length;
+  const colNum = matrix[0].length;
 
-    let left = 0;
-    let right = rowNum * colNum - 1;
+  let left = 0;
+  let right = rowNum * colNum - 1;
 
-    while (left <= right) {
-        const mid = Math.floor((right - left) / 2) + left;
-        const midValue = readMatrixAsArray(matrix, mid);
-        if (midValue > target) {
-            right = mid - 1;
-        } else if (midValue < target) {
-            left = mid + 1;
-        } else {
-            return true;
-        }
+  while (left <= right) {
+    const mid = Math.floor((right - left) / 2) + left;
+    const midValue = readMatrixAsArray(matrix, mid);
+    if (midValue > target) {
+      right = mid - 1;
+    } else if (midValue < target) {
+      left = mid + 1;
+    } else {
+      return true;
     }
-    return false;
+  }
+  return false;
 };
 
 /**
@@ -37,12 +37,12 @@ var searchMatrix = function (matrix, target) {
  * @returns {number}
  */
 function readMatrixAsArray(matrix, index) {
-    const rowNum = matrix.length;
-    const colNum = matrix[0].length;
+  const rowNum = matrix.length;
+  const colNum = matrix[0].length;
 
-    const row = Math.floor(index / colNum);
-    const col = index - row * colNum;
+  const row = Math.floor(index / colNum);
+  const col = index - row * colNum;
 
-    return matrix[row][col];
+  return matrix[row][col];
 }
 // @lc code=end

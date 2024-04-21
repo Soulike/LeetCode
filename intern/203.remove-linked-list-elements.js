@@ -9,8 +9,8 @@
  * @param {ListNode|null} next
  */
 function ListNode(val, next) {
-    this.val = val;
-    this.next = next;
+  this.val = val;
+  this.next = next;
 }
 
 // @lc code=start
@@ -20,18 +20,18 @@ function ListNode(val, next) {
  * @return {ListNode|null}
  */
 const removeElements = function (head, val) {
-    const fakeHead = new ListNode(-1, head);
-    let prevNode = fakeHead;
-    let currentNode = head;
-    while (currentNode !== null) {
-        if (currentNode.val === val) {
-            prevNode.next = currentNode.next;
-            currentNode = prevNode.next;
-        } else {
-            prevNode = currentNode;
-            currentNode = currentNode.next;
-        }
+  const fakeHead = new ListNode(-1, head);
+  let prevNode = fakeHead;
+  let currentNode = head;
+  while (currentNode !== null) {
+    if (currentNode.val === val) {
+      prevNode.next = currentNode.next;
+      currentNode = prevNode.next;
+    } else {
+      prevNode = currentNode;
+      currentNode = currentNode.next;
     }
-    return fakeHead.next;
+  }
+  return fakeHead.next;
 };
 // @lc code=end

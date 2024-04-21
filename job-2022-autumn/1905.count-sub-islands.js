@@ -11,46 +11,46 @@
  * @return {number}
  */
 var countSubIslands = function (grid1, grid2) {
-    const m = grid1.length;
-    const n = grid1[0].length;
-    const WATER = 0;
-    const LAND = 1;
+  const m = grid1.length;
+  const n = grid1[0].length;
+  const WATER = 0;
+  const LAND = 1;
 
-    /**
-     * @param {number} i
-     * @param {number} j
-     */
-    const floodGrid2 = (i, j) => {
-        if (i < 0 || i >= m || j < 0 || j >= n || grid2[i][j] === WATER) {
-            return;
-        }
-
-        grid2[i][j] = WATER;
-        floodGrid2(i + 1, j);
-        floodGrid2(i - 1, j);
-        floodGrid2(i, j + 1);
-        floodGrid2(i, j - 1);
-    };
-
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid1[i][j] === WATER) {
-                floodGrid2(i, j);
-            }
-        }
+  /**
+   * @param {number} i
+   * @param {number} j
+   */
+  const floodGrid2 = (i, j) => {
+    if (i < 0 || i >= m || j < 0 || j >= n || grid2[i][j] === WATER) {
+      return;
     }
 
-    let subIslandCount = 0;
+    grid2[i][j] = WATER;
+    floodGrid2(i + 1, j);
+    floodGrid2(i - 1, j);
+    floodGrid2(i, j + 1);
+    floodGrid2(i, j - 1);
+  };
 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid2[i][j] === LAND) {
-                subIslandCount++;
-                floodGrid2(i, j);
-            }
-        }
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid1[i][j] === WATER) {
+        floodGrid2(i, j);
+      }
     }
+  }
 
-    return subIslandCount;
+  let subIslandCount = 0;
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid2[i][j] === LAND) {
+        subIslandCount++;
+        floodGrid2(i, j);
+      }
+    }
+  }
+
+  return subIslandCount;
 };
 // @lc code=end

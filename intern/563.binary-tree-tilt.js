@@ -10,9 +10,9 @@
  * @param {TreeNode|null} right
  */
 function TreeNode(val, left, right) {
-    this.val = val;
-    this.left = left;
-    this.right = right;
+  this.val = val;
+  this.left = left;
+  this.right = right;
 }
 
 // @lc code=start
@@ -21,9 +21,9 @@ function TreeNode(val, left, right) {
  * @return {number}
  */
 const findTilt = function (root) {
-    const tileSum = {sum: 0};
-    postOrderTransverse(root, tileSum);
-    return tileSum.sum;
+  const tileSum = {sum: 0};
+  postOrderTransverse(root, tileSum);
+  return tileSum.sum;
 };
 
 /**
@@ -32,12 +32,12 @@ const findTilt = function (root) {
  * @return {number} - 以 root 为根的树的所有结点的和
  */
 function postOrderTransverse(root, tileSum) {
-    if (root === null) {
-        return 0;
-    }
-    const leftTreeSum = postOrderTransverse(root.left, tileSum);
-    const rightTreeSum = postOrderTransverse(root.right, tileSum);
-    tileSum.sum += Math.abs(leftTreeSum - rightTreeSum);
-    return leftTreeSum + rightTreeSum + root.val;
+  if (root === null) {
+    return 0;
+  }
+  const leftTreeSum = postOrderTransverse(root.left, tileSum);
+  const rightTreeSum = postOrderTransverse(root.right, tileSum);
+  tileSum.sum += Math.abs(leftTreeSum - rightTreeSum);
+  return leftTreeSum + rightTreeSum + root.val;
 }
 // @lc code=end

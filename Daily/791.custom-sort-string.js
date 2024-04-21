@@ -11,9 +11,9 @@
  * @return {string}
  */
 var customSortString = function (order, s) {
-    return s
-        .split('')
-        .sort((a, b) => order.indexOf(a) - order.indexOf(b))
-        .join('');
+  return s
+    .split('')
+    .sort((a, b) => order.indexOf(a) - order.indexOf(b))
+    .join('');
 };
 // @lc code=end

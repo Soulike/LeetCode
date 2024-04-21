@@ -4,9 +4,9 @@
  * [138] Copy List with Random Pointer
  */
 function Node(val, next, random) {
-    this.val = val;
-    this.next = next;
-    this.random = random;
+  this.val = val;
+  this.next = next;
+  this.random = random;
 }
 
 // @lc code=start
@@ -15,11 +15,11 @@ function Node(val, next, random) {
  * @return {Node|null}
  */
 var copyRandomList = function (head) {
-    makeDuplicateList(head);
-    restoreRandomPointer(head);
+  makeDuplicateList(head);
+  restoreRandomPointer(head);
 
-    const copyHead = extractCopyList(head);
-    return copyHead;
+  const copyHead = extractCopyList(head);
+  return copyHead;
 };
 
 /**
@@ -28,15 +28,15 @@ var copyRandomList = function (head) {
  * @return {void}
  */
 function makeDuplicateList(head) {
-    let node = head;
-    while (node !== null) {
-        const {val, next} = node;
-        const nodeCopy = new Node(val, null, null);
-        nodeCopy.next = next;
-        node.next = nodeCopy;
+  let node = head;
+  while (node !== null) {
+    const {val, next} = node;
+    const nodeCopy = new Node(val, null, null);
+    nodeCopy.next = next;
+    node.next = nodeCopy;
 
-        node = next;
-    }
+    node = next;
+  }
 }
 
 /**
@@ -44,13 +44,13 @@ function makeDuplicateList(head) {
  * @return {void}
  */
 function restoreRandomPointer(head) {
-    let node = head;
-    while (node !== null) {
-        const {next: copy, random} = node;
-        copy.random = random === null ? null : random.next;
+  let node = head;
+  while (node !== null) {
+    const {next: copy, random} = node;
+    copy.random = random === null ? null : random.next;
 
-        node = copy.next;
-    }
+    node = copy.next;
+  }
 }
 
 /**
@@ -58,22 +58,22 @@ function restoreRandomPointer(head) {
  * @return {Node|null}
  */
 function extractCopyList(head) {
-    if (head === null) return null;
+  if (head === null) return null;
 
-    let node = head;
-    let copyNode = new Node(-1, null, null);
-    const fakeCopyListHead = copyNode;
+  let node = head;
+  let copyNode = new Node(-1, null, null);
+  const fakeCopyListHead = copyNode;
 
-    while (node !== null) {
-        const {next: copy} = node;
-        node.next = copy.next;
-        node = node.next;
+  while (node !== null) {
+    const {next: copy} = node;
+    node.next = copy.next;
+    node = node.next;
 
-        copyNode.next = copy;
-        copyNode = copyNode.next;
-        copyNode.next = null;
-    }
+    copyNode.next = copy;
+    copyNode = copyNode.next;
+    copyNode.next = null;
+  }
 
-    return fakeCopyListHead.next;
+  return fakeCopyListHead.next;
 }
 // @lc code=end

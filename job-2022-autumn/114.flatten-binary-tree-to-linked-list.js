@@ -18,21 +18,21 @@
  * @return {void} Do not return anything, modify root in-place instead.
  */
 var flatten = function (root) {
-    if (root === null) return;
+  if (root === null) return;
 
-    let left = root.left;
-    const right = root.right;
+  let left = root.left;
+  const right = root.right;
 
-    flatten(left);
-    flatten(right);
+  flatten(left);
+  flatten(right);
 
-    if (left !== null) {
-        root.right = left;
-        root.left = null;
-        while (left.right !== null) {
-            left = left.right;
-        }
-        left.right = right;
+  if (left !== null) {
+    root.right = left;
+    root.left = null;
+    while (left.right !== null) {
+      left = left.right;
     }
+    left.right = right;
+  }
 };
 // @lc code=end

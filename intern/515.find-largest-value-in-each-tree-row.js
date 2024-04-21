@@ -18,24 +18,24 @@
  * @return {number[]}
  */
 var largestValues = function (root) {
-    if (root === null) {
-        return [];
+  if (root === null) {
+    return [];
+  }
+  const queue = [[root, 0]];
+  const max = [];
+
+  while (queue.length > 0) {
+    const [node, layer] = queue.shift();
+    max[layer] = Math.max(max[layer] ?? -Infinity, node.val);
+
+    if (node.left !== null) {
+      queue.push([node.left, layer + 1]);
     }
-    const queue = [[root, 0]];
-    const max = [];
-
-    while (queue.length > 0) {
-        const [node, layer] = queue.shift();
-        max[layer] = Math.max(max[layer] ?? -Infinity, node.val);
-
-        if (node.left !== null) {
-            queue.push([node.left, layer + 1]);
-        }
-        if (node.right !== null) {
-            queue.push([node.right, layer + 1]);
-        }
+    if (node.right !== null) {
+      queue.push([node.right, layer + 1]);
     }
+  }
 
-    return max;
+  return max;
 };
 // @lc code=end

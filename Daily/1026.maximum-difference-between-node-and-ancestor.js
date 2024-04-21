@@ -18,24 +18,24 @@
  * @return {number}
  */
 var maxAncestorDiff = function (root) {
-    /**
-     * @param {TreeNode|null} root
-     * @param {number} min - min val in root's ancestors
-     * @param {number} max - max val in root's ancestors
-     * @returns {number} max diff in root
-     */
-    const maxDiff = (root, min, max) => {
-        if (root === null) return -1;
+  /**
+   * @param {TreeNode|null} root
+   * @param {number} min - min val in root's ancestors
+   * @param {number} max - max val in root's ancestors
+   * @returns {number} max diff in root
+   */
+  const maxDiff = (root, min, max) => {
+    if (root === null) return -1;
 
-        min = Math.min(min, root.val);
-        max = Math.max(max, root.val);
+    min = Math.min(min, root.val);
+    max = Math.max(max, root.val);
 
-        const leftDiff = maxDiff(root.left, min, max);
-        const rightDiff = maxDiff(root.right, min, max);
+    const leftDiff = maxDiff(root.left, min, max);
+    const rightDiff = maxDiff(root.right, min, max);
 
-        return Math.max(max - min, leftDiff, rightDiff);
-    };
+    return Math.max(max - min, leftDiff, rightDiff);
+  };
 
-    return maxDiff(root, root.val, root.val);
+  return maxDiff(root, root.val, root.val);
 };
 // @lc code=end

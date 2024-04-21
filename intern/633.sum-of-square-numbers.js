@@ -10,26 +10,26 @@
  * @return {boolean}
  */
 var judgeSquareSum = function (c) {
-    let a = 0;
-    let b = Math.floor(Math.sqrt(c));
+  let a = 0;
+  let b = Math.floor(Math.sqrt(c));
 
-    let aSquare = a * a;
-    let bSquare = b * b;
+  let aSquare = a * a;
+  let bSquare = b * b;
 
-    while (a <= b) {
-        const squareSum = aSquare + bSquare;
-        if (squareSum < c) {
-            a++;
-            aSquare = a * a;
-        } else if (squareSum > c) {
-            b--;
-            bSquare = b * b;
-        } else {
-            return true;
-        }
+  while (a <= b) {
+    const squareSum = aSquare + bSquare;
+    if (squareSum < c) {
+      a++;
+      aSquare = a * a;
+    } else if (squareSum > c) {
+      b--;
+      bSquare = b * b;
+    } else {
+      return true;
     }
+  }
 
-    return false;
+  return false;
 };
 // @lc code=end
 

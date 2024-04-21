@@ -11,45 +11,45 @@
  * @return {number[]}
  */
 var maxSlidingWindow = function (nums, k) {
-    /** @type {number[]} */
-    const windowMax = [];
+  /** @type {number[]} */
+  const windowMax = [];
 
-    /** @type {number[]} */
-    const nonIncreasingQueue = [];
-    let left = 0;
-    let right = k - 1;
+  /** @type {number[]} */
+  const nonIncreasingQueue = [];
+  let left = 0;
+  let right = k - 1;
 
-    for (let i = 0; i < k; i++) {
-        while (
-            nonIncreasingQueue.length > 0 &&
-            nonIncreasingQueue[nonIncreasingQueue.length - 1] < nums[i]
-        ) {
-            nonIncreasingQueue.pop();
-        }
-        nonIncreasingQueue.push(nums[i]);
+  for (let i = 0; i < k; i++) {
+    while (
+      nonIncreasingQueue.length > 0 &&
+      nonIncreasingQueue[nonIncreasingQueue.length - 1] < nums[i]
+    ) {
+      nonIncreasingQueue.pop();
     }
+    nonIncreasingQueue.push(nums[i]);
+  }
+
+  windowMax.push(nonIncreasingQueue[0]);
+
+  while (right < nums.length - 1) {
+    if (nums[left] === nonIncreasingQueue[0]) {
+      nonIncreasingQueue.shift();
+    }
+
+    left++;
+    right++;
+
+    while (
+      nonIncreasingQueue.length > 0 &&
+      nonIncreasingQueue[nonIncreasingQueue.length - 1] < nums[right]
+    ) {
+      nonIncreasingQueue.pop();
+    }
+    nonIncreasingQueue.push(nums[right]);
 
     windowMax.push(nonIncreasingQueue[0]);
+  }
 
-    while (right < nums.length - 1) {
-        if (nums[left] === nonIncreasingQueue[0]) {
-            nonIncreasingQueue.shift();
-        }
-
-        left++;
-        right++;
-
-        while (
-            nonIncreasingQueue.length > 0 &&
-            nonIncreasingQueue[nonIncreasingQueue.length - 1] < nums[right]
-        ) {
-            nonIncreasingQueue.pop();
-        }
-        nonIncreasingQueue.push(nums[right]);
-
-        windowMax.push(nonIncreasingQueue[0]);
-    }
-
-    return windowMax;
+  return windowMax;
 };
 // @lc code=end

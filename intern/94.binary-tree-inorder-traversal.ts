@@ -20,21 +20,21 @@
  */
 
 function inorderTraversal(root: TreeNode | null): number[] {
-    const stack: TreeNode[] = [];
-    const result: number[] = [];
+  const stack: TreeNode[] = [];
+  const result: number[] = [];
 
-    let currentNode = root;
+  let currentNode = root;
 
-    while (currentNode || stack.length > 0) {
-        while (currentNode !== null) {
-            stack.push(currentNode);
-            currentNode = currentNode.left;
-        }
-        const top = stack.pop()!;
-        result.push(top.val);
-        currentNode = top.right;
+  while (currentNode || stack.length > 0) {
+    while (currentNode !== null) {
+      stack.push(currentNode);
+      currentNode = currentNode.left;
     }
+    const top = stack.pop()!;
+    result.push(top.val);
+    currentNode = top.right;
+  }
 
-    return result;
+  return result;
 }
 // @lc code=end

@@ -11,34 +11,34 @@
  * @return {number}
  */
 var combinationSum4 = function (nums, target) {
-    const cache = new Map();
+  const cache = new Map();
 
-    /**
-     * @param {number} target
-     * @returns {number}
-     */
-    const helper = (target) => {
-        if (cache.has(target)) {
-            return cache.get(target);
-        }
+  /**
+   * @param {number} target
+   * @returns {number}
+   */
+  const helper = (target) => {
+    if (cache.has(target)) {
+      return cache.get(target);
+    }
 
-        if (target < 0) {
-            return 0;
-        }
-        if (target === 0) {
-            return 1;
-        }
+    if (target < 0) {
+      return 0;
+    }
+    if (target === 0) {
+      return 1;
+    }
 
-        let sum = 0;
+    let sum = 0;
 
-        for (const num of nums) {
-            sum += helper(target - num);
-        }
+    for (const num of nums) {
+      sum += helper(target - num);
+    }
 
-        cache.set(target, sum);
-        return sum;
-    };
+    cache.set(target, sum);
+    return sum;
+  };
 
-    return helper(target);
+  return helper(target);
 };
 // @lc code=end

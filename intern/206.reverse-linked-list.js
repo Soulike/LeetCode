@@ -17,23 +17,23 @@
  * @return {ListNode}
  */
 const reverseList = function (head) {
-    if (head === null) {
-        return head;
+  if (head === null) {
+    return head;
+  }
+  let preNode = null;
+  let currentNode = head;
+  let nextNode = head.next;
+
+  while (currentNode !== null) {
+    currentNode.next = preNode;
+
+    preNode = currentNode;
+    currentNode = nextNode;
+    if (nextNode !== null) {
+      nextNode = nextNode.next;
     }
-    let preNode = null;
-    let currentNode = head;
-    let nextNode = head.next;
+  }
 
-    while (currentNode !== null) {
-        currentNode.next = preNode;
-
-        preNode = currentNode;
-        currentNode = nextNode;
-        if (nextNode !== null) {
-            nextNode = nextNode.next;
-        }
-    }
-
-    return preNode;
+  return preNode;
 };
 // @lc code=end

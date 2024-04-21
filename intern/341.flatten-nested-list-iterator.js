@@ -32,41 +32,41 @@
  * };
  */
 class NestedIterator {
-    nestedList;
-    /**
-     * @constructor
-     * @param {NestedInteger[]} nestedList
-     */
-    constructor(nestedList) {
-        this.nestedList = Array.from(nestedList);
+  nestedList;
+  /**
+   * @constructor
+   * @param {NestedInteger[]} nestedList
+   */
+  constructor(nestedList) {
+    this.nestedList = Array.from(nestedList);
+  }
+
+  /**
+   * @this NestedIterator
+   * @returns {boolean}
+   */
+  hasNext() {
+    if (this.nestedList.length === 0) {
+      return false;
     }
 
-    /**
-     * @this NestedIterator
-     * @returns {boolean}
-     */
-    hasNext() {
-        if (this.nestedList.length === 0) {
-            return false;
-        }
-
-        while (!this.nestedList[0].isInteger()) {
-            const list = this.nestedList.shift();
-            this.nestedList.unshift(...list.getList());
-            if (this.nestedList.length === 0) {
-                return false;
-            }
-        }
-        return true;
+    while (!this.nestedList[0].isInteger()) {
+      const list = this.nestedList.shift();
+      this.nestedList.unshift(...list.getList());
+      if (this.nestedList.length === 0) {
+        return false;
+      }
     }
+    return true;
+  }
 
-    /**
-     * @this NestedIterator
-     * @returns {integer}
-     */
-    next() {
-        return this.nestedList.shift().getInteger();
-    }
+  /**
+   * @this NestedIterator
+   * @returns {integer}
+   */
+  next() {
+    return this.nestedList.shift().getInteger();
+  }
 }
 
 /**

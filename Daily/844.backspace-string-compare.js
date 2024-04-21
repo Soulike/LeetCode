@@ -11,43 +11,43 @@
  * @return {boolean}
  */
 var backspaceCompare = function (s, t) {
-    const BACKSPACE = '#';
+  const BACKSPACE = '#';
 
-    let sSkip = 0;
-    let tSkip = 0;
+  let sSkip = 0;
+  let tSkip = 0;
 
-    let sIndex = s.length - 1;
-    let tIndex = t.length - 1;
+  let sIndex = s.length - 1;
+  let tIndex = t.length - 1;
 
-    while (sIndex >= 0 || tIndex >= 0) {
-        if (s[sIndex] === BACKSPACE || t[tIndex] === BACKSPACE) {
-            while (s[sIndex] === BACKSPACE) {
-                sSkip++;
-                sIndex--;
-            }
-            while (t[tIndex] === BACKSPACE) {
-                tSkip++;
-                tIndex--;
-            }
-        } else if (sSkip > 0 || tSkip > 0) {
-            if (sSkip > 0) {
-                sIndex--;
-                sSkip--;
-            }
-            if (tSkip > 0) {
-                tIndex--;
-                tSkip--;
-            }
-        } else {
-            if (s[sIndex] !== t[tIndex]) return false;
-            else {
-                sIndex--;
-                tIndex--;
-            }
-        }
+  while (sIndex >= 0 || tIndex >= 0) {
+    if (s[sIndex] === BACKSPACE || t[tIndex] === BACKSPACE) {
+      while (s[sIndex] === BACKSPACE) {
+        sSkip++;
+        sIndex--;
+      }
+      while (t[tIndex] === BACKSPACE) {
+        tSkip++;
+        tIndex--;
+      }
+    } else if (sSkip > 0 || tSkip > 0) {
+      if (sSkip > 0) {
+        sIndex--;
+        sSkip--;
+      }
+      if (tSkip > 0) {
+        tIndex--;
+        tSkip--;
+      }
+    } else {
+      if (s[sIndex] !== t[tIndex]) return false;
+      else {
+        sIndex--;
+        tIndex--;
+      }
     }
+  }
 
-    return true;
+  return true;
 };
 // @lc code=end
 

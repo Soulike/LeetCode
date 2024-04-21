@@ -22,42 +22,42 @@
  */
 
 class PeekingIterator {
-    iterator;
-    prevHasNext;
-    prevNext;
+  iterator;
+  prevHasNext;
+  prevNext;
 
-    /**
-     * @param {Iterator} iterator
-     */
-    constructor(iterator) {
-        this.iterator = iterator;
-        this.prevHasNext = iterator.hasNext();
-        this.prevNext = iterator.next();
-    }
+  /**
+   * @param {Iterator} iterator
+   */
+  constructor(iterator) {
+    this.iterator = iterator;
+    this.prevHasNext = iterator.hasNext();
+    this.prevNext = iterator.next();
+  }
 
-    /**
-     * @return {number}
-     */
-    peek() {
-        return this.prevNext;
-    }
+  /**
+   * @return {number}
+   */
+  peek() {
+    return this.prevNext;
+  }
 
-    /**
-     * @return {number}
-     */
-    next() {
-        const result = this.prevNext;
-        this.prevHasNext = this.iterator.hasNext();
-        this.prevNext = this.iterator.next();
-        return result;
-    }
+  /**
+   * @return {number}
+   */
+  next() {
+    const result = this.prevNext;
+    this.prevHasNext = this.iterator.hasNext();
+    this.prevNext = this.iterator.next();
+    return result;
+  }
 
-    /**
-     * @return {boolean}
-     */
-    hasNext() {
-        return this.prevHasNext;
-    }
+  /**
+   * @return {boolean}
+   */
+  hasNext() {
+    return this.prevHasNext;
+  }
 }
 
 /**

@@ -11,74 +11,70 @@
  * @return {[start:number, end:number][]}
  */
 var insert = function (intervals, newInterval) {
-    const START = 0;
-    const END = 1;
+  const START = 0;
+  const END = 1;
 
-    /** @type {[start:number, end:number][]} */
-    const beforeIntervals = [];
-    /** @type {[start:number, end:number][]} */
-    const afterIntervals = [];
+  /** @type {[start:number, end:number][]} */
+  const beforeIntervals = [];
+  /** @type {[start:number, end:number][]} */
+  const afterIntervals = [];
 
-    for (let i = 0; i < intervals.length; i++) {
-        const interval = intervals[i];
-        if (interval[END] < newInterval[START]) {
-            /*
+  for (let i = 0; i < intervals.length; i++) {
+    const interval = intervals[i];
+    if (interval[END] < newInterval[START]) {
+      /*
                     |--N--|
             |--I--|
             */
-            beforeIntervals.push(interval);
-        } else if (interval[START] > newInterval[END]) {
-            /*
+      beforeIntervals.push(interval);
+    } else if (interval[START] > newInterval[END]) {
+      /*
                     |--I--|
             |--N--|
             */
-            afterIntervals.push(...intervals.slice(i));
-            break;
-        } else if (newInterval[START] <= interval[START]) {
-            if (newInterval[END] <= interval[END]) {
-                /*
+      afterIntervals.push(...intervals.slice(i));
+      break;
+    } else if (newInterval[START] <= interval[START]) {
+      if (newInterval[END] <= interval[END]) {
+        /*
                 |--N--|
                   |--I--|
                 OR
                 |--N--|
                 |----I----|
                 */
-                newInterval[END] = interval[END];
-            } else {
-                /*
+        newInterval[END] = interval[END];
+      } else {
+        /*
                 |----N----|
                   |--I--|
                 OR
                 |----N----|
                 |--I--|
                 */
-                // skip;
-            }
-        } else {
-            // newInterval[START] > interval[START]
-            newInterval[START] = interval[START];
+        // skip;
+      }
+    } else {
+      // newInterval[START] > interval[START]
+      newInterval[START] = interval[START];
 
-            if (newInterval[END] <= interval[END]) {
-                /*
+      if (newInterval[END] <= interval[END]) {
+        /*
                   |--N--|
                 |----I----|
                 */
-                newInterval[END] = interval[END];
-            } else {
-                /*
+        newInterval[END] = interval[END];
+      } else {
+        /*
                   |--N--|
                 |--I--|
                 */
-                // skip;
-            }
-        }
+        // skip;
+      }
     }
+  }
 
-    const mergedIntervals = [
-        ...beforeIntervals,
-        newInterval,
-        ...afterIntervals,
-    ];
-    return mergedIntervals;
+  const mergedIntervals = [...beforeIntervals, newInterval, ...afterIntervals];
+  return mergedIntervals;
 };
 // @lc code=end

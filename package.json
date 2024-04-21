@@ -1,26 +1,35 @@
 {
-    "name": "LeetCode",
-    "version": "1.0.0",
-    "repository": "git@github.com:Soulike/LeetCode.git",
-    "author": "Soulike <git_anonymous@foxmail.com>",
-    "license": "MIT",
-    "devDependencies": {
-        "husky": "^8.0.3",
-        "lint-staged": "^15.2.0",
-        "prettier": "^3.1.0"
-    },
-    "scripts": {
-        "prepare": "husky install"
-    },
-    "prettier": {
-        "tabWidth": 4,
-        "singleQuote": true,
-        "jsxSingleQuote": true,
-        "trailingComma": "all",
-        "bracketSpacing": false,
-        "bracketSameLine": true
-    },
-    "lint-staged": {
-        "**/*": "prettier --write --ignore-unknown"
+  "name": "LeetCode",
+  "version": "1.0.0",
+  "repository": "git@github.com:Soulike/LeetCode.git",
+  "author": "Soulike <git_anonymous@foxmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "clang-format": "^1.8.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": false,
+    "bracketSameLine": true
+  },
+  "lint-staged": {
+    "**/*.{js,ts,json}": "prettier --write --ignore-unknown",
+    "**/*.{cpp,h}": [
+      "clang-format -i"
+    ]
+  }
 }

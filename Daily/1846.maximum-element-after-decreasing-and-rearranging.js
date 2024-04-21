@@ -10,16 +10,16 @@
  * @return {number}
  */
 var maximumElementAfterDecrementingAndRearranging = function (arr) {
-    arr.sort((a, b) => a - b);
+  arr.sort((a, b) => a - b);
 
-    let max = 0;
+  let max = 0;
 
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] > max) {
-            max++;
-        }
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] > max) {
+      max++;
     }
+  }
 
-    return max;
+  return max;
 };
 // @lc code=end

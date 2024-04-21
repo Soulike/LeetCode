@@ -18,15 +18,13 @@
  * @return {string}
  */
 var tree2str = function (root) {
-    if (root === null) return '';
-    const leftChildStr = tree2str(root.left);
-    const rightChildStr = tree2str(root.right);
+  if (root === null) return '';
+  const leftChildStr = tree2str(root.left);
+  const rightChildStr = tree2str(root.right);
 
-    if (rightChildStr === '') {
-        return leftChildStr === ''
-            ? `${root.val}`
-            : `${root.val}(${leftChildStr})`;
-    }
-    return `${root.val}(${leftChildStr})(${rightChildStr})`;
+  if (rightChildStr === '') {
+    return leftChildStr === '' ? `${root.val}` : `${root.val}(${leftChildStr})`;
+  }
+  return `${root.val}(${leftChildStr})(${rightChildStr})`;
 };
 // @lc code=end

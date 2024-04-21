@@ -12,20 +12,20 @@
  * @return {number[]}
  */
 const powerfulIntegers = function (x, y, bound) {
-    const result = new Set();
-    for (let i = 1; i <= bound; i *= x) {
-        for (let j = 1; j <= bound; j *= y) {
-            if (i + j <= bound) {
-                result.add(i + j);
-            }
-            if (y === 1 || i + j >= bound) {
-                break;
-            }
-        }
-        if (x === 1) {
-            break;
-        }
+  const result = new Set();
+  for (let i = 1; i <= bound; i *= x) {
+    for (let j = 1; j <= bound; j *= y) {
+      if (i + j <= bound) {
+        result.add(i + j);
+      }
+      if (y === 1 || i + j >= bound) {
+        break;
+      }
     }
-    return Array.from(result);
+    if (x === 1) {
+      break;
+    }
+  }
+  return Array.from(result);
 };
 // @lc code=end

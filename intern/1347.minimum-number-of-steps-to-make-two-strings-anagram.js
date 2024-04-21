@@ -11,18 +11,18 @@
  * @return {number}
  */
 const minSteps = function (s, t) {
-    const letterToCount = new Map();
-    for (let i = 0; i < s.length; i++) {
-        letterToCount.set(s[i], (letterToCount.get(s[i]) ?? 0) + 1);
-        letterToCount.set(t[i], (letterToCount.get(t[i]) ?? 0) - 1);
+  const letterToCount = new Map();
+  for (let i = 0; i < s.length; i++) {
+    letterToCount.set(s[i], (letterToCount.get(s[i]) ?? 0) + 1);
+    letterToCount.set(t[i], (letterToCount.get(t[i]) ?? 0) - 1);
+  }
+  let result = 0;
+  for (const [, count] of letterToCount) {
+    if (count > 0) {
+      result += count;
     }
-    let result = 0;
-    for (const [, count] of letterToCount) {
-        if (count > 0) {
-            result += count;
-        }
-    }
+  }
 
-    return result;
+  return result;
 };
 // @lc code=end

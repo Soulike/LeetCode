@@ -18,25 +18,25 @@
  * @return {boolean}
  */
 var isCompleteTree = function (root) {
-    /** @type {(TreeNode|null)[]} */
-    const nodeQueue = [root];
+  /** @type {(TreeNode|null)[]} */
+  const nodeQueue = [root];
 
-    while (nodeQueue.length > 0) {
-        const headNode = nodeQueue.shift();
-        if (headNode !== null) {
-            nodeQueue.push(headNode.left);
-            nodeQueue.push(headNode.right);
-        } else {
-            break;
-        }
+  while (nodeQueue.length > 0) {
+    const headNode = nodeQueue.shift();
+    if (headNode !== null) {
+      nodeQueue.push(headNode.left);
+      nodeQueue.push(headNode.right);
+    } else {
+      break;
     }
+  }
 
-    for (const node of nodeQueue) {
-        if (node !== null) {
-            return false;
-        }
+  for (const node of nodeQueue) {
+    if (node !== null) {
+      return false;
     }
+  }
 
-    return true;
+  return true;
 };
 // @lc code=end

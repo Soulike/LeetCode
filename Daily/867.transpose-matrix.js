@@ -10,20 +10,20 @@
  * @return {number[][]}
  */
 var transpose = function (matrix) {
-    const M = matrix.length;
-    const N = matrix[0].length;
+  const M = matrix.length;
+  const N = matrix[0].length;
 
-    const transposedMatrix = new Array(N);
-    for (let i = 0; i < N; i++) {
-        transposedMatrix[i] = new Array(M);
+  const transposedMatrix = new Array(N);
+  for (let i = 0; i < N; i++) {
+    transposedMatrix[i] = new Array(M);
+  }
+
+  for (let i = 0; i < M; i++) {
+    for (let j = 0; j < N; j++) {
+      transposedMatrix[j][i] = matrix[i][j];
     }
+  }
 
-    for (let i = 0; i < M; i++) {
-        for (let j = 0; j < N; j++) {
-            transposedMatrix[j][i] = matrix[i][j];
-        }
-    }
-
-    return transposedMatrix;
+  return transposedMatrix;
 };
 // @lc code=end

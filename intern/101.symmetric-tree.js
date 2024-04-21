@@ -18,44 +18,44 @@
  * @return {boolean}
  */
 const isSymmetric = function (root) {
-    let currentLayer = [];
-    let lastLayer = [root];
-    while (lastLayer.length !== 0) {
-        for (const node of lastLayer) {
-            if (node !== null) {
-                currentLayer.push(node.left);
-                currentLayer.push(node.right);
-            }
-        }
-        if (!isSymmetricLayer(currentLayer)) {
-            return false;
-        }
-        lastLayer = currentLayer;
-        currentLayer = [];
+  let currentLayer = [];
+  let lastLayer = [root];
+  while (lastLayer.length !== 0) {
+    for (const node of lastLayer) {
+      if (node !== null) {
+        currentLayer.push(node.left);
+        currentLayer.push(node.right);
+      }
     }
-    return true;
+    if (!isSymmetricLayer(currentLayer)) {
+      return false;
+    }
+    lastLayer = currentLayer;
+    currentLayer = [];
+  }
+  return true;
 };
 
 /**
  * @param {(TreeNode|null)[]} treeLayer
  */
 function isSymmetricLayer(treeLayer) {
-    const LENGTH = treeLayer.length;
-    for (let i = 0; i < LENGTH / 2; i++) {
-        const left = treeLayer[i];
-        const right = treeLayer[LENGTH - 1 - i];
-        if (left === null) {
-            if (right !== null) {
-                return false;
-            }
-        } else if (right === null) {
-            if (left !== null) {
-                return false;
-            }
-        } else if (left.val !== right.val) {
-            return false;
-        }
+  const LENGTH = treeLayer.length;
+  for (let i = 0; i < LENGTH / 2; i++) {
+    const left = treeLayer[i];
+    const right = treeLayer[LENGTH - 1 - i];
+    if (left === null) {
+      if (right !== null) {
+        return false;
+      }
+    } else if (right === null) {
+      if (left !== null) {
+        return false;
+      }
+    } else if (left.val !== right.val) {
+      return false;
     }
-    return true;
+  }
+  return true;
 }
 // @lc code=end

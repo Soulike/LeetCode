@@ -11,28 +11,28 @@
  * @return {number[][]}
  */
 var combine = function (n, k) {
-    /** @type {number[]} */
-    const current = [];
-    /** @type {number[][]} */
-    const results = [];
+  /** @type {number[]} */
+  const current = [];
+  /** @type {number[][]} */
+  const results = [];
 
-    /**
-     * @param {number} startNum
-     */
-    const backtrack = (startNum) => {
-        if (current.length === k) {
-            results.push([...current]);
-        } else {
-            for (let i = startNum; i <= n; i++) {
-                current.push(i);
-                backtrack(i + 1);
-                current.pop();
-            }
-        }
-    };
+  /**
+   * @param {number} startNum
+   */
+  const backtrack = (startNum) => {
+    if (current.length === k) {
+      results.push([...current]);
+    } else {
+      for (let i = startNum; i <= n; i++) {
+        current.push(i);
+        backtrack(i + 1);
+        current.pop();
+      }
+    }
+  };
 
-    backtrack(1);
+  backtrack(1);
 
-    return results;
+  return results;
 };
 // @lc code=end

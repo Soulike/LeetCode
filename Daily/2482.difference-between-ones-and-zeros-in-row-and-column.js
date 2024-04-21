@@ -10,26 +10,26 @@
  * @return {number[][]}
  */
 var onesMinusZeros = function (grid) {
-    const M = grid.length;
-    const N = grid[0].length;
-    /** @type {number[]} */
-    const onesRow = new Array(M).fill(0);
-    /** @type {number[]} */
-    const onesCol = new Array(N).fill(0);
+  const M = grid.length;
+  const N = grid[0].length;
+  /** @type {number[]} */
+  const onesRow = new Array(M).fill(0);
+  /** @type {number[]} */
+  const onesCol = new Array(N).fill(0);
 
-    for (let i = 0; i < M; i++) {
-        for (let j = 0; j < N; j++) {
-            onesRow[i] += grid[i][j];
-            onesCol[j] += grid[i][j];
-        }
+  for (let i = 0; i < M; i++) {
+    for (let j = 0; j < N; j++) {
+      onesRow[i] += grid[i][j];
+      onesCol[j] += grid[i][j];
     }
+  }
 
-    for (let i = 0; i < M; i++) {
-        for (let j = 0; j < N; j++) {
-            grid[i][j] = 2 * (onesRow[i] + onesCol[j]) - (M + N);
-        }
+  for (let i = 0; i < M; i++) {
+    for (let j = 0; j < N; j++) {
+      grid[i][j] = 2 * (onesRow[i] + onesCol[j]) - (M + N);
     }
+  }
 
-    return grid;
+  return grid;
 };
 // @lc code=end

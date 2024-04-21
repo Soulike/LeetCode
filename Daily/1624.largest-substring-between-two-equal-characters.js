@@ -10,21 +10,21 @@
  * @return {number}
  */
 var maxLengthBetweenEqualCharacters = function (s) {
-    /** @type {Map<string, number>} */
-    const letterMins = new Map();
-    let maxLength = -1;
+  /** @type {Map<string, number>} */
+  const letterMins = new Map();
+  let maxLength = -1;
 
-    for (let i = 0; i < s.length; i++) {
-        const letter = s[i];
-        let letterMin = letterMins.get(letter);
-        if (letterMin === undefined) {
-            letterMin = i;
-            letterMins.set(letter, letterMin);
-        }
-
-        maxLength = Math.max(maxLength, i - letterMin - 1);
+  for (let i = 0; i < s.length; i++) {
+    const letter = s[i];
+    let letterMin = letterMins.get(letter);
+    if (letterMin === undefined) {
+      letterMin = i;
+      letterMins.set(letter, letterMin);
     }
 
-    return maxLength;
+    maxLength = Math.max(maxLength, i - letterMin - 1);
+  }
+
+  return maxLength;
 };
 // @lc code=end

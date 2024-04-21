@@ -18,8 +18,8 @@
  * @return {TreeNode}
  */
 var bstToGst = function (root) {
-    helper(root, 0);
-    return root;
+  helper(root, 0);
+  return root;
 };
 
 /**
@@ -29,13 +29,13 @@ var bstToGst = function (root) {
  * @returns {number} - 本子树的结点的和
  */
 function helper(root, currentSum) {
-    if (root === null) return currentSum;
+  if (root === null) return currentSum;
 
-    currentSum = helper(root.right, currentSum);
-    currentSum += root.val;
-    root.val = currentSum;
-    currentSum = helper(root.left, currentSum);
+  currentSum = helper(root.right, currentSum);
+  currentSum += root.val;
+  root.val = currentSum;
+  currentSum = helper(root.left, currentSum);
 
-    return currentSum;
+  return currentSum;
 }
 // @lc code=end

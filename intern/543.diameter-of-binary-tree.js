@@ -18,28 +18,26 @@
  * @return {number}
  */
 var diameterOfBinaryTree = function (root) {
-    const {diameter} = helper(root);
-    return diameter;
+  const {diameter} = helper(root);
+  return diameter;
 };
 
 /**
  * @returns {{maxDepth: number, diameter: number}} - 树的最大深度，和树中存在的最长路径
  */
 function helper(root) {
-    if (root === null) {
-        return {maxDepth: 0, diameter: 0};
-    }
-    const {maxDepth: leftMaxDepth, diameter: leftDiameter} = helper(root.left);
-    const {maxDepth: rightMaxDepth, diameter: rightDiameter} = helper(
-        root.right,
-    );
-    return {
-        maxDepth: 1 + Math.max(leftMaxDepth, rightMaxDepth),
-        diameter: Math.max(
-            leftDiameter,
-            rightDiameter,
-            leftMaxDepth + rightMaxDepth,
-        ),
-    };
+  if (root === null) {
+    return {maxDepth: 0, diameter: 0};
+  }
+  const {maxDepth: leftMaxDepth, diameter: leftDiameter} = helper(root.left);
+  const {maxDepth: rightMaxDepth, diameter: rightDiameter} = helper(root.right);
+  return {
+    maxDepth: 1 + Math.max(leftMaxDepth, rightMaxDepth),
+    diameter: Math.max(
+      leftDiameter,
+      rightDiameter,
+      leftMaxDepth + rightMaxDepth,
+    ),
+  };
 }
 // @lc code=end

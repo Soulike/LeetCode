@@ -10,15 +10,15 @@
  * @return {number}
  */
 var maxScoreSightseeingPair = function (values) {
-    let prevMaxValueIndexSum = values[0];
-    let maxScore = -Infinity;
+  let prevMaxValueIndexSum = values[0];
+  let maxScore = -Infinity;
 
-    for (let i = 1; i < values.length; i++) {
-        maxScore = Math.max(maxScore, prevMaxValueIndexSum + values[i] - i);
+  for (let i = 1; i < values.length; i++) {
+    maxScore = Math.max(maxScore, prevMaxValueIndexSum + values[i] - i);
 
-        prevMaxValueIndexSum = Math.max(prevMaxValueIndexSum, values[i] + i);
-    }
+    prevMaxValueIndexSum = Math.max(prevMaxValueIndexSum, values[i] + i);
+  }
 
-    return maxScore;
+  return maxScore;
 };
 // @lc code=end

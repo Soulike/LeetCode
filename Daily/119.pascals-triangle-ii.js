@@ -10,16 +10,16 @@
  * @return {number[]}
  */
 var getRow = function (rowIndex) {
-    const currRow = [1];
-    for (let i = 1; i <= rowIndex; i++) {
-        const prevRowLength = currRow.length;
-        currRow[prevRowLength] = 1;
-        for (let j = prevRowLength - 1; j > 0; j--) {
-            currRow[j] += currRow[j - 1];
-        }
+  const currRow = [1];
+  for (let i = 1; i <= rowIndex; i++) {
+    const prevRowLength = currRow.length;
+    currRow[prevRowLength] = 1;
+    for (let j = prevRowLength - 1; j > 0; j--) {
+      currRow[j] += currRow[j - 1];
     }
+  }
 
-    return currRow;
+  return currRow;
 };
 // @lc code=end
 

@@ -18,28 +18,28 @@
  * @return {number[]}
  */
 var preorder = function (root) {
-    if (root === null) {
-        return [];
+  if (root === null) {
+    return [];
+  }
+
+  /** @type {Node[]} */
+  const nodeStack = [];
+  nodeStack.push(root);
+
+  /** @type {number[]} */
+  const result = [];
+
+  while (nodeStack.length > 0) {
+    const topNode = nodeStack.pop();
+    result.push(topNode.val);
+
+    const {children} = topNode;
+    for (let i = children.length - 1; i >= 0; i--) {
+      const child = topNode.children[i];
+      nodeStack.push(child);
     }
+  }
 
-    /** @type {Node[]} */
-    const nodeStack = [];
-    nodeStack.push(root);
-
-    /** @type {number[]} */
-    const result = [];
-
-    while (nodeStack.length > 0) {
-        const topNode = nodeStack.pop();
-        result.push(topNode.val);
-
-        const {children} = topNode;
-        for (let i = children.length - 1; i >= 0; i--) {
-            const child = topNode.children[i];
-            nodeStack.push(child);
-        }
-    }
-
-    return result;
+  return result;
 };
 // @lc code=end

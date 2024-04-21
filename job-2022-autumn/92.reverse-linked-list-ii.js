@@ -20,12 +20,12 @@
  * @return {ListNode}
  */
 var reverseBetween = function (head, left, right) {
-    if (left === 1) {
-        return reverseN(head, right - left + 1);
-    }
+  if (left === 1) {
+    return reverseN(head, right - left + 1);
+  }
 
-    head.next = reverseBetween(head.next, left - 1, right - 1);
-    return head;
+  head.next = reverseBetween(head.next, left - 1, right - 1);
+  return head;
 };
 
 /**
@@ -34,18 +34,18 @@ var reverseBetween = function (head, left, right) {
  * @param {number} n - Index of node, starts from 1
  */
 function reverseN(head, n) {
-    if (n === 1) {
-        return head;
-    }
-    let successorBefore = head;
-    for (let i = 1; i < n; i++) {
-        successorBefore = successorBefore.next;
-    }
-    const successor = successorBefore.next;
+  if (n === 1) {
+    return head;
+  }
+  let successorBefore = head;
+  for (let i = 1; i < n; i++) {
+    successorBefore = successorBefore.next;
+  }
+  const successor = successorBefore.next;
 
-    successorBefore.next = reverseN(head, n - 1);
-    head.next = successor;
+  successorBefore.next = reverseN(head, n - 1);
+  head.next = successor;
 
-    return successorBefore;
+  return successorBefore;
 }
 // @lc code=end

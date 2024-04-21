@@ -10,15 +10,15 @@
  * @return {number}
  */
 var titleToNumber = function (columnTitle) {
-    const n = columnTitle.length;
-    const aASCII = 'A'.charCodeAt(0);
-    let result = 0;
-    let exp = 1;
-    for (let i = n - 1; i >= 0; i--) {
-        result += (columnTitle.charCodeAt(i) - aASCII + 1) * exp;
-        exp *= 26;
-    }
+  const n = columnTitle.length;
+  const aASCII = 'A'.charCodeAt(0);
+  let result = 0;
+  let exp = 1;
+  for (let i = n - 1; i >= 0; i--) {
+    result += (columnTitle.charCodeAt(i) - aASCII + 1) * exp;
+    exp *= 26;
+  }
 
-    return result;
+  return result;
 };
 // @lc code=end

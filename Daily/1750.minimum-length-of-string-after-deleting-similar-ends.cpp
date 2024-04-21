@@ -8,35 +8,29 @@
 using std::string;
 
 // @lc code=start
-class Solution
-{
-public:
-    int minimumLength(string s)
-    {
-        string::size_type left = 0;
-        string::size_type right = s.size() - 1;
+class Solution {
+ public:
+  int minimumLength(string s) {
+    string::size_type left = 0;
+    string::size_type right = s.size() - 1;
 
-        while (left < right && s[left] == s[right])
-        {
-            char currentChar = s[left];
-            while (s[left] == currentChar && left <= right)
-            {
-                left++;
-            }
+    while (left < right && s[left] == s[right]) {
+      char currentChar = s[left];
+      while (s[left] == currentChar && left <= right) {
+        left++;
+      }
 
-            while (s[right] == currentChar && left <= right)
-            {
-                right--;
-            }
-        }
-
-        return right - left + 1;
+      while (s[right] == currentChar && left <= right) {
+        right--;
+      }
     }
+
+    return right - left + 1;
+  }
 };
 // @lc code=end
 
-int main()
-{
-    Solution sol;
-    sol.minimumLength("ccbcbcbcc");
+int main() {
+  Solution sol;
+  sol.minimumLength("ccbcbcbcc");
 }

@@ -17,27 +17,27 @@
  * @return {ListNode | null}
  */
 var oddEvenList = function (head) {
-    if (head === null) return null;
+  if (head === null) return null;
 
-    let currentOddNode = head;
-    const fakeEvenNodesHead = new ListNode(0, null);
-    let currentEvenNode = fakeEvenNodesHead;
-    while (true) {
-        const nextEvenNode = currentOddNode.next;
-        if (nextEvenNode === null) break;
-        const nextOddNode = nextEvenNode.next;
+  let currentOddNode = head;
+  const fakeEvenNodesHead = new ListNode(0, null);
+  let currentEvenNode = fakeEvenNodesHead;
+  while (true) {
+    const nextEvenNode = currentOddNode.next;
+    if (nextEvenNode === null) break;
+    const nextOddNode = nextEvenNode.next;
 
-        nextEvenNode.next = null;
-        currentEvenNode.next = nextEvenNode;
-        currentEvenNode = nextEvenNode;
+    nextEvenNode.next = null;
+    currentEvenNode.next = nextEvenNode;
+    currentEvenNode = nextEvenNode;
 
-        if (nextOddNode === null) break;
-        currentOddNode.next = nextOddNode;
-        currentOddNode = nextOddNode;
-    }
+    if (nextOddNode === null) break;
+    currentOddNode.next = nextOddNode;
+    currentOddNode = nextOddNode;
+  }
 
-    currentOddNode.next = fakeEvenNodesHead.next;
+  currentOddNode.next = fakeEvenNodesHead.next;
 
-    return head;
+  return head;
 };
 // @lc code=end

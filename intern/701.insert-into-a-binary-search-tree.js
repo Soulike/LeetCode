@@ -19,28 +19,28 @@
  * @return {TreeNode}
  */
 const insertIntoBST = function (root, val) {
-    const newNode = new TreeNode(val);
-    if (root === null) {
-        return newNode;
+  const newNode = new TreeNode(val);
+  if (root === null) {
+    return newNode;
+  }
+  let currentNode = root;
+  while (true) {
+    if (val < currentNode.val) {
+      if (currentNode.left === null) {
+        currentNode.left = newNode;
+        break;
+      } else {
+        currentNode = currentNode.left;
+      }
+    } else {
+      if (currentNode.right === null) {
+        currentNode.right = newNode;
+        break;
+      } else {
+        currentNode = currentNode.right;
+      }
     }
-    let currentNode = root;
-    while (true) {
-        if (val < currentNode.val) {
-            if (currentNode.left === null) {
-                currentNode.left = newNode;
-                break;
-            } else {
-                currentNode = currentNode.left;
-            }
-        } else {
-            if (currentNode.right === null) {
-                currentNode.right = newNode;
-                break;
-            } else {
-                currentNode = currentNode.right;
-            }
-        }
-    }
-    return root;
+  }
+  return root;
 };
 // @lc code=end

@@ -10,21 +10,21 @@
  * @return {string}
  */
 var removeDuplicates = function (s) {
-    const stack = [];
+  const stack = [];
 
-    for (const c of s) {
-        if (stack.length === 0) {
-            stack.push(c);
-        } else {
-            const top = stack[stack.length - 1];
-            if (top === c) {
-                stack.pop();
-            } else {
-                stack.push(c);
-            }
-        }
+  for (const c of s) {
+    if (stack.length === 0) {
+      stack.push(c);
+    } else {
+      const top = stack[stack.length - 1];
+      if (top === c) {
+        stack.pop();
+      } else {
+        stack.push(c);
+      }
     }
+  }
 
-    return stack.join('');
+  return stack.join('');
 };
 // @lc code=end

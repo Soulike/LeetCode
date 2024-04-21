@@ -5,16 +5,16 @@
  */
 
 class TreeNode {
-    /**
-     * @param {number} val
-     * @param {TreeNode|null} left
-     * @param {TreeNode|null} right
-     */
-    constructor(val, left, right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
+  /**
+   * @param {number} val
+   * @param {TreeNode|null} left
+   * @param {TreeNode|null} right
+   */
+  constructor(val, left, right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
 // @lc code=start
@@ -23,23 +23,23 @@ class TreeNode {
  * @return {TreeNode|null}
  */
 const invertTree = function (root) {
-    let lastLayerNodes = [root];
-    /**
-     * @type {(TreeNode|null)[]}
-     */
-    let currentLayerNodes = [];
-    while (lastLayerNodes.length > 0) {
-        for (const node of lastLayerNodes) {
-            if (node !== null) {
-                currentLayerNodes.push(node.left);
-                currentLayerNodes.push(node.right);
+  let lastLayerNodes = [root];
+  /**
+   * @type {(TreeNode|null)[]}
+   */
+  let currentLayerNodes = [];
+  while (lastLayerNodes.length > 0) {
+    for (const node of lastLayerNodes) {
+      if (node !== null) {
+        currentLayerNodes.push(node.left);
+        currentLayerNodes.push(node.right);
 
-                [node.left, node.right] = [node.right, node.left];
-            }
-        }
-        lastLayerNodes = currentLayerNodes;
-        currentLayerNodes = [];
+        [node.left, node.right] = [node.right, node.left];
+      }
     }
-    return root;
+    lastLayerNodes = currentLayerNodes;
+    currentLayerNodes = [];
+  }
+  return root;
 };
 // @lc code=end

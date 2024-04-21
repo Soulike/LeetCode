@@ -5,8 +5,8 @@
  */
 
 function ListNode(val, next) {
-    this.val = val === undefined ? 0 : val;
-    this.next = next === undefined ? null : next;
+  this.val = val === undefined ? 0 : val;
+  this.next = next === undefined ? null : next;
 }
 
 // @lc code=start
@@ -15,41 +15,41 @@ function ListNode(val, next) {
  * @return {number}
  */
 var pairSum = function (head) {
-    /** @type {number[]} */
-    const pairSums = [];
+  /** @type {number[]} */
+  const pairSums = [];
 
-    /** @type {ListNode | null} */
-    let fast = head;
-    let slow = head;
+  /** @type {ListNode | null} */
+  let fast = head;
+  let slow = head;
 
-    while (true) {
-        fast = fast.next;
-        fast = fast.next;
-        pairSums.push(slow.val);
-        if (fast === null) break;
-        slow = slow.next;
-    }
+  while (true) {
+    fast = fast.next;
+    fast = fast.next;
+    pairSums.push(slow.val);
+    if (fast === null) break;
+    slow = slow.next;
+  }
 
-    slow.next = reverseLinkedList(slow.next);
+  slow.next = reverseLinkedList(slow.next);
 
-    let maxPairSum = 0;
+  let maxPairSum = 0;
 
-    let firstHalfPointer = head;
-    let secondHalfPointer = slow.next;
+  let firstHalfPointer = head;
+  let secondHalfPointer = slow.next;
 
-    while (secondHalfPointer !== null) {
-        maxPairSum = Math.max(
-            maxPairSum,
-            firstHalfPointer.val + secondHalfPointer.val,
-        );
+  while (secondHalfPointer !== null) {
+    maxPairSum = Math.max(
+      maxPairSum,
+      firstHalfPointer.val + secondHalfPointer.val,
+    );
 
-        firstHalfPointer = firstHalfPointer.next;
-        secondHalfPointer = secondHalfPointer.next;
-    }
+    firstHalfPointer = firstHalfPointer.next;
+    secondHalfPointer = secondHalfPointer.next;
+  }
 
-    // slow.next = reverseLinkedList(slow.next);
+  // slow.next = reverseLinkedList(slow.next);
 
-    return maxPairSum;
+  return maxPairSum;
 };
 
 /**
@@ -57,25 +57,25 @@ var pairSum = function (head) {
  * @returns {ListNode | null}
  */
 function reverseLinkedList(head) {
-    if (head === null || head.next === null) return head;
+  if (head === null || head.next === null) return head;
 
-    const fakeHead = new ListNode();
+  const fakeHead = new ListNode();
 
-    /** @type {ListNode | null} */
-    let current = head;
-    /** @type {ListNode | null} */
-    let next = head.next;
+  /** @type {ListNode | null} */
+  let current = head;
+  /** @type {ListNode | null} */
+  let next = head.next;
 
-    while (current !== null) {
-        next = current.next;
+  while (current !== null) {
+    next = current.next;
 
-        const newNext = fakeHead.next;
-        current.next = newNext;
-        fakeHead.next = current;
+    const newNext = fakeHead.next;
+    current.next = newNext;
+    fakeHead.next = current;
 
-        current = next;
-    }
+    current = next;
+  }
 
-    return fakeHead.next;
+  return fakeHead.next;
 }
 // @lc code=end

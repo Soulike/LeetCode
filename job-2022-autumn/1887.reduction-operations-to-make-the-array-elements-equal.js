@@ -10,18 +10,18 @@
  * @return {number}
  */
 var reductionOperations = function (nums) {
-    nums.sort((a, b) => b - a);
+  nums.sort((a, b) => b - a);
 
-    let steps = 0;
-    let currentNum = nums[0];
+  let steps = 0;
+  let currentNum = nums[0];
 
-    for (let i = 1; i < nums.length; i++) {
-        if (nums[i] !== currentNum) {
-            steps += i;
-            currentNum = nums[i];
-        }
+  for (let i = 1; i < nums.length; i++) {
+    if (nums[i] !== currentNum) {
+      steps += i;
+      currentNum = nums[i];
     }
+  }
 
-    return steps;
+  return steps;
 };
 // @lc code=end

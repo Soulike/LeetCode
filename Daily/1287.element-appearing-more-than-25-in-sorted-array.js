@@ -10,9 +10,9 @@
  * @return {number}
  */
 var findSpecialInteger = function (arr) {
-    const rangeDiff = Math.floor(arr.length / 4);
-    for (let i = 0; i < arr.length - rangeDiff; i++) {
-        if (arr[i] === arr[i + rangeDiff]) return arr[i];
-    }
+  const rangeDiff = Math.floor(arr.length / 4);
+  for (let i = 0; i < arr.length - rangeDiff; i++) {
+    if (arr[i] === arr[i + rangeDiff]) return arr[i];
+  }
 };
 // @lc code=end

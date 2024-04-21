@@ -11,11 +11,11 @@
  * @return {number}
  */
 var minOperations = function (nums, x) {
-    const sum = nums.reduce((prev, curr) => prev + curr);
-    if (sum === x) return nums.length;
+  const sum = nums.reduce((prev, curr) => prev + curr);
+  if (sum === x) return nums.length;
 
-    const result = findLongestSumSubarrayLength(nums, sum - x);
-    return result === -1 ? -1 : nums.length - result;
+  const result = findLongestSumSubarrayLength(nums, sum - x);
+  return result === -1 ? -1 : nums.length - result;
 };
 
 /**
@@ -24,26 +24,26 @@ var minOperations = function (nums, x) {
  * @returns {number}
  */
 function findLongestSumSubarrayLength(nums, sum) {
-    let left = 0;
-    let right = 0;
+  let left = 0;
+  let right = 0;
 
-    let currentSum = 0;
-    let maxSubarrayLength = -1;
+  let currentSum = 0;
+  let maxSubarrayLength = -1;
 
-    while (right < nums.length) {
-        currentSum += nums[right];
-        while (currentSum > sum) {
-            currentSum -= nums[left];
-            left++;
-        }
-
-        if (currentSum === sum) {
-            maxSubarrayLength = Math.max(maxSubarrayLength, right - left + 1);
-        }
-
-        right++;
+  while (right < nums.length) {
+    currentSum += nums[right];
+    while (currentSum > sum) {
+      currentSum -= nums[left];
+      left++;
     }
 
-    return maxSubarrayLength;
+    if (currentSum === sum) {
+      maxSubarrayLength = Math.max(maxSubarrayLength, right - left + 1);
+    }
+
+    right++;
+  }
+
+  return maxSubarrayLength;
 }
 // @lc code=end

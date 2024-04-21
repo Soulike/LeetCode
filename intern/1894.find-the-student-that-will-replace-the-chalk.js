@@ -11,15 +11,15 @@
  * @return {number}
  */
 const chalkReplacer = function (chalk, k) {
-    const chalkSum = chalk.reduce((prev, current) => prev + current);
-    k = k % chalkSum;
+  const chalkSum = chalk.reduce((prev, current) => prev + current);
+  k = k % chalkSum;
 
-    const STUDENT_AMOUNT = chalk.length;
-    for (let i = 0; i < STUDENT_AMOUNT; i++) {
-        k -= chalk[i];
-        if (k < 0) {
-            return i;
-        }
+  const STUDENT_AMOUNT = chalk.length;
+  for (let i = 0; i < STUDENT_AMOUNT; i++) {
+    k -= chalk[i];
+    if (k < 0) {
+      return i;
     }
+  }
 };
 // @lc code=end

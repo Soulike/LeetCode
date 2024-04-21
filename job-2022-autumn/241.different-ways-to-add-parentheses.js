@@ -10,58 +10,58 @@
  * @return {number[]}
  */
 var diffWaysToCompute = function (expression) {
-    const memo = {};
+  const memo = {};
 
-    /**
-     * @param {string} expression
-     * @return {number[]}
-     */
-    const helper = (expression) => {
-        if (expression.length <= 2) {
-            return [Number.parseInt(expression)];
+  /**
+   * @param {string} expression
+   * @return {number[]}
+   */
+  const helper = (expression) => {
+    if (expression.length <= 2) {
+      return [Number.parseInt(expression)];
+    }
+
+    if (memo[expression] !== undefined) return memo[expression];
+
+    /** @type {Array<number>} */
+    const results = [];
+
+    for (let i = 0; i < expression.length; i++) {
+      if (expression[i] === '+') {
+        const leftResults = diffWaysToCompute(expression.slice(0, i));
+        const rightResults = diffWaysToCompute(expression.slice(i + 1));
+
+        for (const leftResult of leftResults) {
+          for (const rightResult of rightResults) {
+            results.push(leftResult + rightResult);
+          }
         }
+      } else if (expression[i] === '-') {
+        const leftResults = diffWaysToCompute(expression.slice(0, i));
+        const rightResults = diffWaysToCompute(expression.slice(i + 1));
 
-        if (memo[expression] !== undefined) return memo[expression];
-
-        /** @type {Array<number>} */
-        const results = [];
-
-        for (let i = 0; i < expression.length; i++) {
-            if (expression[i] === '+') {
-                const leftResults = diffWaysToCompute(expression.slice(0, i));
-                const rightResults = diffWaysToCompute(expression.slice(i + 1));
-
-                for (const leftResult of leftResults) {
-                    for (const rightResult of rightResults) {
-                        results.push(leftResult + rightResult);
-                    }
-                }
-            } else if (expression[i] === '-') {
-                const leftResults = diffWaysToCompute(expression.slice(0, i));
-                const rightResults = diffWaysToCompute(expression.slice(i + 1));
-
-                for (const leftResult of leftResults) {
-                    for (const rightResult of rightResults) {
-                        results.push(leftResult - rightResult);
-                    }
-                }
-            } else if (expression[i] === '*') {
-                const leftResults = diffWaysToCompute(expression.slice(0, i));
-                const rightResults = diffWaysToCompute(expression.slice(i + 1));
-
-                for (const leftResult of leftResults) {
-                    for (const rightResult of rightResults) {
-                        results.push(leftResult * rightResult);
-                    }
-                }
-            }
+        for (const leftResult of leftResults) {
+          for (const rightResult of rightResults) {
+            results.push(leftResult - rightResult);
+          }
         }
+      } else if (expression[i] === '*') {
+        const leftResults = diffWaysToCompute(expression.slice(0, i));
+        const rightResults = diffWaysToCompute(expression.slice(i + 1));
 
-        memo[expression] = results;
+        for (const leftResult of leftResults) {
+          for (const rightResult of rightResults) {
+            results.push(leftResult * rightResult);
+          }
+        }
+      }
+    }
 
-        return results;
-    };
+    memo[expression] = results;
 
-    return helper(expression);
+    return results;
+  };
+
+  return helper(expression);
 };
 // @lc code=end

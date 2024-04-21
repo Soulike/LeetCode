@@ -11,35 +11,35 @@
  * @return {number}
  */
 const findTargetSumWays = function (nums, target) {
-    let currentSum = 0;
-    const cache = new Map();
+  let currentSum = 0;
+  const cache = new Map();
 
-    /**
-     * 回溯法
-     * @param {number} index
-     */
-    function helper(index) {
-        const cacheKey = `${index}-${currentSum}`;
-        if (cache.has(cacheKey)) {
-            return cache.get(cacheKey);
-        }
-
-        let result = 0;
-        if (index < nums.length) {
-            currentSum += nums[index];
-            result += helper(index + 1);
-            currentSum -= nums[index];
-
-            currentSum -= nums[index];
-            result += helper(index + 1);
-            currentSum += nums[index];
-        } else {
-            result = currentSum === target ? 1 : 0;
-        }
-        cache.set(cacheKey, result);
-        return result;
+  /**
+   * 回溯法
+   * @param {number} index
+   */
+  function helper(index) {
+    const cacheKey = `${index}-${currentSum}`;
+    if (cache.has(cacheKey)) {
+      return cache.get(cacheKey);
     }
 
-    return helper(0);
+    let result = 0;
+    if (index < nums.length) {
+      currentSum += nums[index];
+      result += helper(index + 1);
+      currentSum -= nums[index];
+
+      currentSum -= nums[index];
+      result += helper(index + 1);
+      currentSum += nums[index];
+    } else {
+      result = currentSum === target ? 1 : 0;
+    }
+    cache.set(cacheKey, result);
+    return result;
+  }
+
+  return helper(0);
 };
 // @lc code=end

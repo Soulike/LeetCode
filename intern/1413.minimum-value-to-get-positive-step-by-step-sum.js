@@ -10,16 +10,16 @@
  * @return {number}
  */
 const minStartValue = function (nums) {
-    let stepSum = 0;
-    let minStepSum = 0;
-    for (const num of nums) {
-        stepSum += num;
-        minStepSum = Math.min(minStepSum, stepSum);
-    }
-    if (minStepSum >= 1) {
-        return 1;
-    } else {
-        return -minStepSum + 1;
-    }
+  let stepSum = 0;
+  let minStepSum = 0;
+  for (const num of nums) {
+    stepSum += num;
+    minStepSum = Math.min(minStepSum, stepSum);
+  }
+  if (minStepSum >= 1) {
+    return 1;
+  } else {
+    return -minStepSum + 1;
+  }
 };
 // @lc code=end

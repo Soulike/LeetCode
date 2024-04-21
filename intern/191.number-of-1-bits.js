@@ -10,17 +10,17 @@
  * @return {number}
  */
 var hammingWeight = function (n) {
-    let mask = 1;
-    let count = 0;
-    for (let i = 0; i < 32; i++) {
-        if (mask > n) {
-            break;
-        }
-        if (n & mask) {
-            count++;
-        }
-        mask <<= 1;
+  let mask = 1;
+  let count = 0;
+  for (let i = 0; i < 32; i++) {
+    if (mask > n) {
+      break;
     }
-    return count;
+    if (n & mask) {
+      count++;
+    }
+    mask <<= 1;
+  }
+  return count;
 };
 // @lc code=end

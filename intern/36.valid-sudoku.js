@@ -10,19 +10,19 @@
  * @return {boolean}
  */
 const isValidSudoku = function (board) {
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            if (i === j) {
-                if (!validateRow(board, i) || !validateCol(board, j)) {
-                    return false;
-                }
-            }
-            if (i % 3 === 0 && j % 3 === 0 && !validateSubBox(board, i, j)) {
-                return false;
-            }
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (i === j) {
+        if (!validateRow(board, i) || !validateCol(board, j)) {
+          return false;
         }
+      }
+      if (i % 3 === 0 && j % 3 === 0 && !validateSubBox(board, i, j)) {
+        return false;
+      }
     }
-    return true;
+  }
+  return true;
 };
 
 /**
@@ -31,21 +31,21 @@ const isValidSudoku = function (board) {
  * @return {boolean}
  */
 function validateRow(board, x) {
-    /**@type {Set<string>} */
-    const nums = new Set();
-    let char = '';
-    for (let i = 0; i < 9; i++) {
-        char = board[x][i];
-        if (char === '.') {
-            continue;
-        }
-        if (nums.has(char)) {
-            return false;
-        } else {
-            nums.add(char);
-        }
+  /**@type {Set<string>} */
+  const nums = new Set();
+  let char = '';
+  for (let i = 0; i < 9; i++) {
+    char = board[x][i];
+    if (char === '.') {
+      continue;
     }
-    return true;
+    if (nums.has(char)) {
+      return false;
+    } else {
+      nums.add(char);
+    }
+  }
+  return true;
 }
 
 /**
@@ -54,21 +54,21 @@ function validateRow(board, x) {
  * @return {boolean}
  */
 function validateCol(board, y) {
-    /**@type {Set<string>} */
-    const nums = new Set();
-    let char = '';
-    for (let i = 0; i < 9; i++) {
-        char = board[i][y];
-        if (char === '.') {
-            continue;
-        }
-        if (nums.has(char)) {
-            return false;
-        } else {
-            nums.add(char);
-        }
+  /**@type {Set<string>} */
+  const nums = new Set();
+  let char = '';
+  for (let i = 0; i < 9; i++) {
+    char = board[i][y];
+    if (char === '.') {
+      continue;
     }
-    return true;
+    if (nums.has(char)) {
+      return false;
+    } else {
+      nums.add(char);
+    }
+  }
+  return true;
 }
 
 /**
@@ -77,22 +77,22 @@ function validateCol(board, y) {
  * @param {number} y
  */
 function validateSubBox(board, x, y) {
-    /**@type {Set<string>} */
-    const nums = new Set();
-    let char = '';
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            char = board[x + i][y + j];
-            if (char === '.') {
-                continue;
-            }
-            if (nums.has(char)) {
-                return false;
-            } else {
-                nums.add(char);
-            }
-        }
+  /**@type {Set<string>} */
+  const nums = new Set();
+  let char = '';
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      char = board[x + i][y + j];
+      if (char === '.') {
+        continue;
+      }
+      if (nums.has(char)) {
+        return false;
+      } else {
+        nums.add(char);
+      }
     }
-    return true;
+  }
+  return true;
 }
 // @lc code=end

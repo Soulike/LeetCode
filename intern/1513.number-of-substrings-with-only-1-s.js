@@ -10,20 +10,20 @@
  * @return {number}
  */
 var numSub = function (s) {
-    const MOD = 10 ** 9 + 7;
-    let numSubCount = 0;
-    let currentSubCount = 0;
+  const MOD = 10 ** 9 + 7;
+  let numSubCount = 0;
+  let currentSubCount = 0;
 
-    for (const c of s) {
-        if (c === '1') {
-            currentSubCount++;
-            numSubCount += currentSubCount;
-        } else {
-            currentSubCount = 0;
-        }
+  for (const c of s) {
+    if (c === '1') {
+      currentSubCount++;
+      numSubCount += currentSubCount;
+    } else {
+      currentSubCount = 0;
     }
+  }
 
-    return numSubCount % MOD;
+  return numSubCount % MOD;
 };
 
 // @lc code=end

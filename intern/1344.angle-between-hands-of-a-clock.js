@@ -11,16 +11,16 @@
  * @return {number}
  */
 const angleClock = function (hour, minutes) {
-    const anglePerCircle = 360;
-    const hoursPerCircle = 12;
-    const anglePerHour = anglePerCircle / hoursPerCircle;
-    const minutesPerHour = 60;
+  const anglePerCircle = 360;
+  const hoursPerCircle = 12;
+  const anglePerHour = anglePerCircle / hoursPerCircle;
+  const minutesPerHour = 60;
 
-    const hourAngle =
-        ((hour % hoursPerCircle) + minutes / minutesPerHour) * anglePerHour;
-    const minutesAngle = (minutes / minutesPerHour) * anglePerCircle;
+  const hourAngle =
+    ((hour % hoursPerCircle) + minutes / minutesPerHour) * anglePerHour;
+  const minutesAngle = (minutes / minutesPerHour) * anglePerCircle;
 
-    const diff = Math.abs(hourAngle - minutesAngle);
-    return Math.min(diff, anglePerCircle - diff);
+  const diff = Math.abs(hourAngle - minutesAngle);
+  return Math.min(diff, anglePerCircle - diff);
 };
 // @lc code=end

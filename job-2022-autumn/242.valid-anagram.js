@@ -11,26 +11,26 @@
  * @return {boolean}
  */
 var isAnagram = function (s, t) {
-    if (s.length !== t.length) {
-        return false;
+  if (s.length !== t.length) {
+    return false;
+  }
+
+  const letterToCount = new Map();
+  let leftLetterCount = s.length;
+
+  for (const letter of s) {
+    letterToCount.set(letter, (letterToCount.get(letter) ?? 0) + 1);
+  }
+
+  for (const letter of t) {
+    if ((letterToCount.get(letter) ?? 0) === 0) {
+      return false;
+    } else {
+      letterToCount.set(letter, letterToCount.get(letter) - 1);
+      leftLetterCount--;
     }
+  }
 
-    const letterToCount = new Map();
-    let leftLetterCount = s.length;
-
-    for (const letter of s) {
-        letterToCount.set(letter, (letterToCount.get(letter) ?? 0) + 1);
-    }
-
-    for (const letter of t) {
-        if ((letterToCount.get(letter) ?? 0) === 0) {
-            return false;
-        } else {
-            letterToCount.set(letter, letterToCount.get(letter) - 1);
-            leftLetterCount--;
-        }
-    }
-
-    return leftLetterCount === 0;
+  return leftLetterCount === 0;
 };
 // @lc code=end

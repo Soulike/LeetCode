@@ -5,8 +5,8 @@
  */
 
 function TreeNode(val) {
-    this.val = val;
-    this.left = this.right = null;
+  this.val = val;
+  this.left = this.right = null;
 }
 
 // @lc code=start
@@ -24,11 +24,11 @@ function TreeNode(val) {
  * @return {void}
  */
 const preVisit = function (root, vals) {
-    if (root !== null) {
-        vals.push(root.val);
-        preVisit(root.left, vals);
-        preVisit(root.right, vals);
-    }
+  if (root !== null) {
+    vals.push(root.val);
+    preVisit(root.left, vals);
+    preVisit(root.right, vals);
+  }
 };
 
 /**
@@ -38,10 +38,10 @@ const preVisit = function (root, vals) {
  * @return {string}
  */
 const serialize = function (root) {
-    /**@type {number[]} */
-    const vals = [];
-    preVisit(root, vals);
-    return vals.join(',');
+  /**@type {number[]} */
+  const vals = [];
+  preVisit(root, vals);
+  return vals.join(',');
 };
 
 /**
@@ -51,35 +51,35 @@ const serialize = function (root) {
  * @return {TreeNode | null}
  */
 const deserialize = function (data) {
-    if (data.length === 0) {
-        return null;
-    }
-    const vals = data.split(',').map((valStr) => Number.parseInt(valStr));
-    const root = new TreeNode(vals[0], null, null);
-    /**@type {TreeNode} */
-    let currentNode = root;
-    for (let i = 1; i < vals.length; i++) {
-        while (true) {
-            if (currentNode.val > vals[i]) {
-                if (currentNode.left === null) {
-                    currentNode.left = new TreeNode(vals[i], null, null);
-                    currentNode = root;
-                    break;
-                } else {
-                    currentNode = currentNode.left;
-                }
-            } else {
-                if (currentNode.right === null) {
-                    currentNode.right = new TreeNode(vals[i], null, null);
-                    currentNode = root;
-                    break;
-                } else {
-                    currentNode = currentNode.right;
-                }
-            }
+  if (data.length === 0) {
+    return null;
+  }
+  const vals = data.split(',').map((valStr) => Number.parseInt(valStr));
+  const root = new TreeNode(vals[0], null, null);
+  /**@type {TreeNode} */
+  let currentNode = root;
+  for (let i = 1; i < vals.length; i++) {
+    while (true) {
+      if (currentNode.val > vals[i]) {
+        if (currentNode.left === null) {
+          currentNode.left = new TreeNode(vals[i], null, null);
+          currentNode = root;
+          break;
+        } else {
+          currentNode = currentNode.left;
         }
+      } else {
+        if (currentNode.right === null) {
+          currentNode.right = new TreeNode(vals[i], null, null);
+          currentNode = root;
+          break;
+        } else {
+          currentNode = currentNode.right;
+        }
+      }
     }
-    return root;
+  }
+  return root;
 };
 
 /**
