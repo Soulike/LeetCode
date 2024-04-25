@@ -20,15 +20,12 @@ class Solution {
 
     for (const auto& c : s) {
       int index = c - 'a';
-      for (int j = 1; j <= k; j++) {
-        if (index - j >= 0) {
-          dp[index] = std::max(dp[index], dp[index - j]);
-        }
-        if (index + j <= 25) {
-          dp[index] = std::max(dp[index], dp[index + j]);
-        }
+      for (int j = 0; j <= k; j++) {
+        dp[index] =
+            std::max(dp[index], std::max(index - j >= 0 ? dp[index - j] : -1,
+                                         index + j <= 25 ? dp[index + j] : -1) +
+                                    1);
       }
-      dp[index]++;
       maxLength = std::max(maxLength, dp[index]);
     }
 
