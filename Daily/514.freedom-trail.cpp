@@ -3,6 +3,7 @@
  *
  * [514] Freedom Trail
  */
+#include <climits>
 #include <cmath>
 #include <string>
 #include <vector>
@@ -14,71 +15,52 @@ using std::vector;
 class Solution {
  public:
   int findRotateSteps(const string& ring, const string& key) {
-    vector<vector<int>> memo;
-    memo.resize(ring.size());
-    for (int i = 0; i < memo.size(); i++) {
-      memo[i].resize(key.size());
-      std::fill(memo[i].begin(), memo[i].end(), -1);
+    /*
+    dp[k][r]: ring is at ring[r], how many steps needed at minimum to fulfill
+    key[k:]
+    */
+    vector<vector<int>> dp;
+    dp.resize(2);
+    for (int i = 0; i < dp.size(); i++) {
+      dp[i].resize(ring.size());
+    }
+    std::fill(dp[key.size() % 2].begin(), dp[key.size() % 2].end(), 0);
+
+    vector<vector<int>> letterToRingIndexes;
+    letterToRingIndexes.resize(26);
+
+    for (int i = 0; i < ring.size(); i++) {
+      letterToRingIndexes[ring[i] - 'a'].push_back(i);
     }
 
-    int result = findRotateSteps(ring, 0, key, 0, memo);
-    return result;
-  }
+    for (int k = key.size() - 1; k >= 0; k--) {
+      int dpIndex = k % 2;
+      int prevDpIndex = (k + 1) % 2;
+      std::fill(dp[dpIndex].begin(), dp[dpIndex].end(), INT_MAX);
 
- private:
-  /*
-  Ring is at ring[r], how many steps needed at minimum to fulfill key[k:]
-  */
-  int findRotateSteps(const string& ring,
-                      int r,
-                      const string& key,
-                      int k,
-                      vector<vector<int>>& memo) {
-    if (k == key.size()) {
-      return 0;  // done
+      const vector<int>& keyLetterInRingIndexes =
+          letterToRingIndexes[key[k] - 'a'];
+      for (int r = 0; r < ring.size(); r++) {
+        for (const auto& keyLetterInRingIndex : keyLetterInRingIndexes) {
+          dp[dpIndex][r] = std::min(
+              dp[dpIndex][r], 1 + std::abs(r - keyLetterInRingIndex) +
+                                  dp[(prevDpIndex) % 2][keyLetterInRingIndex]);
+          dp[dpIndex][r] = std::min(
+              dp[dpIndex][r],
+              1 + ((int)ring.size() - std::abs(r - keyLetterInRingIndex)) +
+                  dp[prevDpIndex][keyLetterInRingIndex]);
+        }
+      }
     }
 
-    if (memo[r][k] != -1) {
-      return memo[r][k];
-    }
-
-    if (ring[r] == key[k]) {
-      int steps = 1 + findRotateSteps(ring, r, key, k + 1, memo);
-      memo[r][k] = steps;
-      return steps;
-    }
-
-    int clockwiseR = r;
-    int clockwiseSteps = 0;
-    while (ring[clockwiseR] != key[k]) {
-      clockwiseSteps++;
-      clockwiseR--;
-      clockwiseR = (clockwiseR + ring.size()) % ring.size();
-    }
-
-    int anticlockwiseR = r;
-    int anticlockwiseSteps = 0;
-    while (ring[anticlockwiseR] != key[k]) {
-      anticlockwiseSteps++;
-      anticlockwiseR++;
-      anticlockwiseR = anticlockwiseR % ring.size();
-    }
-
-    int steps =
-        std::min(clockwiseSteps +
-                     findRotateSteps(ring, clockwiseR, key, k + 1, memo),
-                 anticlockwiseSteps +
-                     findRotateSteps(ring, anticlockwiseR, key, k + 1, memo)) +
-        1;
-    memo[r][k] = steps;
-    return steps;
+    return dp[0][0];
   }
 };
 // @lc code=end
 
 int main() {
   Solution sol;
-  string ring = "nyngl";
-  string key = "yyynnnnnnlllggg";
+  string ring = "godding";
+  string key = "godding";
   sol.findRotateSteps(ring, key);
 }
