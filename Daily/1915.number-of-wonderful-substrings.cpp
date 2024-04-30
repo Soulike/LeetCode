@@ -3,21 +3,21 @@
  *
  * [1915] Number of Wonderful Substrings
  */
+#include <array>
 #include <cctype>
 #include <string>
-#include <unordered_map>
 
+using std::array;
 using std::string;
-using std::unordered_map;
 
 // @lc code=start
 class Solution {
  public:
   long long wonderfulSubstrings(string word) {
     long long result = 0;
-    unordered_map<int_fast16_t, int> prefixBitmaskToCount;
+    array<int, 1024> prefixBitmaskToCount;
     // insert empty string here to handle single chars
-    prefixBitmaskToCount.insert({0, 1});
+    prefixBitmaskToCount[0] = 1;
     int_fast16_t currentPrefixBitmask = 0;
     for (int i = 0; i < word.size(); i++) {
       int_fast16_t mask = 1 << (word[i] - 'a');
