@@ -24,6 +24,7 @@ class Solution {
     for (ListNode* node = head; node != nullptr; node = node->next) {
       while (!nonIncreasingStack.empty() &&
              nonIncreasingStack.back()->val < node->val) {
+        delete nonIncreasingStack.back();
         nonIncreasingStack.pop_back();
       }
       nonIncreasingStack.push_back(node);
