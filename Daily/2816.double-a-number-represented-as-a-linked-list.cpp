@@ -14,43 +14,27 @@ struct ListNode {
 class Solution {
  public:
   ListNode* doubleIt(ListNode* head) {
-    ListNode* reversedHead = reverseList(head);
-    bool hasCarry = false;
-    for (ListNode* node = reversedHead; node != nullptr; node = node->next) {
-      node->val *= 2;
-      if (hasCarry) {
-        node->val++;
-        hasCarry = false;
-      }
-      if (node->val >= 10) {
-        hasCarry = true;
-        node->val -= 10;
-      }
+    int carry = calculateDoubledList(head);
+    if (carry != 0) {
+      ListNode* newHead = new ListNode(1, head);
+      return newHead;
     }
-
-    if (hasCarry) {
-      head->next = new ListNode(1);
-    }
-
-    return reverseList(reversedHead);
+    return head;
   }
 
-  ListNode* reverseList(ListNode* head) {
-    ListNode* fakeHead = new ListNode();
-    ListNode* currentNode = head;
-    ListNode* nextNode = head->next;
-
-    while (currentNode != nullptr) {
-      currentNode->next = fakeHead->next;
-      fakeHead->next = currentNode;
-
-      currentNode = nextNode;
-      if (nextNode != nullptr) {
-        nextNode = nextNode->next;
-      }
+  int calculateDoubledList(ListNode* head) {
+    if (head == nullptr) {
+      return 0;
     }
 
-    return fakeHead->next;
+    int carry = calculateDoubledList(head->next);
+    head->val *= 2;
+    head->val += carry;
+    if (head->val >= 10) {
+      head->val -= 10;
+      return 1;
+    }
+    return 0;
   }
 };
 // @lc code=end
