@@ -13,33 +13,19 @@ using std::vector;
 class Solution {
  public:
   int specialArray(vector<int>& nums) {
-    std::sort(nums.begin(), nums.end(), [](int a, int b) { return a > b; });
-
-    if (nums.back() >= nums.size()) {
-      return nums.size();
+    std::sort(nums.begin(), nums.end(), std::greater<int>());
+    int x = 0;  // how many nums are >= x
+    while (x < nums.size() && nums[x] > x) {
+      x++;
     }
-
-    for (int x = 0; x <= nums.size(); x++) {
-      int count = nums.size();
-      for (int i = 0; i < nums.size(); i++) {
-        if (nums[i] < x) {
-          count = i;
-          break;
-        }
-      }
-
-      if (count == x) {
-        return x;
-      }
-    }
-
-    return -1;
+    // x == nums[x] : we got x + 1 nums >= x
+    return (x < nums.size() && x == nums[x]) ? -1 : x;
   }
 };
 // @lc code=end
 
 int main() {
   Solution sol;
-  vector<int> vec = {1, 0, 0, 6, 4, 9};
+  vector<int> vec = {0, 0};
   sol.specialArray(vec);
 }
