@@ -6,7 +6,7 @@
       "defines": ["_GNU_SOURCE"],
       "compilerPath": "/usr/bin/clang++",
       "intelliSenseMode": "macos-clang-arm64",
-      "cppStandard": "c++17"
+      "cppStandard": "c++23"
     }
   ],
   "version": 4
