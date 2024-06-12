@@ -4,4 +4,4 @@ project(LeetCode)
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(LeetCode
-        Daily/*.cpp)
+        Daily/75.sort-colors.cpp)
