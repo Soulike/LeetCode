@@ -5,4 +5,5 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(LeetCode
         Daily/75.sort-colors.cpp
-        Daily/2037.minimum-number-of-moves-to-seat-everyone.cpp)
+        Daily/2037.minimum-number-of-moves-to-seat-everyone.cpp
+        Daily/945.minimum-increment-to-make-array-unique.cpp)
