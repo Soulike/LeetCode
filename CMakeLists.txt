@@ -7,4 +7,5 @@ add_executable(LeetCode
         Daily/75.sort-colors.cpp
         Daily/2037.minimum-number-of-moves-to-seat-everyone.cpp
         Daily/945.minimum-increment-to-make-array-unique.cpp
-        Daily/502.ipo.cpp)
+        Daily/502.ipo.cpp
+        Daily/330.patching-array.cpp)
