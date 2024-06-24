@@ -14,6 +14,10 @@ class Solution {
     std::queue<int> flips;
     int result = 0;
     for (auto i = 0; i < nums.size(); i++) {
+      /*
+       nums[i] == 1 && flips.size() % 2 == 1 ||
+       nums[i] == 0 && flips.size() % 2 == 0
+      */
       if (nums[i] != (flips.size() % 2 ? 0 : 1)) {
         result++;
         flips.push(i + k - 1);
