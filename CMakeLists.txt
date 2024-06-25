@@ -10,4 +10,5 @@ add_executable(LeetCode
         Daily/502.ipo.cpp
         Daily/330.patching-array.cpp
         Daily/633.sum-of-square-numbers.cpp
-        Daily/995.minimum-number-of-k-consecutive-bit-flips.cpp)
+        Daily/995.minimum-number-of-k-consecutive-bit-flips.cpp
+        Daily/1038.binary-search-tree-to-greater-sum-tree.cpp)
