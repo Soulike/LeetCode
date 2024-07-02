@@ -3,6 +3,7 @@
 .idea/
 cpp-out/
 build/
+CMakeLists.txt
 
 # CMake
 cmake-build-*/
