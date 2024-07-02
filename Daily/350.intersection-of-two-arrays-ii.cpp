@@ -17,30 +17,12 @@ class Solution {
       nums1NumToFreqs[num]++;
     }
 
-    std::unordered_map<int, int> nums2NumToFreqs;
-    for (const auto& num : nums2) {
-      nums2NumToFreqs[num]++;
-    }
-
-    std::unordered_map<int, int> intersectNumToFreqs;
-    for (const auto& num1ToFreq : nums1NumToFreqs) {
-      const auto num = num1ToFreq.first;
-
-      const auto num1Freq = num1ToFreq.second;
-      const auto num2Freq = nums2NumToFreqs[num];
-
-      const auto intersectedNumFreq = std::min(num1Freq, num2Freq);
-      if (intersectedNumFreq > 0) {
-        intersectNumToFreqs[num] = intersectedNumFreq;
-      }
-    }
-
     std::vector<int> intersectedNums;
-    for (const auto& numToFreq : intersectNumToFreqs) {
-      const auto num = numToFreq.first;
-      const auto freq = numToFreq.second;
-      std::vector<int> nums(freq, num);
-      intersectedNums.insert(intersectedNums.end(), nums.begin(), nums.end());
+    for (const auto& num : nums2) {
+      if (nums1NumToFreqs[num] > 0) {
+        nums1NumToFreqs[num]--;
+        intersectedNums.push_back(num);
+      }
     }
 
     return intersectedNums;
