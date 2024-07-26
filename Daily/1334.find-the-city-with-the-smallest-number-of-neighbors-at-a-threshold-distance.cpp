@@ -28,8 +28,9 @@ class Floyd {
  private:
   void buildMatrix(const std::vector<std::vector<int>>& edges) {
     for (int from = 0; from < this->nodeCount; from++) {
-      std::vector<int> tos(this->nodeCount, INT_MAX);
+      std::vector<int> tos(this->nodeCount, this->NOT_REACHABLE);
       this->costMatrix.push_back(std::move(tos));
+      this->costMatrix[from][from] = 0;
     }
 
     for (const auto& edge : edges) {
@@ -48,14 +49,15 @@ class Floyd {
       for (int from = 0; from < this->nodeCount; from++) {
         for (int to = from + 1; to < this->nodeCount; to++) {
           for (int mid = 0; mid < this->nodeCount; mid++) {
-            if (this->costMatrix[from][mid] == INT_MAX ||
-                this->costMatrix[mid][to] == INT_MAX) {
+            if (this->costMatrix[from][mid] == this->NOT_REACHABLE ||
+                this->costMatrix[mid][to] == this->NOT_REACHABLE) {
               continue;
             }
 
             const auto newCost =
                 this->costMatrix[from][mid] + this->costMatrix[mid][to];
-            if (newCost < this->costMatrix[from][to]) {
+            if (this->costMatrix[from][to] == this->NOT_REACHABLE ||
+                newCost < this->costMatrix[from][to]) {
               this->costMatrix[from][to] = newCost;
               this->costMatrix[to][from] = newCost;
               newReachableFound = true;
@@ -69,6 +71,7 @@ class Floyd {
  private:
   const int nodeCount;
   std::vector<std::vector<int>> costMatrix;
+  const int NOT_REACHABLE = INT_MAX;
 };
 
 class Solution {
@@ -78,7 +81,7 @@ class Solution {
                   int distanceThreshold) {
     const Floyd floyd(n, edges);
     int resultCity = -1;
-    int resultCityReachableCount = n + 1;
+    std::vector<int>::size_type resultCityReachableCount = n + 1;
 
     for (int i = 0; i < n; i++) {
       const std::vector<int>& reachableCities =
