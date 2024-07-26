@@ -42,26 +42,20 @@ class Floyd {
       this->costMatrix[to][from] = cost;
     }
 
-    bool newReachableFound = true;
-    while (newReachableFound) {
-      newReachableFound = false;
-
+    for (int mid = 0; mid < this->nodeCount; mid++) {
       for (int from = 0; from < this->nodeCount; from++) {
-        for (int to = from + 1; to < this->nodeCount; to++) {
-          for (int mid = 0; mid < this->nodeCount; mid++) {
-            if (this->costMatrix[from][mid] == this->NOT_REACHABLE ||
-                this->costMatrix[mid][to] == this->NOT_REACHABLE) {
-              continue;
-            }
+        for (int to = 0; to < this->nodeCount; to++) {
+          if (this->costMatrix[from][mid] == this->NOT_REACHABLE ||
+              this->costMatrix[mid][to] == this->NOT_REACHABLE) {
+            continue;
+          }
 
-            const auto newCost =
-                this->costMatrix[from][mid] + this->costMatrix[mid][to];
-            if (this->costMatrix[from][to] == this->NOT_REACHABLE ||
-                newCost < this->costMatrix[from][to]) {
-              this->costMatrix[from][to] = newCost;
-              this->costMatrix[to][from] = newCost;
-              newReachableFound = true;
-            }
+          const auto newCost =
+              this->costMatrix[from][mid] + this->costMatrix[mid][to];
+          if (this->costMatrix[from][to] == this->NOT_REACHABLE ||
+              newCost < this->costMatrix[from][to]) {
+            this->costMatrix[from][to] = newCost;
+            this->costMatrix[to][from] = newCost;
           }
         }
       }
