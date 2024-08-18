@@ -3,42 +3,41 @@
  *
  * [264] Ugly Number II
  */
-#include <cinttypes>
-#include <queue>
-#include <unordered_set>
+#include <algorithm>
 #include <vector>
 
 // @lc code=start
 class Solution {
  public:
   int nthUglyNumber(int n) {
-    std::unordered_set<std::int64_t> uglyNumberSet = {1};
-    std::priority_queue<std::int64_t, std::vector<std::int64_t>, std::greater<>>
-        uglyNumbersHeap;
-    uglyNumbersHeap.push(1);
+    std::vector<int> uglyNumbers(n);
+    uglyNumbers[0] = 1;
+    int next2MultipleIndex = 0;
+    int next2MultipleNumber = 2;
+    int next3MultipleIndex = 0;
+    int next3MultipleNumber = 3;
+    int next5MultipleIndex = 0;
+    int next5MultipleNumber = 5;
 
     for (int i = 2; i <= n; i++) {
-      const std::int64_t currentUglyNumber = uglyNumbersHeap.top();
-      uglyNumbersHeap.pop();
-      std::vector<std::int64_t> newUglyNumbers;
-      if (!uglyNumberSet.contains(currentUglyNumber * 2)) {
-        newUglyNumbers.push_back(currentUglyNumber * 2);
+      const int nextUglyNumber = std::min(
+          {next2MultipleNumber, next3MultipleNumber, next5MultipleNumber});
+      uglyNumbers[i - 1] = nextUglyNumber;
+      if (nextUglyNumber == next2MultipleNumber) {
+        next2MultipleIndex++;
+        next2MultipleNumber = uglyNumbers[next2MultipleIndex] * 2;
       }
-      if (!uglyNumberSet.contains(currentUglyNumber * 3)) {
-        newUglyNumbers.push_back(currentUglyNumber * 3);
+      if (nextUglyNumber == next3MultipleNumber) {
+        next3MultipleIndex++;
+        next3MultipleNumber = uglyNumbers[next3MultipleIndex] * 3;
       }
-      if (!uglyNumberSet.contains(currentUglyNumber * 5)) {
-        newUglyNumbers.push_back(currentUglyNumber * 5);
-      }
-
-      uglyNumberSet.merge(std::unordered_set<std::int64_t>(
-          newUglyNumbers.begin(), newUglyNumbers.end()));
-      for (const auto newUglyNumber : newUglyNumbers) {
-        uglyNumbersHeap.push(newUglyNumber);
+      if (nextUglyNumber == next5MultipleNumber) {
+        next5MultipleIndex++;
+        next5MultipleNumber = uglyNumbers[next5MultipleIndex] * 5;
       }
     }
 
-    return static_cast<int>(uglyNumbersHeap.top());
+    return uglyNumbers.back();
   }
 };
 // @lc code=end
@@ -46,4 +45,5 @@ class Solution {
 int main() {
   Solution sol;
   sol.nthUglyNumber(10);
+  sol.nthUglyNumber(11);
 }
