@@ -5,48 +5,34 @@
  */
 
 #include <algorithm>
-#include <array>
+#include <climits>
+#include <vector>
 
 // @lc code=start
 class Solution {
  public:
   int minSteps(int n) {
-    if (n == 1) {
-      return 0;
+    // dp[i] - The minimum steps to reach length i
+    // dp[i] = dp[j] + 1 + (i - j) / j if i % j == 0 for j from 1 to i
+    // Copy: +1
+    // Pastes: (i-j)/j
+    std::vector<int> dp(n + 1, INT_MAX);
+    dp[1] = 0;
+
+    for (int i = 2; i <= n; i++) {
+      for (int j = i - 1; j >= 1; j--) {
+        if (i % j == 0) {
+          dp[i] = std::min(dp[i], /*dp[j] + 1 + (i - j) / j*/ dp[j] + i / j);
+        }
+      }
     }
-    int result = minStepsHelper(1, 0, n);
-    return result;
+
+    return dp[n];
   }
-
- private:
-  int minStepsHelper(int currentLength, int pasteLength, int target) {
-    if (currentLength == target) {
-      return 0;
-    }
-    if (currentLength + pasteLength > target) {
-      return MAX;
-    }
-
-    if (memo[currentLength][pasteLength] != 0) {
-      return memo[currentLength][pasteLength];
-    }
-
-    // Option 1: Copy all and paste
-    int stepsOfCopyAllAndPaste =
-        2 + minStepsHelper(currentLength * 2, currentLength, target);
-    // Option 2: Only paste
-    int stepsOfOnlyPaste = pasteLength > 0
-                               ? 1 + minStepsHelper(currentLength + pasteLength,
-                                                    pasteLength, target)
-                               : MAX;
-
-    const int result = std::min(stepsOfCopyAllAndPaste, stepsOfOnlyPaste);
-    memo[currentLength][pasteLength] = result;
-    return result;
-  }
-
- private:
-  inline static int MAX = 1000;
-  std::array<std::array<int, 1000>, 1000> memo{0};
 };
 // @lc code=end
+
+int main() {
+  Solution sol;
+  sol.minSteps(20);
+}
