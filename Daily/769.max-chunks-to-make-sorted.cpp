@@ -4,7 +4,6 @@
  * [769] Max Chunks To Make Sorted
  */
 
-#include <algorithm>
 #include <vector>
 
 // @lc code=start
@@ -12,53 +11,47 @@
 class Solution {
  public:
   int maxChunksToSorted(const std::vector<int>& arr) {
-    std::vector<Range> ranges;
+    std::vector<Chunk> chunks;
     for (int i = 0; i < arr.size(); i++) {
       const int expectedIndex = arr[i];
-      const int rangeBegin = std::min(i, expectedIndex);
-      const int rangeEnd = std::max(i, expectedIndex);
-      ranges.emplace_back(rangeBegin, rangeEnd);
+      const int chunkBegin = std::min(i, expectedIndex);
+      const int chunkEnd = std::max(i, expectedIndex);
+      chunks.emplace_back(chunkBegin, chunkEnd);
     }
 
-    return rangeNumberAfterMerge(ranges);
+    // Here, chunks are already sorted by `begin`.
+    return chunkNumberAfterMerge(chunks);
   }
 
  private:
-  class Range {
+  class Chunk {
    public:
     int begin;
     int end;
   };
 
-  static int rangeNumberAfterMerge(std::vector<Range> ranges) {
-    if (ranges.empty()) {
+  static int chunkNumberAfterMerge(
+      const std::vector<Chunk>& chunksSortedByBegin) {
+    if (chunksSortedByBegin.empty()) {
       return 0;
     }
 
-    std::sort(ranges.begin(), ranges.end(),
-              [](const Range& range1, const Range& range2) {
-                if (range1.begin != range2.begin) {
-                  return range1.begin < range2.begin;
-                }
-                return range1.end < range2.end;
-              });
+    int currentEnd = chunksSortedByBegin[0].end;
+    int chunkNumber = 1;
 
-    int currentEnd = ranges[0].end;
-    int rangeNumber = 1;
-
-    for (int i = 1; i < ranges.size(); i++) {
-      const Range& currentRange = ranges[i];
-      if (currentRange.begin > currentEnd) {
-        // new range
-        rangeNumber++;
-        currentEnd = currentRange.end;
+    for (int i = 1; i < chunksSortedByBegin.size(); i++) {
+      const Chunk& currentChunk = chunksSortedByBegin[i];
+      if (currentChunk.begin > currentEnd) {
+        // Can not merge. New chunk
+        chunkNumber++;
+        currentEnd = currentChunk.end;
       } else {
-        // Can merge. Extend current range if possible.
-        currentEnd = std::max(currentRange.end, currentEnd);
+        // Can merge. Extend current chunk if possible.
+        currentEnd = std::max(currentChunk.end, currentEnd);
       }
     }
 
-    return rangeNumber;
+    return chunkNumber;
   }
 };
 
