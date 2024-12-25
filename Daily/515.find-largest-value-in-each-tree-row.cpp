@@ -4,7 +4,7 @@
  * [515] Find Largest Value in Each Tree Row
  */
 
-#include <cmath>
+#include <memory>
 #include <vector>
 
 struct TreeNode {
@@ -21,30 +21,41 @@ struct TreeNode {
 class Solution {
  public:
   std::vector<int> largestValues(TreeNode* root) {
-    std::vector<int> maxValuesInLevel;
-    dfs(root, 0, maxValuesInLevel);
-    return maxValuesInLevel;
-  }
-
- private:
-  static void dfs(TreeNode* root,
-                  const int level,
-                  std::vector<int>& /*out*/ maxValuesInLevel) {
     if (root == nullptr) {
-      return;
+      return {};
     }
-    if (maxValuesInLevel.size() == level) {
-      maxValuesInLevel.push_back(root->val);
-    } else {
-      maxValuesInLevel[level] = std::max(maxValuesInLevel[level], root->val);
+    std::vector<int> maxValuesInLevel;
+    maxValuesInLevel.push_back(root->val);
+
+    auto prevLevelNodes = std::make_unique<std::vector<TreeNode*>>();
+    auto currentLevelNodes = std::make_unique<std::vector<TreeNode*>>();
+    prevLevelNodes->push_back(root);
+    int currentLevel = 0;
+
+    while (!prevLevelNodes->empty()) {
+      currentLevel++;
+      int maxValueInLevel = INT_MIN;
+      for (const TreeNode* prevLevelNode : *prevLevelNodes) {
+        if (prevLevelNode->left) {
+          maxValueInLevel = std::max(maxValueInLevel, prevLevelNode->left->val);
+          currentLevelNodes->push_back(prevLevelNode->left);
+        }
+        if (prevLevelNode->right) {
+          maxValueInLevel =
+              std::max(maxValueInLevel, prevLevelNode->right->val);
+          currentLevelNodes->push_back(prevLevelNode->right);
+        }
+      }
+
+      if (!currentLevelNodes->empty()) {
+        maxValuesInLevel.push_back(maxValueInLevel);
+      }
+
+      prevLevelNodes = std::move(currentLevelNodes);
+      currentLevelNodes = std::make_unique<std::vector<TreeNode*>>();
     }
 
-    if (root->left) {
-      dfs(root->left, level + 1, maxValuesInLevel);
-    }
-    if (root->right) {
-      dfs(root->right, level + 1, maxValuesInLevel);
-    }
+    return maxValuesInLevel;
   }
 };
 // @lc code=end
