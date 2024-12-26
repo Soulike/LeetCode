@@ -4,41 +4,38 @@
  * [494] Target Sum
  */
 
+#include <unordered_map>
 #include <vector>
 
 // @lc code=start
 class Solution {
  public:
   int findTargetSumWays(const std::vector<int>& nums, const int target) {
-    currentSum = 0;
-    foundWays = 0;
-
-    backtrack(nums, 0, target);
-    return foundWays;
+    std::unordered_map<std::string, int> memo;
+    return dp(nums, 0, target, memo);
   }
 
  private:
-  void backtrack(const std::vector<int>& nums,
-                 const int numsIndex,
-                 const int target) {
-    if (numsIndex == nums.size()) {
-      if (currentSum == target) {
-        foundWays++;
-      }
-      return;
+  /**
+   * Starts from `index`, how many ways we can get `target`.
+   * If not possible, returns `0`.
+   */
+  int dp(const std::vector<int>& nums,
+         const int index,
+         const int target,
+         std::unordered_map<std::string, int>& memo) {
+    if (index == nums.size()) {
+      return target == 0;
     }
-
-    currentSum += nums[numsIndex];
-    backtrack(nums, numsIndex + 1, target);
-    currentSum -= nums[numsIndex];
-
-    currentSum -= nums[numsIndex];
-    backtrack(nums, numsIndex + 1, target);
-    currentSum += nums[numsIndex];
+    const std::string memoKey =
+        std::to_string(index) + '-' + std::to_string(target);
+    if (memo.contains(memoKey)) {
+      return memo[memoKey];
+    }
+    const int result = dp(nums, index + 1, target + nums[index], memo) +
+                       dp(nums, index + 1, target - nums[index], memo);
+    memo[memoKey] = result;
+    return result;
   }
-
- private:
-  int currentSum;
-  int foundWays;
 };
 // @lc code=end
