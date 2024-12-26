@@ -20,9 +20,11 @@ class Solution {
     /*
      * dp[i][numsSum+t] - How many ways can `nums[0]`~`nums[i]` get target `t`
      *
-     * base case
-     * dp[0][numsSum+nums[0]] = 1
-     * dp[0][numsSum-nums[0]] += 1
+     * base case:
+     *  It is possible that `nums[0] == 0`, in which case we have 2 ways to get
+     * `t == 0`.
+     *
+     * dp[0][numsSum+nums[0]] += 1 dp[0][numsSum-nums[0]] += 1
      *
      * dp[i][numsSum+t] = dp[i-1][numsSum+t+nums[i]] +
      * dp[i-1][numsSum+t-nums[i]]
@@ -31,25 +33,22 @@ class Solution {
     // `2 * numsSum + 1`: Possible target range is `[-numsSum, numsSum]`. To
     // keep the index positive, we add `numsSum` and get range `[0, 2 *
     // numsSum]`.
-    std::vector<std::vector<int>> dp(nums.size(),
-                                     std::vector<int>(2 * numsSum + 1, 0));
-    dp[0][numsSum + nums[0]] = 1;
-    // It is possible that `nums[0] == 0`, in which case we have 2 ways to get
-    // `t == 0`.
+    std::vector<std::vector<int>> dp(2, std::vector<int>(2 * numsSum + 1, 0));
+    dp[0][numsSum + nums[0]] += 1;
     dp[0][numsSum - nums[0]] += 1;
 
     for (int i = 1; i < nums.size(); i++) {
       for (int t = -numsSum; t <= numsSum; t++) {
-        dp[i][numsSum + t] = (isTargetPossible(t + nums[i], numsSum)
-                                  ? dp[i - 1][numsSum + t + nums[i]]
-                                  : 0) +
-                             (isTargetPossible(t - nums[i], numsSum)
-                                  ? dp[i - 1][numsSum + t - nums[i]]
-                                  : 0);
+        dp[i % 2][numsSum + t] = (isTargetPossible(t + nums[i], numsSum)
+                                      ? dp[(i - 1) % 2][numsSum + t + nums[i]]
+                                      : 0) +
+                                 (isTargetPossible(t - nums[i], numsSum)
+                                      ? dp[(i - 1) % 2][numsSum + t - nums[i]]
+                                      : 0);
       }
     }
 
-    return dp[nums.size() - 1][numsSum + target];
+    return dp[(nums.size() - 1) % 2][numsSum + target];
   }
 
  private:
