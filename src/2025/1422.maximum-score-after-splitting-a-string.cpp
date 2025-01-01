@@ -5,28 +5,33 @@
  */
 
 #include <string>
+#include <utility>
 #include <vector>
 
 // @lc code=start
 class Solution {
  public:
   int maxScore(const std::string& s) {
-    int totalOnesCount = 0;
-    for (int i = 0; i < s.size(); i++) {
-      totalOnesCount += (s[i] == '1');
+    /**
+     * score = left zeros + right ones
+     *       = left zeros + (total ones - left ones)
+     *       = (left zeros - left ones) + total ones
+     * "total ones" is a constant. Find maximum (left zeros - left ones).
+     */
+
+    int currentLeftZeroCount = 0;
+    int currentLeftOneCount = 0;
+    int maximumLeftZeroOneDiff = INT_MIN;
+
+    for (int i = 0; i < s.size() - 1; i++) {
+      currentLeftOneCount += s[i] == '1';
+      currentLeftZeroCount += s[i] == '0';
+      maximumLeftZeroOneDiff = std::max(
+          maximumLeftZeroOneDiff, currentLeftZeroCount - currentLeftOneCount);
     }
 
-    int maximumScore = 0;
-    int currentLeftZerosCount = 0;
-    // `i < s.size() - 1`: leave at lease 1 element for right part
-    for (int i = 0; i < s.size() - 1; i++) {
-      currentLeftZerosCount += s[i] == '0';
-      const int currentLeftOnesCount = (i + 1) - currentLeftZerosCount;
-      const int currentRightOnesCount = totalOnesCount - currentLeftOnesCount;
-      maximumScore =
-          std::max(maximumScore, currentLeftZerosCount + currentRightOnesCount);
-    }
-    return maximumScore;
+    const int kTotalOneCount = currentLeftOneCount + (s.back() == '1');
+    return maximumLeftZeroOneDiff + kTotalOneCount;
   }
 };
 // @lc code=end
