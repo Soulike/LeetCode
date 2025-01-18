@@ -4,23 +4,15 @@
  * [2683] Neighboring Bitwise XOR
  */
 
+#include <numeric>
 #include <vector>
+
 // @lc code=start
 class Solution {
  public:
   bool doesValidArrayExist(const std::vector<int>& derived) {
-    constexpr bool kFirstOriginalElement = false;
-
-    bool currentOriginalElement = kFirstOriginalElement;
-    for (int i = 0; i < derived.size() - 1; i++) {
-      if (derived[i] == 1) {
-        currentOriginalElement = !currentOriginalElement;
-      }
-    }
-
-    const bool expectedFirstElement =
-        derived.back() == 1 ? !currentOriginalElement : currentOriginalElement;
-    return expectedFirstElement == kFirstOriginalElement;
+    return std::accumulate(derived.cbegin(), derived.cend(), 0,
+                           [](const int a, const int b) { return a ^ b; }) == 0;
   }
 };
 // @lc code=end
