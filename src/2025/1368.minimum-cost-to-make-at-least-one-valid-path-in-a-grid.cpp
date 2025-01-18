@@ -4,6 +4,7 @@
  * [1368] Minimum Cost to Make at Least One Valid Path in a Grid
  */
 
+#include <deque>
 #include <vector>
 
 // @lc code=start
@@ -14,13 +15,75 @@ class Solution {
     const int kColCount = static_cast<int>(grid[0].size());
 
     std::vector<std::vector<int>> minCostToReach(
-        kRowCount, std::vector<int>(kColCount, INT_MAX));
+        kRowCount, std::vector<int>(kColCount, INT_MAX - 1));
     minCostToReach[0][0] = 0;
-    bool hasChange = true;
 
-    while (hasChange) {
-      hasChange = doForwardPass(grid, minCostToReach) ||
-                  doBackwardPass(grid, minCostToReach);
+    std::deque<Coordinate> exploreQueue;
+    exploreQueue.push_front({0, 0});
+
+    while (!exploreQueue.empty()) {
+      const Coordinate coordinate = exploreQueue.front();
+      exploreQueue.pop_front();
+
+      const bool canMoveUp = coordinate.x - 1 >= 0;
+      const bool canMoveDown = coordinate.x + 1 <= kRowCount - 1;
+      const bool canMoveLeft = coordinate.y - 1 >= 0;
+      const bool canMoveRight = coordinate.y + 1 <= kColCount - 1;
+      const auto direction =
+          static_cast<Direction>(grid[coordinate.x][coordinate.y]);
+
+      if (canMoveUp) {
+        const Coordinate newCoordinate(coordinate.x - 1, coordinate.y);
+        if (minCostToReach[coordinate.x][coordinate.y] +
+                (direction != Direction::kUp) <
+            minCostToReach[newCoordinate.x][newCoordinate.y]) {
+          minCostToReach[newCoordinate.x][newCoordinate.y] =
+              minCostToReach[coordinate.x][coordinate.y] +
+              (direction != Direction::kUp);
+          direction == Direction::kUp ? exploreQueue.push_front(newCoordinate)
+                                      : exploreQueue.push_back(newCoordinate);
+        }
+      }
+
+      if (canMoveDown) {
+        const Coordinate newCoordinate(coordinate.x + 1, coordinate.y);
+        if (minCostToReach[coordinate.x][coordinate.y] +
+                (direction != Direction::kDown) <
+            minCostToReach[newCoordinate.x][newCoordinate.y]) {
+          minCostToReach[newCoordinate.x][newCoordinate.y] =
+              minCostToReach[coordinate.x][coordinate.y] +
+              (direction != Direction::kDown);
+          direction == Direction::kDown ? exploreQueue.push_front(newCoordinate)
+                                        : exploreQueue.push_back(newCoordinate);
+        }
+      }
+
+      if (canMoveLeft) {
+        const Coordinate newCoordinate(coordinate.x, coordinate.y - 1);
+        if (minCostToReach[coordinate.x][coordinate.y] +
+                (direction != Direction::kLeft) <
+            minCostToReach[newCoordinate.x][newCoordinate.y]) {
+          minCostToReach[newCoordinate.x][newCoordinate.y] =
+              minCostToReach[coordinate.x][coordinate.y] +
+              (direction != Direction::kLeft);
+          direction == Direction::kLeft ? exploreQueue.push_front(newCoordinate)
+                                        : exploreQueue.push_back(newCoordinate);
+        }
+      }
+
+      if (canMoveRight) {
+        const Coordinate newCoordinate(coordinate.x, coordinate.y + 1);
+        if (minCostToReach[coordinate.x][coordinate.y] +
+                (direction != Direction::kRight) <
+            minCostToReach[newCoordinate.x][newCoordinate.y]) {
+          minCostToReach[newCoordinate.x][newCoordinate.y] =
+              minCostToReach[coordinate.x][coordinate.y] +
+              (direction != Direction::kRight);
+          direction == Direction::kRight
+              ? exploreQueue.push_front(newCoordinate)
+              : exploreQueue.push_back(newCoordinate);
+        }
+      }
     }
 
     return minCostToReach[kRowCount - 1][kColCount - 1];
@@ -34,73 +97,11 @@ class Solution {
     kUp = 4,
   };
 
-  bool doForwardPass(const std::vector<std::vector<int>>& grid,
-                     std::vector<std::vector<int>>& minCostToReach) {
-    const int kRowCount = static_cast<int>(grid.size());
-    const int kColCount = static_cast<int>(grid[0].size());
-
-    bool hasChange = false;
-    for (int i = 0; i < kRowCount; i++) {
-      for (int j = 0; j < kColCount; j++) {
-        // From top
-        if (i > 0) {
-          const int fromTopMinCostToReach =
-              minCostToReach[i - 1][j] +
-              (grid[i - 1][j] != static_cast<int>(Direction::kDown));
-          if (fromTopMinCostToReach < minCostToReach[i][j]) {
-            minCostToReach[i][j] = fromTopMinCostToReach;
-            hasChange = true;
-          }
-        }
-        // From left
-        if (j > 0) {
-          const int fromLeftMinCostToReach =
-              minCostToReach[i][j - 1] +
-              (grid[i][j - 1] != static_cast<int>(Direction::kRight));
-          if (fromLeftMinCostToReach < minCostToReach[i][j]) {
-            minCostToReach[i][j] = fromLeftMinCostToReach;
-            hasChange = true;
-          }
-        }
-      }
-    }
-
-    return hasChange;
-  }
-
-  bool doBackwardPass(const std::vector<std::vector<int>>& grid,
-                      std::vector<std::vector<int>>& minCostToReach) {
-    const int kRowCount = static_cast<int>(grid.size());
-    const int kColCount = static_cast<int>(grid[0].size());
-
-    bool hasChange = false;
-    for (int i = kRowCount - 1; i >= 0; i--) {
-      for (int j = kColCount - 1; j >= 0; j--) {
-        // From bottom
-        if (i < kRowCount - 1) {
-          const int fromBottomMinCostToReach =
-              minCostToReach[i + 1][j] +
-              (grid[i + 1][j] != static_cast<int>(Direction::kUp));
-          if (fromBottomMinCostToReach < minCostToReach[i][j]) {
-            minCostToReach[i][j] = fromBottomMinCostToReach;
-            hasChange = true;
-          }
-        }
-        // From right
-        if (j < kColCount - 1) {
-          const int fromRightMinCostToReach =
-              minCostToReach[i][j + 1] +
-              (grid[i][j + 1] != static_cast<int>(Direction::kLeft));
-          if (fromRightMinCostToReach < minCostToReach[i][j]) {
-            minCostToReach[i][j] = fromRightMinCostToReach;
-            hasChange = true;
-          }
-        }
-      }
-    }
-
-    return hasChange;
-  }
+  class Coordinate {
+   public:
+    int x;
+    int y;
+  };
 };
 // @lc code=end
 
