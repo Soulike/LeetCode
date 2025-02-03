@@ -10,25 +10,30 @@
 class Solution {
  public:
   int longestMonotonicSubarray(const std::vector<int>& nums) {
-    std::vector<int> increasingSubArrayLength(nums.size(), 1);
-    std::vector<int> decreasingSubArrayLength(nums.size(), 1);
+    int increasingSubArrayLength = 1;
+    int decreasingSubArrayLength = 1;
+
+    int maxMonotonicSubArrayLength = 1;
 
     for (int i = 1; i < nums.size(); i++) {
       if (nums[i - 1] > nums[i]) {
-        decreasingSubArrayLength[i] = decreasingSubArrayLength[i - 1] + 1;
+        decreasingSubArrayLength++;
+      } else {
+        decreasingSubArrayLength = 1;
       }
 
       if (nums[i - 1] < nums[i]) {
-        increasingSubArrayLength[i] = increasingSubArrayLength[i - 1] + 1;
+        increasingSubArrayLength++;
+      } else {
+        increasingSubArrayLength = 1;
       }
+
+      maxMonotonicSubArrayLength =
+          std::max({maxMonotonicSubArrayLength, increasingSubArrayLength,
+                    decreasingSubArrayLength});
     }
 
-    const int maxIncreasingSubArrayLength = *std::max_element(
-        increasingSubArrayLength.cbegin(), increasingSubArrayLength.cend());
-    const int maxDecreasingSubArrayLength = *std::max_element(
-        decreasingSubArrayLength.cbegin(), decreasingSubArrayLength.cend());
-
-    return std::max(maxIncreasingSubArrayLength, maxDecreasingSubArrayLength);
+    return maxMonotonicSubArrayLength;
   }
 };
 // @lc code=end
