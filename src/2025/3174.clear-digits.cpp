@@ -10,16 +10,18 @@
 class Solution {
  public:
   std::string clearDigits(std::string s) {
-    std::string result;
-    for (const char c : s) {
-      if (c >= '0' && c <= '9') {
-        result.pop_back();
+    int stackTop = 0;
+    for (int i = 0; i < s.size(); i++) {
+      if (s[i] >= '0' && s[i] <= '9') {
+        stackTop--;
       } else {
-        result.push_back(c);
+        s[stackTop] = s[i];
+        stackTop++;
       }
     }
 
-    return result;
+    s.resize(stackTop);
+    return s;
   }
 };
 // @lc code=end
