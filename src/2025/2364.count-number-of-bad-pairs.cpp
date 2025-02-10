@@ -4,7 +4,6 @@
  * [2364] Count Number of Bad Pairs
  */
 
-#include <cinttypes>
 #include <unordered_map>
 #include <vector>
 
@@ -19,25 +18,18 @@ class Solution {
      * We can group the diffs in maps and calculate the number of good pairs
      */
 
-    const size_t kNumsLength = nums.size();
-    const std::uint64_t kAllPairsNumber =
-        kNumsLength % 2 ? kNumsLength * ((kNumsLength - 1) / 2)
-                        : (kNumsLength / 2) * (kNumsLength - 1);
+    long long badPairNumber = 0;
+    std::unordered_map<int, long long> diffToFrequency;
 
-    std::unordered_map<int, std::uint64_t> diffToNumbers;
     for (int i = 0; i < nums.size(); i++) {
-      diffToNumbers[nums[i] - i]++;
+      const int diff = nums[i] - i;
+      const long long newGoodPairNumber = diffToFrequency[diff];
+      const long long totalNewPairNumber = i;
+      badPairNumber += totalNewPairNumber - newGoodPairNumber;
+      diffToFrequency[diff]++;
     }
 
-    std::uint64_t goodPairsNumber = 0;
-    for (const auto& diffToNumber : diffToNumbers) {
-      const std::uint64_t diffNumber = diffToNumber.second;
-
-      goodPairsNumber += diffNumber % 2 ? diffNumber * ((diffNumber - 1) / 2)
-                                        : (diffNumber / 2) * (diffNumber - 1);
-    }
-
-    return static_cast<long long>(kAllPairsNumber - goodPairsNumber);
+    return badPairNumber;
   }
 };
 // @lc code=end
