@@ -4,7 +4,7 @@
  * [2342] Max Sum of a Pair With Equal Sum of Digits
  */
 
-#include <queue>
+#include <array>
 #include <unordered_map>
 #include <vector>
 
@@ -12,25 +12,28 @@
 class Solution {
  public:
   int maximumSum(const std::vector<int>& nums) {
-    std::unordered_map<int, std::priority_queue<int>> digitSumToNumsPqs;
+    std::unordered_map<int, std::array<int, 2>> digitSumToLargest2Nums;
 
     for (const int num : nums) {
       const int numDigitSum = getDigitSum(num);
-      digitSumToNumsPqs[numDigitSum].push(num);
+      std::array<int, 2>& largest2Nums = digitSumToLargest2Nums[numDigitSum];
+      if (num > largest2Nums[0]) {
+        largest2Nums[1] = largest2Nums[0];
+        largest2Nums[0] = num;
+      } else if (num > largest2Nums[1]) {
+        largest2Nums[1] = num;
+      }
     }
 
     int maximum2NumDigitSum = -1;
-    for (const auto& digitSumToNumPq : digitSumToNumsPqs) {
-      const int digitSum = digitSumToNumPq.first;
-      std::priority_queue<int> numPq = digitSumToNumPq.second;
-      if (numPq.size() < 2) {
+    for (const auto& digitSumToLargest2Num : digitSumToLargest2Nums) {
+      const int digitSum = digitSumToLargest2Num.first;
+      std::array<int, 2> largest2Nums = digitSumToLargest2Num.second;
+      if (largest2Nums[1] == 0 || largest2Nums[0] == 0) {
         continue;
       }
-      const int firstLargestNum = numPq.top();
-      numPq.pop();
-      const int secondLargestNum = numPq.top();
       maximum2NumDigitSum =
-          std::max(maximum2NumDigitSum, firstLargestNum + secondLargestNum);
+          std::max(maximum2NumDigitSum, largest2Nums[0] + largest2Nums[1]);
     }
 
     return maximum2NumDigitSum;
