@@ -4,10 +4,8 @@
  * [2698] Find the Punishment Number of an Integer
  */
 
-#include <memory>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
+#include <string_view>
 
 // @lc code=start
 class Solution {
@@ -15,7 +13,7 @@ class Solution {
   int punishmentNumber(int n) {
     int punishmentNumber = 0;
     for (int i = 1; i <= n; i++) {
-      if (isPunishmentNumberComponent(i)) {
+      if (canSplitSumToEqualTarget(std::to_string(i * i), i)) {
         punishmentNumber += (i * i);
       }
     }
@@ -24,51 +22,31 @@ class Solution {
   }
 
  private:
-  static bool isPunishmentNumberComponent(const int n) {
-    std::unordered_map<int, std::shared_ptr<const std::unordered_set<int>>>
-        memo;
-    auto splitSumsOfNumber =
-        allSplitSumOfNumber(std::to_string(n * n), 0, memo);
-    return splitSumsOfNumber->contains(n);
-  }
-
-  static std::shared_ptr<const std::unordered_set<int>> allSplitSumOfNumber(
-      const std::string& number,
-      const int beginIndex,
-      std::unordered_map<int, std::shared_ptr<const std::unordered_set<int>>>&
-          memoForNumber) {
-    auto splitSums = std::make_shared<std::unordered_set<int>>();
-
-    // Base case: if beginIndex is at the end of the string, return an empty
-    // set.
-    if (beginIndex >= number.size()) {
-      splitSums->insert(
-          0);  // Insert 0 to handle the case where no more splits are possible.
-      return splitSums;
+  /**
+   * @return Whether we can split `numString` into multiple parts and make their
+   * sum to be `target`.
+   */
+  static bool canSplitSumToEqualTarget(std::string_view numString,
+                                       const int target) {
+    if (numString.empty() && target == 0) {
+      return true;
     }
 
-    if (memoForNumber.contains(beginIndex)) {
-      return memoForNumber.at(beginIndex);
+    if (target < 0) {
+      return false;
     }
 
-    for (int i = beginIndex; i < number.size(); i++) {
-      const int firstSegmentNumber =
-          std::stoi(number.substr(beginIndex, i - beginIndex + 1));
-      auto remainSegmentsSplitSums =
-          allSplitSumOfNumber(number, i + 1, memoForNumber);
-      for (const int splitSum : *remainSegmentsSplitSums) {
-        splitSums->insert(firstSegmentNumber + splitSum);
+    for (int i = 0; i < numString.size(); i++) {
+      std::string_view firstPartNumString = numString.substr(0, i + 1);
+      const int firstPartNum = std::stoi(std::string(firstPartNumString));
+      std::string_view remainPartNumString = numString.substr(i + 1);
+      if (canSplitSumToEqualTarget(remainPartNumString,
+                                   target - firstPartNum)) {
+        return true;
       }
     }
 
-    memoForNumber[beginIndex] = splitSums;
-
-    return splitSums;
+    return false;
   }
 };
 // @lc code=end
-
-int main() {
-  Solution sol;
-  sol.punishmentNumber(45);
-}
