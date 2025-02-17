@@ -6,46 +6,37 @@
 
 #include <algorithm>
 
+#include <array>
 #include <string>
-#include <unordered_set>
 
 // @lc code=start
 class Solution {
  public:
-  int numTilePossibilities(std::string tiles) {
-    std::sort(tiles.begin(), tiles.end());
-    std::unordered_set<int> usedTiles;
+  int numTilePossibilities(const std::string& tiles) {
+    std::array<int, 26> tileNumberOfLetters = {};
+    for (const char letter : tiles) {
+      tileNumberOfLetters[letter - 'A']++;
+    }
     std::string currentSequence;
-    int possibilities = backtrack(tiles, usedTiles, currentSequence);
-    return possibilities - 1;  // Remove empty string
+    const int possibilities = backtrack(tileNumberOfLetters, currentSequence);
+    return possibilities - 1;  // Remove empty sequence
   }
 
  private:
-  int backtrack(const std::string& tiles,
-                std::unordered_set<int>& usedTiles,
+  int backtrack(std::array<int, 26>& tileNumberOfLetters,
                 std::string& currentSequence) {
-    if (usedTiles.size() == tiles.size()) {
-      return 1;
-    }
-
-    int possibilities = 1;  // Every time in backtrack we get a new sequence,
-                            // including empty string
-    char lastUsedChar = 0;
-    for (int i = 0; i < tiles.size(); i++) {
-      if (usedTiles.contains(i)) {
+    int possibilities =
+        1;  // Every backtrack contains a sequence, including empty sequence.
+    for (int i = 0; i < 26; i++) {
+      if (tileNumberOfLetters[i] == 0) {
         continue;
       }
 
-      if (tiles[i] == lastUsedChar) {
-        continue;
-      }
-
-      usedTiles.insert(i);
-      currentSequence += tiles[i];
-      possibilities += backtrack(tiles, usedTiles, currentSequence);
+      tileNumberOfLetters[i]--;
+      currentSequence += static_cast<char>('a' + i);
+      possibilities += backtrack(tileNumberOfLetters, currentSequence);
       currentSequence.pop_back();
-      usedTiles.erase(i);
-      lastUsedChar = tiles[i];
+      tileNumberOfLetters[i]++;
     }
 
     return possibilities;
