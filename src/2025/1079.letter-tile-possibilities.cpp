@@ -16,23 +16,20 @@ class Solution {
     std::sort(tiles.begin(), tiles.end());
     std::unordered_set<int> usedTiles;
     std::string currentSequence;
-    int possibilities = 0;
-    for (int i = 1; i <= tiles.size(); i++) {
-      possibilities += backtrack(tiles, usedTiles, currentSequence, i);
-    }
-    return possibilities;
+    int possibilities = backtrack(tiles, usedTiles, currentSequence);
+    return possibilities - 1;  // Remove empty string
   }
 
  private:
   int backtrack(const std::string& tiles,
                 std::unordered_set<int>& usedTiles,
-                std::string& currentSequence,
-                const int targetLength) {
-    if (usedTiles.size() == targetLength) {
+                std::string& currentSequence) {
+    if (usedTiles.size() == tiles.size()) {
       return 1;
     }
 
-    int possibilities = 0;
+    int possibilities = 1;  // Every time in backtrack we get a new sequence,
+                            // including empty string
     char lastUsedChar = 0;
     for (int i = 0; i < tiles.size(); i++) {
       if (usedTiles.contains(i)) {
@@ -45,8 +42,7 @@ class Solution {
 
       usedTiles.insert(i);
       currentSequence += tiles[i];
-      possibilities +=
-          backtrack(tiles, usedTiles, currentSequence, targetLength);
+      possibilities += backtrack(tiles, usedTiles, currentSequence);
       currentSequence.pop_back();
       usedTiles.erase(i);
       lastUsedChar = tiles[i];
