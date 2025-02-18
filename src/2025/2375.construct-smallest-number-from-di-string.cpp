@@ -4,95 +4,58 @@
  * [2375] Construct Smallest Number From DI String
  */
 
-#include <algorithm>
-#include <array>
-#include <memory>
+#include <stack>
 #include <string>
-#include <vector>
 
 // @lc code=start
 class Solution {
  public:
   std::string smallestNumber(const std::string& pattern) {
-    std::array<int, 10> numberIsAvailable;
-    numberIsAvailable.fill(true);
-    numberIsAvailable[0] = false;
+    /**
+     * Since we want the lexicographically smallest possible string, we should
+     * put small numbers first.
+     * Pushing numbers from 1 to 9 into a stack, and pop them out forms a
+     * decreasing sequence, which can create smallest decreasing sequence
+     * possible.
+     * Therefore, when we meed a 'D', we should push a number into the stack,
+     * Once an 'I' is encountered, we should first pop the stack until it is
+     * empty, forming a valid sequence for 'DD...D', and then push a number into
+     * the stack to fulfill the 'I'.
+     */
+    std::stack<int> numberStack;
+    std::string result;
+    result.reserve(pattern.size() + 1);
 
-    std::vector<int> currentResult;
-    std::shared_ptr<std::vector<int>> smallestResultPtr;
+    numberStack.push(1);
+    int nextNumber = 2;
 
-    backtrack(pattern, numberIsAvailable, currentResult, smallestResultPtr);
+    for (const char p : pattern) {
+      if (p == kIncrease) {
+        while (!numberStack.empty()) {
+          result.push_back(numberStack.top() + '0');
+          numberStack.pop();
+        }
+      }
 
-    return intVectorToString(*smallestResultPtr);
+      numberStack.push(nextNumber);
+      nextNumber++;
+    }
+
+    while (!numberStack.empty()) {
+      result.push_back(numberStack.top() + '0');
+      numberStack.pop();
+    }
+
+    return result;
   }
 
  private:
   static constexpr char kIncrease = 'I';
   static constexpr char kDecrease = 'D';
-
-  static void backtrack(const std::string& pattern,
-                        std::array<int, 10>& numberIsAvailable,
-                        std::vector<int>& currentResult,
-                        std::shared_ptr<std::vector<int>>& smallestResultPtr) {
-    const int patternIndex = currentResult.size() - 1;
-    if (patternIndex == pattern.size()) {
-      if (!smallestResultPtr || currentResult < *smallestResultPtr) {
-        smallestResultPtr = std::make_shared<std::vector<int>>(
-            currentResult.cbegin(), currentResult.cend());
-      }
-      return;
-    }
-
-    if (currentResult.empty()) {
-      for (int i = 1; i <= 9; i++) {
-        if (!numberIsAvailable[i]) {
-          continue;
-        }
-
-        numberIsAvailable[i] = false;
-        currentResult.push_back(i);
-        backtrack(pattern, numberIsAvailable, currentResult, smallestResultPtr);
-        currentResult.pop_back();
-        numberIsAvailable[i] = true;
-      }
-      return;
-    }
-
-    if (pattern[patternIndex] == kIncrease) {
-      for (int i = currentResult.back(); i <= 9; i++) {
-        if (!numberIsAvailable[i]) {
-          continue;
-        }
-
-        numberIsAvailable[i] = false;
-        currentResult.push_back(i);
-        backtrack(pattern, numberIsAvailable, currentResult, smallestResultPtr);
-        currentResult.pop_back();
-        numberIsAvailable[i] = true;
-      }
-    } else {
-      for (int i = currentResult.back(); i >= 1; i--) {
-        if (!numberIsAvailable[i]) {
-          continue;
-        }
-
-        numberIsAvailable[i] = false;
-        currentResult.push_back(i);
-        backtrack(pattern, numberIsAvailable, currentResult, smallestResultPtr);
-        currentResult.pop_back();
-        numberIsAvailable[i] = true;
-      }
-    }
-  }
-
-  static std::string intVectorToString(const std::vector<int>& nums) {
-    std::string s;
-    s.reserve(nums.size());
-    for (const int num : nums) {
-      s.push_back('0' + num);
-    }
-
-    return s;
-  }
 };
 // @lc code=end
+
+int main() {
+  Solution sol;
+  sol.smallestNumber("IIIDIDDD");
+}
