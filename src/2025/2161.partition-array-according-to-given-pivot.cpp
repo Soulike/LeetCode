@@ -10,26 +10,22 @@
 class Solution {
  public:
   std::vector<int> pivotArray(const std::vector<int>& nums, const int pivot) {
-    std::vector<int> lessThanPivotNumbers;
-    std::vector<int> moreThanPivotNumbers;
-    int pivotCount = 0;
+    std::vector<int> result(nums.size(), pivot);
+    int lessThanPivotIndex = 0;
+    int moreThanPivotIndex = static_cast<int>(result.size()) - 1;
 
-    for (const int num : nums) {
-      if (num < pivot) {
-        lessThanPivotNumbers.push_back(num);
-      } else if (num > pivot) {
-        moreThanPivotNumbers.push_back(num);
-      } else {
-        pivotCount++;
+    for (int i = 0; i < nums.size(); i++) {
+      if (nums[i] < pivot) {
+        result[lessThanPivotIndex] = nums[i];
+        lessThanPivotIndex++;
+      }
+
+      if (nums[nums.size() - i - 1] > pivot) {
+        result[moreThanPivotIndex] = nums[nums.size() - i - 1];
+        moreThanPivotIndex--;
       }
     }
 
-    std::vector<int> result;
-    result.insert(result.end(), lessThanPivotNumbers.cbegin(),
-                  lessThanPivotNumbers.cend());
-    result.insert(result.end(), pivotCount, pivot);
-    result.insert(result.end(), moreThanPivotNumbers.cbegin(),
-                  moreThanPivotNumbers.cend());
     return result;
   }
 };
