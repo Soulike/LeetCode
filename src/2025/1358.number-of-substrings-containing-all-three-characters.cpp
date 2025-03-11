@@ -4,35 +4,22 @@
  * [1358] Number of Substrings Containing All Three Characters
  */
 
+#include <array>
 #include <string>
-#include <unordered_map>
 
 // @lc code=start
 class Solution {
  public:
   int numberOfSubstrings(const std::string& s) {
-    std::unordered_map<char, int> charToCount;
-
-    int left = 0;
-    int right = 0;
     int substringNumber = 0;
+    std::array<int, 3> lastIndexOfChar = {-1, -1, -1};
 
-    while (true) {
-      if (charToCount.size() < 3) {
-        if (right == s.size()) {
-          break;
-        }
+    for (int i = 0; i < s.size(); i++) {
+      lastIndexOfChar[s[i] - 'a'] = i;
 
-        charToCount[s[right]]++;
-        right++;
-      } else {
-        substringNumber += static_cast<int>(s.size()) - right + 1;
-        charToCount[s[left]]--;
-        if (charToCount[s[left]] == 0) {
-          charToCount.erase(s[left]);
-        }
-        left++;
-      }
+      const int leftMostCharIndex = std::min(
+          {lastIndexOfChar[0], lastIndexOfChar[1], lastIndexOfChar[2]});
+      substringNumber += leftMostCharIndex + 1;
     }
 
     return substringNumber;
