@@ -4,6 +4,7 @@
  * [2780] Minimum Index of a Valid Split
  */
 
+#include <algorithm>
 #include <unordered_map>
 #include <vector>
 
@@ -12,26 +13,23 @@ class Solution {
  public:
   int minimumIndex(const std::vector<int>& nums) {
     const int dominant_element = GetDominantElement(nums);
-    std::vector<int> prefix_dominant_element_number(nums.size(), 0);
-    prefix_dominant_element_number[0] = nums[0] == dominant_element;
-    for (int i = 1; i < nums.size(); i++) {
-      prefix_dominant_element_number[i] = prefix_dominant_element_number[i - 1];
-      if (nums[i] == dominant_element) {
-        prefix_dominant_element_number[i]++;
-      }
-    }
+    const int dominant_element_total_number = static_cast<int>(
+        std::count(nums.cbegin(), nums.cend(), dominant_element));
+    int dominant_element_number_in_split1 = 0;
+    int dominant_element_number_in_split2 = dominant_element_total_number;
+    int split1_size = 0;
+    int split2_size = static_cast<int>(nums.size());
 
     for (int i = 0; i < nums.size() - 1; i++) {
-      const int split1_size = i + 1;
-      const int split2_size = static_cast<int>(nums.size()) - i - 1;
-      const int split1_dominant_element_number =
-          prefix_dominant_element_number[i];
-      const int split2_dominant_element_number =
-          prefix_dominant_element_number[nums.size() - 1] -
-          prefix_dominant_element_number[i];
+      split1_size++;
+      split2_size--;
+      if (nums[i] == dominant_element) {
+        dominant_element_number_in_split1++;
+        dominant_element_number_in_split2--;
+      }
 
-      if (split1_dominant_element_number * 2 > split1_size &&
-          split2_dominant_element_number * 2 > split2_size) {
+      if (dominant_element_number_in_split1 * 2 > split1_size &&
+          dominant_element_number_in_split2 * 2 > split2_size) {
         return i;
       }
     }
@@ -41,15 +39,22 @@ class Solution {
 
  private:
   static int GetDominantElement(const std::vector<int>& nums) {
-    std::unordered_map<int, int> numToFrequency;
+    int current_element = nums[0];
+    int current_element_vote = 0;
+
     for (const int num : nums) {
-      numToFrequency[num]++;
-      if (numToFrequency[num] * 2 > nums.size()) {
-        return num;
+      if (current_element == num) {
+        current_element_vote++;
+      } else {
+        current_element_vote--;
+        if (current_element_vote == 0) {
+          current_element = num;
+          current_element_vote = 1;
+        }
       }
     }
 
-    return -1;
+    return current_element;
   }
 };
 // @lc code=end
