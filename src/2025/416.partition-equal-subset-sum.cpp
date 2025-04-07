@@ -28,23 +28,23 @@ class Solution {
     //         || dp[i-1][j-nums[i]]  // we pick nums[i]
     // result: dp[nums.size()][expected_target]
     std::vector<std::vector<bool>> dp(
-        nums.size() + 1, std::vector<bool>(expected_target + 1, false));
+        2, std::vector<bool>(expected_target + 1, false));
 
     std::ranges::fill(dp[0], false);
-    for (int i = 0; i <= nums.size(); i++) {
+    for (int i = 0; i <= 1; i++) {
       dp[i][0] = true;
     }
 
     for (int i = 1; i <= nums.size(); i++) {
       for (int j = 1; j <= expected_target; j++) {
-        dp[i][j] = dp[i - 1][j];
+        dp[i % 2][j] = dp[(i - 1) % 2][j];
         if (j - nums[i - 1] >= 0) {
-          dp[i][j] = dp[i][j] || dp[i - 1][j - nums[i - 1]];
+          dp[i % 2][j] = dp[i % 2][j] || dp[(i - 1) % 2][j - nums[i - 1]];
         }
       }
     }
 
-    return dp[nums.size()][expected_target];
+    return dp[nums.size() % 2][expected_target];
   }
 };
 // @lc code=end
