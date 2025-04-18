@@ -4,6 +4,8 @@
  * [38] Count and Say
  */
 
+#include <memory>
+#include <stack>
 #include <string>
 
 // @lc code=start
@@ -13,31 +15,33 @@ class Solution {
     if (n == 1) {
       return "1";
     }
-
-    const std::string prev_count_and_say = countAndSay(n - 1);
-    int left = 0;
-    int right = 0;
-    int current_number_count = 0;
+    std::string prev_count_and_say = "1";
     std::string current_count_and_say;
 
-    while (right < prev_count_and_say.size()) {
-      while (right < prev_count_and_say.size() &&
-             prev_count_and_say[right] == prev_count_and_say[left]) {
-        current_number_count++;
-        right++;
+    for (int i = 2; i <= n; i++) {
+      int left = 0;
+      int right = 0;
+      while (right < prev_count_and_say.size()) {
+        while (right < prev_count_and_say.size() &&
+               prev_count_and_say[left] == prev_count_and_say[right]) {
+          right++;
+        }
+        const int current_number_count = right - left;
+        current_count_and_say +=
+            std::to_string(current_number_count) + prev_count_and_say[left];
+        left = right;
       }
-      current_count_and_say +=
-          std::to_string(current_number_count) + prev_count_and_say[left];
-      left = right;
-      current_number_count = 0;
+
+      prev_count_and_say = std::move(current_count_and_say);
+      current_count_and_say.clear();
     }
 
-    return current_count_and_say;
+    return prev_count_and_say;
   }
 };
 // @lc code=end
 
 int main() {
   Solution sol;
-  sol.countAndSay(20);
+  sol.countAndSay(4);
 }
