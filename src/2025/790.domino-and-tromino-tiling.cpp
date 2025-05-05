@@ -25,21 +25,18 @@ class Solution {
      * dp[i][0] = dp[i-1][0] + dp[i-2][0] + 2*dp[i-2][1]
      * dp[i][1] = dp[i-1][0] + dp[i-1][1]
      */
-    static std::vector<std::vector<int>> dp(1001, std::vector<int>(2, -1));
+    std::vector<std::vector<int>> dp(3, std::vector<int>(2, -1));
     dp[1] = {1, 1};
     dp[2] = {2, 2};
-    if (dp[n][0] != -1) {
-      return dp[n][0];
-    }
 
     for (int i = 3; i <= n; i++) {
-      dp[i][0] =
-          ((dp[i - 1][0] + dp[i - 2][0]) % kMod + (2 * dp[i - 2][1]) % kMod) %
-          kMod;
-      dp[i][1] = (dp[i - 1][0] + dp[i - 1][1]) % kMod;
+      dp[i % 3][0] = ((dp[(i - 1) % 3][0] + dp[(i - 2) % 3][0]) % kMod +
+                      (2 * dp[(i - 2) % 3][1]) % kMod) %
+                     kMod;
+      dp[i % 3][1] = (dp[(i - 1) % 3][0] + dp[(i - 1) % 3][1]) % kMod;
     }
 
-    return dp[n][0];
+    return dp[n % 3][0];
   }
 
  private:
