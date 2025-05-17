@@ -4,26 +4,34 @@
  * [75] Sort Colors
  */
 
-#include <array>
 #include <vector>
 
 // @lc code=start
 class Solution {
  public:
   void sortColors(std::vector<int>& nums) {
-    std::array<int, 3> num_counts = {0, 0, 0};
-    for (const int num : nums) {
-      num_counts[num]++;
-    }
+    int left = 0;
+    int right = static_cast<int>(nums.size()) - 1;
+    int mid = left;
 
-    int current_index = 0;
-    for (int num = 0; num < 3; num++) {
-      while (num_counts[num] > 0) {
-        nums[current_index] = num;
-        current_index++;
-        num_counts[num]--;
+    while (mid <= right) {
+      if (nums[mid] == 0) {
+        std::swap(nums[left], nums[mid]);
+        left++;
+        mid++;
+      } else if (nums[mid] == 1) {
+        mid++;
+      } else if (nums[mid] == 2) {
+        std::swap(nums[mid], nums[right]);
+        right--;
       }
     }
   }
 };
 // @lc code=end
+
+int main() {
+  Solution sol;
+  std::vector<int> nums = {2, 1, 0};
+  sol.sortColors(nums);
+}
