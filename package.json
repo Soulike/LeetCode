@@ -1,14 +1,15 @@
 {
-  "name": "LeetCode",
+  "name": "leet-code",
   "version": "1.0.0",
+  "type": "module",
   "repository": "git@github.com:Soulike/LeetCode.git",
   "author": "Soulike <git_anonymous@foxmail.com>",
   "license": "MIT",
   "devDependencies": {
     "clang-format": "^1.8.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.3.0",
-    "prettier": "^3.4.2"
+    "lint-staged": "^16.0.0",
+    "prettier": "^3.5.3"
   },
   "scripts": {
     "prepare": "husky"
