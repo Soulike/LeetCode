@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 project(LeetCode)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17)
 
 # Add main.cpp file of the project root directory as a source file
 set(SOURCE_FILES
