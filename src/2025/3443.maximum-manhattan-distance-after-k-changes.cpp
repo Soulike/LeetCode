@@ -4,6 +4,7 @@
  * [3443] Maximum Manhattan Distance After K Changes
  */
 
+#include <algorithm>
 #include <string>
 #include <valarray>
 
@@ -11,118 +12,30 @@
 class Solution {
  public:
   int maxDistance(const std::string s, const int k) {
-    std::string try_s = s;
-    int try_k = k;
-
-    int max_distance = GetMaxDistance(try_s);
-
-    // Try NW
-    for (char& direction : try_s) {
-      if (try_k == 0) {
-        break;
-      }
-      if (direction == kSouth) {
-        direction = kNorth;
-        try_k--;
-      }
-      if (try_k == 0) {
-        break;
-      }
-      if (direction == kEast) {
-        direction = kWest;
-        try_k--;
-      }
-    }
-    max_distance = std::max(max_distance, GetMaxDistance(try_s));
-
-    try_s = s;
-    try_k = k;
-    // Try NE
-    for (char& direction : try_s) {
-      if (try_k == 0) {
-        break;
-      }
-      if (direction == kSouth) {
-        direction = kNorth;
-        try_k--;
-      }
-      if (try_k == 0) {
-        break;
-      }
-      if (direction == kWest) {
-        direction = kEast;
-        try_k--;
-      }
-    }
-    max_distance = std::max(max_distance, GetMaxDistance(try_s));
-
-    try_s = s;
-    try_k = k;
-    // Try SW
-    for (char& direction : try_s) {
-      if (try_k == 0) {
-        break;
-      }
-      if (direction == kNorth) {
-        direction = kSouth;
-        try_k--;
-      }
-      if (try_k == 0) {
-        break;
-      }
-      if (direction == kEast) {
-        direction = kWest;
-        try_k--;
-      }
-    }
-    max_distance = std::max(max_distance, GetMaxDistance(try_s));
-
-    try_s = s;
-    try_k = k;
-    // Try SE
-    for (char& direction : try_s) {
-      if (try_k == 0) {
-        break;
-      }
-      if (direction == kNorth) {
-        direction = kSouth;
-        try_k--;
-      }
-      if (try_k == 0) {
-        break;
-      }
-      if (direction == kWest) {
-        direction = kEast;
-        try_k--;
-      }
-    }
-    max_distance = std::max(max_distance, GetMaxDistance(try_s));
-
-    return max_distance;
-  }
-
- private:
-  static int GetMaxDistance(const std::string& s) {
-    int horizontal_position = 0;
-    int vertical_position = 0;
-
+    int latitude = 0;
+    int longitude = 0;
     int max_distance = 0;
-
-    for (const char direction : s) {
-      if (direction == kNorth) {
-        vertical_position--;
-      } else if (direction == kSouth) {
-        vertical_position++;
-      } else if (direction == kWest) {
-        horizontal_position--;
-      } else {
-        horizontal_position++;
+    for (int i = 0; i < s.size(); i++) {
+      switch (s[i]) {
+        case kNorth:
+          latitude--;
+          break;
+        case kSouth:
+          latitude++;
+          break;
+        case kEast:
+          longitude++;
+          break;
+        case kWest:
+          longitude--;
+          break;
+        default:
+          break;
       }
-
-      max_distance = std::max(max_distance, std::abs(horizontal_position) +
-                                                std::abs(vertical_position));
+      max_distance =
+          std::max(max_distance,
+                   std::min(abs(latitude) + abs(longitude) + k * 2, i + 1));
     }
-
     return max_distance;
   }
 
@@ -136,5 +49,5 @@ class Solution {
 
 int main() {
   Solution sol;
-  sol.maxDistance("EWNS", 0);
+  sol.maxDistance("NWSE", 1);
 }
