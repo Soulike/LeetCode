@@ -52,43 +52,40 @@ class Solution {
   }
 
  private:
-  static long long Generate10BasedOddPalindromeNumber(const int left_half) {
-    int current_left_half = left_half / 10;
-    long long odd_palindrome_number = left_half;
-    while (current_left_half > 0) {
-      odd_palindrome_number *= 10;
-      odd_palindrome_number += current_left_half % 10;
-      current_left_half /= 10;
+  static long long Generate10BasedOddPalindromeNumber(
+      const long long left_half) {
+    long long result = left_half;
+    long long temp = left_half / 10;
+
+    while (temp > 0) {
+      result = result * 10 + (temp % 10);
+      temp /= 10;
     }
-    return odd_palindrome_number;
+    return result;
   }
 
-  static long long Generate10BasedEvenPalindromeNumber(const int left_half) {
-    int current_left_half = left_half;
-    long long even_palindrome_number = left_half;
-    while (current_left_half > 0) {
-      even_palindrome_number *= 10;
-      even_palindrome_number += current_left_half % 10;
-      current_left_half /= 10;
+  static long long Generate10BasedEvenPalindromeNumber(
+      const long long left_half) {
+    long long result = left_half;
+    long long temp = left_half;
+
+    while (temp > 0) {
+      result = result * 10 + (temp % 10);
+      temp /= 10;
     }
-    return even_palindrome_number;
+    return result;
   }
 
   static bool IsPalindromeForBase(const int base, const long long num) {
-    std::vector<int> digits;
     long long current_num = num;
+    long long reversed = 0;
+
     while (current_num > 0) {
-      digits.push_back(current_num % base);
+      reversed = reversed * base + (current_num % base);
       current_num /= base;
     }
 
-    for (int i = 0; i < digits.size() / 2; i++) {
-      if (digits[i] != digits[digits.size() - i - 1]) {
-        return false;
-      }
-    }
-
-    return true;
+    return num == reversed;
   }
 };
 // @lc code=end
