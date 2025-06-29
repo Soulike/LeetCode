@@ -14,38 +14,27 @@ class Solution {
   int numSubseq(std::vector<int>& nums, const int target) {
     std::ranges::sort(nums);
     std::intmax_t result = 0;
-    for (size_t left = 0; left < nums.size(); left++) {
-      const int right_target = target - nums[left];
-      const size_t right = BinarySearchUpperBound(nums, right_target);
-      if (right <= left) {
+
+    int left = 0;
+    int right = nums.size() - 1;
+
+    while (left <= right) {
+      while (left <= right && nums[left] + nums[right] > target) {
+        right--;
+      }
+      if (left > right) {
         break;
       }
-      const size_t between_element_count = right - left - 1;
-      result += PowMod(2, between_element_count, kMod);
+      result += PowMod(2, right - left, kMod);
       result %= kMod;
+      left++;
     }
+
     return static_cast<int>(result);
   }
 
  private:
   static constexpr int kMod = 1e9 + 7;
-
-  static size_t BinarySearchUpperBound(const std::vector<int>& nums,
-                                       const int target) {
-    size_t left = 0;
-    size_t right = nums.size();
-
-    while (left < right) {
-      const size_t mid = (right - left) / 2 + left;
-      if (nums[mid] <= target) {
-        left = mid + 1;
-      } else if (nums[mid] > target) {
-        right = mid;
-      }
-    }
-
-    return left;
-  }
 
   static std::intmax_t PowMod(const std::intmax_t base,
                               const size_t exp,
@@ -71,6 +60,9 @@ class Solution {
 
 int main() {
   Solution sol;
-  std::vector<int> nums = {3, 5, 6, 7};
-  sol.numSubseq(nums, 9);
+  std::vector<int> nums = {14, 4,  6,  6,  20, 8,  5,  6,  8,  12, 6,  10,
+                           14, 9,  17, 16, 9,  7,  14, 11, 14, 15, 13, 11,
+                           10, 18, 13, 17, 17, 14, 17, 7,  9,  5,  10, 13,
+                           8,  5,  18, 20, 7,  5,  5,  15, 19, 14};
+  sol.numSubseq(nums, 22);
 }
