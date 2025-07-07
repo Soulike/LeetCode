@@ -28,19 +28,25 @@ class Solution {
     int events_index = 0;
     int max_event_count = 0;
 
+    // Min heap of end days. The events in the heap should be maintained
+    // attendable in current day.
     std::priority_queue<int, std::vector<int>, std::greater_equal<>> end_day_pq;
 
     for (int day = 1; day <= last_day; day++) {
       while (events_index < events.size() && events[events_index][0] <= day) {
+        // Add all following events whose start days are <= day as candidates.
         end_day_pq.push(events[events_index][1]);
         events_index++;
       }
 
       while (!end_day_pq.empty() && end_day_pq.top() < day) {
+        // Remove all events whose end days are < day, i.e., can not attend at
+        // day.
         end_day_pq.pop();
       }
 
       if (!end_day_pq.empty()) {
+        // Greedy. Attend the event with the smallest end day.
         max_event_count++;
         end_day_pq.pop();
       }
