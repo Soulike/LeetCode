@@ -35,13 +35,14 @@ class Solution {
      */
 
     std::vector<std::vector<int>> dp(2, std::vector<int>(events.size() + 1));
+    std::vector<int> firstAttendableEventAfterEventMemo(events.size(), -1);
 
     for (int event_count = 1; event_count <= k; event_count++) {
       for (int event_index = static_cast<int>(events.size() - 1);
            event_index >= 0; event_index--) {
         const int next_attendable_event_index =
-            FindFirstAttendableEventAfterStartDay(events,
-                                                  events[event_index][1] + 1);
+            FindFirstAttendableEventAfterEvent(
+                events, event_index, firstAttendableEventAfterEventMemo);
         dp[event_count % 2][event_index] =
             std::max(events[event_index][2] +
                          dp[(event_count - 1) % 2][next_attendable_event_index],
@@ -53,21 +54,27 @@ class Solution {
   }
 
  private:
-  static int FindFirstAttendableEventAfterStartDay(
+  static int FindFirstAttendableEventAfterEvent(
       const std::vector<std::vector<int>>& events,
-      const int start_day) {
+      const int event_index,
+      std::vector<int>& memo) {
+    if (memo[event_index] != -1) {
+      return memo[event_index];
+    }
     int left = 0;
     int right = static_cast<int>(events.size());
+    const int target_start_day = events[event_index][1] + 1;
 
     while (left < right) {
       const int mid = (right - left) / 2 + left;
-      if (events[mid][0] < start_day) {
+      if (events[mid][0] < target_start_day) {
         left = mid + 1;
       } else {
         right = mid;
       }
     }
 
+    memo[event_index] = left;
     return left;
   }
 };
