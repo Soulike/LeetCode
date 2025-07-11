@@ -15,66 +15,62 @@ class Solution {
   int mostBooked(const int n, std::vector<std::vector<int>>& meetings) {
     std::ranges::sort(meetings);
 
-    const auto room_info_comp = [](const RoomInfo& info1,
-                                   const RoomInfo& info2) {
+    std::priority_queue<int, std::vector<int>, std::greater<>>
+        free_rooms_min_heap;
+    for (int room = 0; room < n; room++) {
+      free_rooms_min_heap.push(room);
+    }
+
+    const auto busy_room_info_comp = [](const BusyRoomInfo& info1,
+                                        const BusyRoomInfo& info2) {
       if (info1.free_time == info2.free_time) {
         return info1.index > info2.index;
       }
       return info1.free_time > info2.free_time;
     };
-    std::priority_queue<RoomInfo, std::vector<RoomInfo>,
-                        decltype(room_info_comp)>
-        room_info_heap(room_info_comp);
-    for (int room = 0; room < n; room++) {
-      room_info_heap.emplace(room, 0);
-    }
+    std::priority_queue<BusyRoomInfo, std::vector<BusyRoomInfo>,
+                        decltype(busy_room_info_comp)>
+        busy_room_info_min_heap(busy_room_info_comp);
 
-    std::vector<int> used_count_of_rooms(n, 0);
+    std::vector<int> used_count_of_rooms(n);
 
     for (const auto& meeting : meetings) {
       const int start_time = meeting[0];
       const int end_time = meeting[1];
 
-      std::vector<RoomInfo> free_room_infos;
-      while (!room_info_heap.empty() &&
-             room_info_heap.top().free_time <= start_time) {
-        RoomInfo free_room_info = room_info_heap.top();
-        room_info_heap.pop();
-
-        free_room_info.free_time = start_time;
-        free_room_infos.emplace_back(free_room_info);
-      }
-      for (const RoomInfo& room_info : free_room_infos) {
-        room_info_heap.emplace(room_info);
+      while (!busy_room_info_min_heap.empty() &&
+             busy_room_info_min_heap.top().free_time <= start_time) {
+        free_rooms_min_heap.push(busy_room_info_min_heap.top().index);
+        busy_room_info_min_heap.pop();
       }
 
-      const auto [room, room_free_time] = room_info_heap.top();
-      room_info_heap.pop();
+      if (free_rooms_min_heap.empty()) [[unlikely]] {
+        // Have no free room. Get one from busy room and delay current meeting.
+        BusyRoomInfo first_freed_busy_room_info = busy_room_info_min_heap.top();
+        busy_room_info_min_heap.pop();
 
-      if (room_free_time <= start_time) {
-        room_info_heap.emplace(room, end_time);
+        const std::intmax_t delay_time =
+            first_freed_busy_room_info.free_time - start_time;
+
+        first_freed_busy_room_info.free_time = end_time + delay_time;
+        busy_room_info_min_heap.emplace(first_freed_busy_room_info);
+
+        used_count_of_rooms[first_freed_busy_room_info.index]++;
       } else {
-        const std::int64_t time_shift = room_free_time - start_time;
-        room_info_heap.emplace(room, end_time + time_shift);
-      }
+        const int free_room = free_rooms_min_heap.top();
+        free_rooms_min_heap.pop();
+        busy_room_info_min_heap.emplace(free_room, end_time);
 
-      used_count_of_rooms[room]++;
-    }
-
-    int max_use_count_of_room = 0;
-    int max_use_count_room = n;
-    for (int room = 0; room < n; room++) {
-      if (used_count_of_rooms[room] > max_use_count_of_room) {
-        max_use_count_room = room;
-        max_use_count_of_room = used_count_of_rooms[room];
+        used_count_of_rooms[free_room]++;
       }
     }
 
-    return max_use_count_room;
+    return static_cast<int>(std::ranges::max_element(used_count_of_rooms) -
+                            used_count_of_rooms.cbegin());
   }
 
  private:
-  struct RoomInfo {
+  struct BusyRoomInfo {
     int index = -1;
     std::intmax_t free_time = -1;
   };
