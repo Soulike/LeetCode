@@ -40,24 +40,30 @@ class Solution {
 
     // Second part
     std::priority_queue<int, std::vector<int>, std::greater<>> min_heap;
-    std::vector<std::int64_t> second_part_max_n_element_sums(n + 1, 0);
+    // std::vector<std::int64_t> second_part_max_n_element_sums(n + 1, 0);
+    std::int64_t second_part_max_n_element_sum = 0;
     for (int i = 3 * n - 1; i >= 2 * n; i--) {
       min_heap.push(nums[i]);
-      second_part_max_n_element_sums[n] += nums[i];
+      second_part_max_n_element_sum += nums[i];
+      // second_part_max_n_element_sums[n] += nums[i];
     }
+
+    std::int64_t min_diff =
+        first_part_min_n_element_sums[n] - second_part_max_n_element_sum;
 
     for (int i = 2 * n - 1; i >= n; i--) {
       min_heap.push(nums[i]);
-      second_part_max_n_element_sums[i - n] =
-          second_part_max_n_element_sums[i - n + 1] - min_heap.top() + nums[i];
+      second_part_max_n_element_sum =
+          second_part_max_n_element_sum - min_heap.top() + nums[i];
+      // second_part_max_n_element_sums[i - n] =
+      //     second_part_max_n_element_sums[i - n + 1] - min_heap.top() +
+      //     nums[i];
       min_heap.pop();
+
+      min_diff = std::min(min_diff, first_part_min_n_element_sums[i - n] -
+                                        second_part_max_n_element_sum);
     }
 
-    std::int64_t min_diff = INT64_MAX;
-    for (int i = 0; i <= n; i++) {
-      min_diff = std::min(min_diff, first_part_min_n_element_sums[i] -
-                                        second_part_max_n_element_sums[i]);
-    }
     return min_diff;
   }
 };
