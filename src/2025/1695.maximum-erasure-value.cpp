@@ -4,29 +4,31 @@
  * [1695] Maximum Erasure Value
  */
 
-#include <unordered_set>
+#include <array>
 #include <vector>
 
 // @lc code=start
 class Solution {
  public:
   int maximumUniqueSubarray(const std::vector<int>& nums) {
-    std::unordered_set<int> unique_nums;
-    int subarray_sum = 0;
+    std::array<int, 10001> num_to_last_index = {};
+    num_to_last_index.fill(-1);
+
+    std::vector<int> prefix_sum(nums.size() + 1);
+
     int max_subarray_sum = 0;
 
     int left = 0;
     int right = 0;
     while (right < nums.size()) {
-      while (left < right && unique_nums.contains(nums[right])) {
-        unique_nums.erase(nums[left]);
-        subarray_sum -= nums[left];
+      while (left < right && num_to_last_index[nums[right]] >= left) {
         left++;
       }
-      subarray_sum += nums[right];
-      unique_nums.insert(nums[right]);
-      max_subarray_sum = std::max(max_subarray_sum, subarray_sum);
+      num_to_last_index[nums[right]] = right;
+      prefix_sum[right + 1] = prefix_sum[right] + nums[right];
       right++;
+      max_subarray_sum =
+          std::max(max_subarray_sum, prefix_sum[right] - prefix_sum[left]);
     }
 
     return max_subarray_sum;
