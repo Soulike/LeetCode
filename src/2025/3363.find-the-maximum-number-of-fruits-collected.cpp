@@ -34,7 +34,8 @@ class Solution {
                                      std::vector<int>(fruits.size(), 0));
     dp[fruits.size() - 1][0] = fruits[fruits.size() - 1][0];
     for (int j = 1; j < fruits.size() - 1; j++) {
-      for (int i = j + 1; i < fruits.size(); i++) {
+      for (int i = std::max(j + 1, static_cast<int>(fruits.size()) - j - 1);
+           i < fruits.size(); i++) {
         dp[i][j] = std::max({i + 1 < fruits.size() ? dp[i + 1][j - 1] : 0,
                              dp[i][j - 1], dp[i - 1][j - 1]}) +
                    fruits[i][j];
@@ -53,7 +54,8 @@ class Solution {
 
     dp[0][fruits.size() - 1] = fruits[0][fruits.size() - 1];
     for (int i = 1; i < fruits.size() - 1; i++) {
-      for (int j = i + 1; j < fruits.size(); j++) {
+      for (int j = std::max(i + 1, static_cast<int>(fruits.size()) - i - 1);
+           j < fruits.size(); j++) {
         dp[i][j] = std::max({j + 1 < fruits.size() ? dp[i - 1][j + 1] : 0,
                              dp[i - 1][j], dp[i - 1][j - 1]}) +
                    fruits[i][j];
