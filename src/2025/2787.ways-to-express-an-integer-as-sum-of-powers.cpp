@@ -5,22 +5,33 @@
  */
 
 #include <array>
-#include <cmath>
+
 // @lc code=start
 class Solution {
  public:
   int numberOfWays(const int n, const int x) {
-    std::array<std::array<int, 301>, 301> memo = {};
-    for (auto& row : memo) {
-      row.fill(-1);
+    std::array<std::array<int, 301>, 301>* memo_ptr = nullptr;
+    if (memo_initialized_[x - 1]) {
+      memo_ptr = &memos_[x - 1];
+    } else {
+      std::array<std::array<int, 301>, 301>& memo = memos_[x - 1];
+      for (auto& row : memo) {
+        row.fill(-1);
+      }
+      memo_initialized_[x - 1] = true;
+      memo_ptr = &memo;
     }
 
-    const int result = dp(n, x, 1, memo);
+    const int result = dp(n, x, 1, *memo_ptr);
     return result;
   }
 
  private:
   static constexpr int kMod = 1e9 + 7;
+  static inline std::array<std::array<std::array<int, 301>, 301>, 5> memos_ =
+      {};
+  static inline std::array<bool, 5> memo_initialized_ = {};
+
   static int dp(const int n,
                 const int x,
                 const int min_num,
