@@ -26,31 +26,38 @@ class Solution {
     //
     // Result
     // sum(dp[n-1])
-    std::vector<std::vector<int>> dp(n, std::vector<int>(forget));
+    std::vector<std::vector<int>> dp(delay + 1, std::vector<int>(forget));
     dp[0][0] = 1;
 
     for (int i = 1; i < n; i++) {
       for (int j = 0; j < forget; j++) {
         if (j == 0) {
           if (i - delay >= 0) {
-            dp[i][0] =
-                (std::accumulate(dp[i - delay].cbegin(), dp[i - delay].cend(),
-                                 0, accumulate_mod_sum_op) -
-                 std::accumulate(dp[i - delay].cbegin() + (forget - delay),
-                                 dp[i - delay].cend(), 0,
-                                 accumulate_mod_sum_op) +
-                 kMod) %
+            dp[i % (delay + 1)][0] =
+                (
+                    // Everyone `delay` days ago tells the secret to
+                    // another person.
+                    std::accumulate(dp[(i - delay) % (delay + 1)].cbegin(),
+                                    dp[(i - delay) % (delay + 1)].cend(), 0,
+                                    accumulate_mod_sum_op) -
+                    // But some of the persons in `delay` days ago have
+                    // forgotten. Remove them from today's people count.
+                    std::accumulate(dp[(i - delay) % (delay + 1)].cbegin() +
+                                        (forget - delay),
+                                    dp[(i - delay) % (delay + 1)].cend(), 0,
+                                    accumulate_mod_sum_op) +
+                    kMod) %
                 kMod;
           }
           continue;
         }
-        dp[i][j] = dp[i - 1][j - 1];
+        dp[i % (delay + 1)][j] = dp[(i - 1) % (delay + 1)][j - 1];
       }
     }
 
-    const int result = std::accumulate(dp[n - 1].cbegin(), dp[n - 1].cend(), 0,
-                                       accumulate_mod_sum_op) %
-                       kMod;
+    const int result = std::accumulate(dp[(n - 1) % (delay + 1)].cbegin(),
+                                       dp[(n - 1) % (delay + 1)].cend(), 0,
+                                       accumulate_mod_sum_op);
     return result;
   }
 };
