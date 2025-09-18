@@ -33,18 +33,12 @@ class TaskManager {
   }
 
   void edit(const TaskId taskId, const Priority newPriority) {
-    const UserId user_id = task_id_to_task_info_.at(taskId).user_id;
-    task_max_heap_.emplace(user_id, taskId, newPriority);
-    task_id_to_task_info_.at(taskId).priority = newPriority;
+    TaskInfo& task_info = task_id_to_task_info_.at(taskId);
+    task_max_heap_.emplace(task_info.user_id, taskId, newPriority);
+    task_info.priority = newPriority;
   }
 
-  void rmv(const TaskId taskId) {
-    if (!task_id_to_task_info_.contains(taskId)) {
-      return;
-    }
-    task_id_to_task_info_.at(taskId).user_id = kInvalidUserId;
-    task_id_to_task_info_.at(taskId).priority = kInvalidPriority;
-  }
+  void rmv(const TaskId taskId) { task_id_to_task_info_.erase(taskId); }
 
   UserId execTop() {
     if (task_max_heap_.empty()) {
@@ -90,8 +84,8 @@ class TaskManager {
     if (!task_id_to_task_info_.contains(task.task_id)) {
       return false;
     }
-    return task_id_to_task_info_.at(task.task_id).priority == task.priority &&
-           task_id_to_task_info_.at(task.task_id).user_id == task.user_id;
+    const auto& [user_id, priority] = task_id_to_task_info_.at(task.task_id);
+    return priority == task.priority && user_id == task.user_id;
   }
 
   std::unordered_map<TaskId, TaskInfo> task_id_to_task_info_;
