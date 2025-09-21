@@ -4,7 +4,6 @@
  * [1912] Design Movie Rental System
  */
 
-#include <format>
 #include <set>
 #include <unordered_map>
 #include <vector>
@@ -14,7 +13,6 @@ class MovieRentingSystem {
   using Movie = int;
   using Shop = int;
   using Price = int;
-  using MovieCopyIndex = size_t;
 
   struct MovieCopy {
     Movie movie;
@@ -24,54 +22,50 @@ class MovieRentingSystem {
     MovieCopy(const Movie movie, const Shop shop, const Price price)
         : movie(movie), shop(shop), price(price) {}
 
-    MovieCopy(const MovieCopy& other) = delete;
-    MovieCopy& operator=(const MovieCopy& other) = delete;
+    // 自定义比较运算符：先按价格，再按商店，最后按电影ID
+    bool operator<(const MovieCopy& other) const {
+      if (price != other.price) {
+        return price < other.price;
+      }
+      if (shop != other.shop) {
+        return shop < other.shop;
+      }
+      return movie < other.movie;
+    }
 
-    MovieCopy(MovieCopy&& other) noexcept = default;
-    MovieCopy& operator=(MovieCopy&& other) noexcept = default;
+    bool operator==(const MovieCopy& other) const {
+      return movie == other.movie && shop == other.shop && price == other.price;
+    }
   };
 
  public:
-  MovieRentingSystem(const int n, const std::vector<std::vector<int>>& entries)
-      : movie_copy_index_comp_(this),
-        rented_movie_copy_indexes_(movie_copy_index_comp_) {
-    shop_movie_to_movie_copy_index_.reserve(n);
-    movie_copies_.reserve(entries.size());
+  MovieRentingSystem(const int n,
+                     const std::vector<std::vector<int>>& entries) {
+    shop_movie_to_price_.reserve(n);
 
     for (const auto& entry : entries) {
       const Shop shop = entry[0];
       const Movie movie = entry[1];
       const Price price = entry[2];
-      movie_copies_.emplace_back(movie, shop, price);
-    }
 
-    for (MovieCopyIndex i = 0; i < movie_copies_.size(); ++i) {
-      const Shop shop = movie_copies_[i].shop;
-      const Movie movie = movie_copies_[i].movie;
+      // 存储价格查找表
+      shop_movie_to_price_[shop][movie] = price;
 
-      shop_movie_to_movie_copy_index_[shop][movie] = i;
-
-      if (!movie_to_unrented_movie_copy_indexes_.contains(movie)) {
-        movie_to_unrented_movie_copy_indexes_.emplace(
-            movie, std::set<MovieCopyIndex, MovieCopyIndexComp>(
-                       movie_copy_index_comp_));
-      }
-      movie_to_unrented_movie_copy_indexes_.at(movie).insert(i);
+      // 添加到未租借列表
+      movie_to_unrented_copies_[movie].emplace(movie, shop, price);
     }
   }
 
   std::vector<Shop> search(const int movie) {
     std::vector<Shop> result;
 
-    if (!movie_to_unrented_movie_copy_indexes_.contains(movie)) {
+    if (!movie_to_unrented_copies_.contains(movie)) {
       return result;
     }
 
-    const auto& movie_copy_indexes =
-        movie_to_unrented_movie_copy_indexes_.at(movie);
-
-    for (const MovieCopyIndex index : movie_copy_indexes) {
-      result.push_back(movie_copies_[index].shop);
+    const auto& copies = movie_to_unrented_copies_.at(movie);
+    for (const auto& copy : copies) {
+      result.push_back(copy.shop);
       if (result.size() == 5) {
         break;
       }
@@ -81,32 +75,32 @@ class MovieRentingSystem {
   }
 
   void rent(const Shop shop, const Movie movie) {
-    const MovieCopyIndex target_movie_copy_index =
-        shop_movie_to_movie_copy_index_.at(shop).at(movie);
-    movie_to_unrented_movie_copy_indexes_.at(movie).erase(
-        target_movie_copy_index);
+    const Price price = shop_movie_to_price_.at(shop).at(movie);
+    MovieCopy copy(movie, shop, price);
 
-    rented_movie_copy_indexes_.insert(target_movie_copy_index);
+    // 从未租借列表移除
+    movie_to_unrented_copies_.at(movie).erase(copy);
+
+    // 添加到已租借列表
+    rented_copies_.insert(copy);
   }
 
   void drop(const Shop shop, const Movie movie) {
-    const MovieCopyIndex target_index =
-        shop_movie_to_movie_copy_index_.at(shop).at(movie);
-    rented_movie_copy_indexes_.erase(target_index);
+    const Price price = shop_movie_to_price_.at(shop).at(movie);
+    MovieCopy copy(movie, shop, price);
 
-    if (!movie_to_unrented_movie_copy_indexes_.contains(movie)) {
-      movie_to_unrented_movie_copy_indexes_.emplace(
-          movie,
-          std::set<MovieCopyIndex, MovieCopyIndexComp>(movie_copy_index_comp_));
-    }
-    movie_to_unrented_movie_copy_indexes_.at(movie).insert(target_index);
+    // 从已租借列表移除
+    rented_copies_.erase(copy);
+
+    // 添加到未租借列表
+    movie_to_unrented_copies_[movie].insert(copy);
   }
 
   [[nodiscard]] std::vector<std::vector<int>> report() const {
     std::vector<std::vector<int>> result;
 
-    for (const MovieCopyIndex index : rented_movie_copy_indexes_) {
-      result.push_back({movie_copies_[index].shop, movie_copies_[index].movie});
+    for (const auto& copy : rented_copies_) {
+      result.push_back({copy.shop, copy.movie});
       if (result.size() == 5) {
         break;
       }
@@ -116,46 +110,15 @@ class MovieRentingSystem {
   }
 
  private:
-  struct MovieCopyIndexComp {
-   public:
-    explicit MovieCopyIndexComp(const MovieRentingSystem* movie_renting_system)
-        : movie_renting_system_(movie_renting_system) {}
+  // 快速价格查找：(shop, movie) -> price
+  std::unordered_map<Shop, std::unordered_map<Movie, Price>>
+      shop_movie_to_price_;
 
-    bool operator()(const MovieCopyIndex index1,
-                    const MovieCopyIndex index2) const {
-      const auto& movie_copies = movie_renting_system_->movie_copies_;
-      const MovieCopy& movie_copy1 = movie_copies[index1];
-      const MovieCopy& movie_copy2 = movie_copies[index2];
-      if (movie_copy1.price != movie_copy2.price) {
-        return movie_copy1.price < movie_copy2.price;
-      }
-      if (movie_copy1.shop != movie_copy2.shop) {
-        return movie_copy1.shop < movie_copy2.shop;
-      }
-      return movie_copy1.movie < movie_copy2.movie;
-    }
+  // 未租借的电影副本，按电影分组并自动排序
+  std::unordered_map<Movie, std::set<MovieCopy>> movie_to_unrented_copies_;
 
-   private:
-    const MovieRentingSystem* movie_renting_system_;
-  };
-
-  MovieCopyIndexComp movie_copy_index_comp_;
-
-  // Core data storage: all movie copies indexed by MovieCopyIndex
-  std::vector<MovieCopy> movie_copies_;
-
-  // Fast lookup: (shop, movie) -> MovieCopyIndex for O(1) rent/drop operations
-  std::unordered_map<Shop, std::unordered_map<Movie, MovieCopyIndex>>
-      shop_movie_to_movie_copy_index_;
-
-  // Unrented movie copies organized by movie (sorted by price, shop, movie) -
-  // used for search()
-  std::unordered_map<Movie, std::set<MovieCopyIndex, MovieCopyIndexComp>>
-      movie_to_unrented_movie_copy_indexes_;
-
-  // All rented movie copies globally (sorted by price, shop, movie) - used for
-  // report()
-  std::set<MovieCopyIndex, MovieCopyIndexComp> rented_movie_copy_indexes_;
+  // 所有已租借的电影副本，自动排序
+  std::set<MovieCopy> rented_copies_;
 };
 
 /**
