@@ -4,7 +4,6 @@
  * [2872] Maximum Number of K-Divisible Components
  */
 
-#include <unordered_set>
 #include <vector>
 
 // @lc code=start
@@ -12,90 +11,47 @@ class Solution {
  public:
   int maxKDivisibleComponents(const int n,
                               const std::vector<std::vector<int>>& edges,
-                              const std::vector<int>& values,
+                              std::vector<int>& values,
                               const int k) {
-    TreeNode* tree = BuildTree(n, edges, values);
-    const int component_count = PostOrderTraversal(tree, k);
-    TearDownTree(tree);
+    const std::vector<std::vector<int>> adjacent_table =
+        BuildAdjacentTable(n, edges);
+    const int component_count = dfs(0, -1, adjacent_table, values, k);
     return component_count;
   }
 
  private:
-  struct TreeNode {
-    int index_;
-    int value_;
-    std::vector<TreeNode*> children_;
-
-    explicit TreeNode(const int index, const int value)
-        : index_(index), value_(value) {}
-  };
-
-  static int PostOrderTraversal(TreeNode* root, const int k) {
+  static int dfs(const int node,
+                 const int parent_node,
+                 const std::vector<std::vector<int>>& adjacent_table,
+                 std::vector<int>& values,
+                 const int k) {
+    const std::vector<int>& adjacent_nodes = adjacent_table[node];
+    int component_value = values[node] % k;
     int component_count = 0;
-    for (TreeNode* child : root->children_) {
-      component_count += PostOrderTraversal(child, k);
-    }
-    int component_value = root->value_ % k;
-    for (TreeNode* child : root->children_) {
-      component_value += child->value_;
+    for (const int adjacent_node : adjacent_nodes) {
+      if (adjacent_node == parent_node) {
+        continue;
+      }
+      component_count += dfs(adjacent_node, node, adjacent_table, values, k);
+      component_value += values[adjacent_node];
       component_value %= k;
     }
     if (component_value == 0) {
       component_count++;
     }
-    root->value_ = component_value;
+    values[node] = component_value;
     return component_count;
   }
 
-  static TreeNode* BuildTree(const int n,
-                             const std::vector<std::vector<int>>& edges,
-                             const std::vector<int>& values) {
-    const std::vector<std::unordered_set<int>> adjacent_table =
-        BuildAdjacentTable(n, edges);
-    return BuildTreeHelper(adjacent_table, values, 0, -1);
-  }
-
-  static TreeNode* BuildTreeHelper(
-      const std::vector<std::unordered_set<int>>& adjacent_table,
-      const std::vector<int>& values,
-      const int root_index,
-      const int parent_node_index) {
-    auto* root = new TreeNode(root_index, values[root_index]);
-    const std::unordered_set<int>& adjacent_nodes_indexes =
-        adjacent_table[root_index];
-    for (const int node_index : adjacent_nodes_indexes) {
-      if (node_index == parent_node_index) {
-        continue;
-      }
-      auto* child_tree =
-          BuildTreeHelper(adjacent_table, values, node_index, root_index);
-      root->children_.push_back(child_tree);
-    }
-    return root;
-  }
-
-  static std::vector<std::unordered_set<int>> BuildAdjacentTable(
+  static std::vector<std::vector<int>> BuildAdjacentTable(
       const int n,
       const std::vector<std::vector<int>>& edges) {
-    std::vector<std::unordered_set<int>> adjacent_table(n);
+    std::vector<std::vector<int>> adjacent_table(n);
     for (const std::vector<int>& edge : edges) {
-      adjacent_table[edge[0]].insert(edge[1]);
-      adjacent_table[edge[1]].insert(edge[0]);
+      adjacent_table[edge[0]].push_back(edge[1]);
+      adjacent_table[edge[1]].push_back(edge[0]);
     }
     return adjacent_table;
   }
-
-  static void TearDownTree(const TreeNode* root) {
-    for (const TreeNode* child : root->children_) {
-      delete child;
-    }
-    delete root;
-  }
 };
 // @lc code=end
-
-int main() {
-  Solution sol;
-  sol.maxKDivisibleComponents(5, {{0, 2}, {1, 2}, {1, 3}, {2, 4}},
-                              {1, 8, 1, 4, 4}, 6);
-}
