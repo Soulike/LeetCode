@@ -12,29 +12,35 @@ class Solution {
  public:
   int specialTriplets(const std::vector<int>& nums) {
     static constexpr int kMod = 1e9 + 7;
+    static constexpr int kMaxNum = 1e5;
 
-    std::unordered_map<int, std::uint64_t> num_to_freqs;
+    std::array<int, kMaxNum + 1> num_to_freqs = {};
     for (const int num : nums) {
       num_to_freqs[num]++;
     }
 
     std::uint64_t triplet_count = 0;
 
-    std::unordered_map<int, std::uint64_t> prefix_num_to_freqs;
-    for (const int num : nums) {
-      const int num_double = num * 2;
+    std::array<int, kMaxNum + 1> prefix_num_to_freqs = {};
 
-      const std::uint64_t num_double_prev_freq =
-          prefix_num_to_freqs[num_double];
-      const std::uint64_t num_double_after_freq =
+    for (const int num : nums) {
+      prefix_num_to_freqs[num]++;
+
+      const int num_double = num * 2;
+      if (num_double > kMaxNum) {
+        continue;
+      }
+
+      const int num_double_prev_freq = prefix_num_to_freqs[num_double];
+      const int num_double_after_freq =
           num_to_freqs[num_double] - num_double_prev_freq - (num == 0);
 
-      prefix_num_to_freqs[num]++;
       if (num_double_prev_freq == 0 || num_double_after_freq <= 0) {
         continue;
       }
 
-      triplet_count += (num_double_prev_freq * num_double_after_freq) % kMod;
+      triplet_count +=
+          (1ll * num_double_prev_freq * num_double_after_freq) % kMod;
       triplet_count %= kMod;
     }
 
@@ -45,5 +51,5 @@ class Solution {
 
 int main() {
   Solution sol;
-  sol.specialTriplets({8, 4, 2, 8, 4});
+  sol.specialTriplets({0, 0, 0});
 }
