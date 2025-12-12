@@ -17,8 +17,18 @@ class Solution {
       const int numberOfUsers,
       std::vector<std::vector<std::string>>& events) {
     std::ranges::sort(events, [](const auto& event1, const auto& event2) {
-      return std::stoi(event1[1]) < std::stoi(event2[1]);
+      const int timestamp1 = std::stoi(event1[1]);
+      const int timestamp2 = std::stoi(event2[1]);
+      if (timestamp1 != timestamp2) {
+        return std::stoi(event1[1]) < std::stoi(event2[1]);
+      }
+      // Handle Offline events first.
+      if (event1[0] == event2[0]) {
+        return false;
+      }
+      return event1[0] == "OFFLINE";
     });
+
     std::vector<int> mentions_count_of_user(numberOfUsers, 0);
     UserStateManager user_state_manager(numberOfUsers);
     for (const std::vector<std::string>& raw_event : events) {
@@ -63,7 +73,7 @@ class Solution {
       }
       std::unordered_set<int> back_online_users;
       for (const int user : offline_users_) {
-        if (timestamp > offline_until_timestamp_[user]) {
+        if (timestamp >= offline_until_timestamp_[user]) {
           back_online_users.insert(user);
         }
       }
@@ -77,14 +87,11 @@ class Solution {
 
     void SetUserOfflineInNextTimestamp(const int user) {
       offline_users_.insert(user);
-      offline_until_timestamp_[user] = current_timestamp_ + 59;
+      offline_until_timestamp_[user] = current_timestamp_ + 60;
     }
 
     [[nodiscard]] bool IsUserNowOffline(const int user) const {
-      // When set SetUserOfflineInNextTimestamp(user) at current_timestamp_ the
-      // user is not offline yet. Also check if user is already offline.
-      return offline_users_.contains(user) &&
-             offline_until_timestamp_[user] != current_timestamp_ + 59;
+      return offline_users_.contains(user);
     }
 
     [[nodiscard]] std::vector<int> GetAllNowOnlineUsers() const {
@@ -112,9 +119,6 @@ class Solution {
     int user_count_;
     int current_timestamp_;
     std::unordered_set<int> offline_users_;
-    // The last timestamp that user is offline.
-    // For example, if user back online at 104, offline_until_timestamp_[user]
-    // will be 103.
     std::vector<int> offline_until_timestamp_;
 
     mutable std::optional<std::vector<int>> all_users_;
@@ -176,8 +180,9 @@ class Solution {
 
 int main() {
   Solution sol;
-  std::vector<std::vector<std::string>> events = {{"MESSAGE", "5", "id0 id1"},
-                                                  {"OFFLINE", "10", "0"},
-                                                  {"MESSAGE", "15", "ALL"}};
+  std::vector<std::vector<std::string>> events = {{"MESSAGE", "2", "HERE"},
+                                                  {"OFFLINE", "2", "1"},
+                                                  {"OFFLINE", "1", "0"},
+                                                  {"MESSAGE", "61", "HERE"}};
   sol.countMentions(3, events);
 }
