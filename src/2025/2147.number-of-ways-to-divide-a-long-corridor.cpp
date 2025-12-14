@@ -16,21 +16,23 @@ class Solution {
     static constexpr int kInvalidIndex = -1;
     static constexpr int kMod = 1e9 + 7;
 
-    std::vector<Segment> segments;
-
+    std::int64_t number_of_ways = 1;
+    int prev_seat2 = kInvalidIndex;
     int seat1 = kInvalidIndex;
 
     for (int i = 0; i < corridor.size(); i++) {
       if (corridor[i] == kPlant) {
         continue;
       }
-      if (corridor[i] == kSeat) {
-        if (seat1 == kInvalidIndex) {
-          seat1 = i;
-        } else {
-          segments.emplace_back(seat1, i);
-          seat1 = kInvalidIndex;
+      if (seat1 == kInvalidIndex) {
+        seat1 = i;
+        if (prev_seat2 != kInvalidIndex) {
+          number_of_ways *= seat1 - prev_seat2;
+          number_of_ways %= kMod;
         }
+      } else {
+        prev_seat2 = i;
+        seat1 = kInvalidIndex;
       }
     }
 
@@ -38,32 +40,11 @@ class Solution {
         // Lasts an orphan seat
         seat1 != kInvalidIndex ||
         // Or No segment is found at all.
-        segments.empty()) {
+        prev_seat2 == kInvalidIndex) {
       return 0;
-    }
-
-    std::int64_t number_of_ways = 1;
-    for (int i = 1; i < segments.size(); i++) {
-      const auto& [begin1, end1] = segments[i - 1];
-      const auto& [begin2, end2] = segments[i];
-      number_of_ways *= begin2 - end1;
-      number_of_ways %= kMod;
     }
 
     return number_of_ways;
   }
-
- private:
-  struct Segment {
-    int begin;
-    int end;  // inclusive
-  };
 };
 // @lc code=end
-
-int main() {
-  Solution sol;
-  sol.numberOfWays(
-      "SPPPPPPPSPPPSPSSSPPPPPPPPPPPPPPPPPSPPPPPPPPPPPPPPPPSPPPPPSPSPPPPPPSPSPPS"
-      "PSPPPSPSPPSSPPPPPSPPSSPP");
-}
