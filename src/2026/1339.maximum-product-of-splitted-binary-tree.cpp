@@ -20,42 +20,40 @@ class Solution {
  public:
   int maxProduct(TreeNode* root) {
     static constexpr std::uint64_t kMod = 1e9 + 7;
-    TransformToSumTree(root);
-    const std::uint64_t result = GetMaxProductMod(root, root->val) % kMod;
-    return static_cast<int>(result);
+    const std::uint64_t total_sum = GetTreeSum(root);
+    std::uint64_t result = 0;
+    dfs(root, total_sum, result);
+    return static_cast<int>(result % kMod);
   }
 
  private:
-  static void TransformToSumTree(TreeNode* root) {
-    if (root->left) {
-      TransformToSumTree(root->left);
-      root->val += root->left->val;
-    }
-
-    if (root->right) {
-      TransformToSumTree(root->right);
-      root->val += root->right->val;
-    }
-  }
-
-  static std::uint64_t GetMaxProductMod(TreeNode* root,
-                                        const std::uint64_t total_sum) {
-    if (root == nullptr) {
+  static std::uint64_t GetTreeSum(TreeNode* root) {
+    if (!root) {
       return 0;
     }
-    const std::uint64_t left_subtree_max_product =
-        GetMaxProductMod(root->left, total_sum);
-    const std::uint64_t right_subtree_max_product =
-        GetMaxProductMod(root->right, total_sum);
+    const std::uint64_t left_subtree_sum = GetTreeSum(root->left);
+    const std::uint64_t right_subtree_sum = GetTreeSum(root->right);
+    const std::uint64_t tree_sum =
+        root->val + left_subtree_sum + right_subtree_sum;
+    return tree_sum;
+  }
 
-    const std::uint64_t remove_left_subtree_product =
-        root->left ? ((total_sum - root->left->val) * root->left->val) : 0;
-    const std::uint64_t remove_right_subtree_product =
-        root->right ? ((total_sum - root->right->val) * root->right->val) : 0;
+  static std::uint64_t dfs(TreeNode* root,
+                           const std::uint64_t total_sum,
+                           std::uint64_t& max_product) {
+    if (!root) {
+      return 0;
+    }
+    const std::uint64_t left_subtree_sum =
+        dfs(root->left, total_sum, max_product);
+    const std::uint64_t right_subtree_sum =
+        dfs(root->right, total_sum, max_product);
+    const std::uint64_t tree_sum =
+        root->val + left_subtree_sum + right_subtree_sum;
 
-    return std::max({left_subtree_max_product, right_subtree_max_product,
-                     remove_left_subtree_product,
-                     remove_right_subtree_product});
+    max_product = std::max(max_product, (total_sum - tree_sum) * tree_sum);
+
+    return tree_sum;
   }
 };
 // @lc code=end
