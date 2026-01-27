@@ -21,12 +21,11 @@ class Solution {
       const int to = edge[kTo];
       const int weight = edge[kWeight];
       const int backward_weight = 2 * weight;
-      adjacent_table[from].push_back({to, weight});
-      adjacent_table[to].push_back({from, backward_weight});
+      adjacent_table[from].emplace_back(to, weight);
+      adjacent_table[to].emplace_back(from, backward_weight);
     }
 
-    const std::vector<int> min_costs = Dijkstra(n, adjacent_table, 0);
-    return min_costs[n - 1] == INT_MAX ? -1 : min_costs[n - 1];
+    return Dijkstra(n, adjacent_table, 0, n - 1);
   }
 
  private:
@@ -40,10 +39,10 @@ class Solution {
     int known_min_distance_from_source;
   };
 
-  static std::vector<int> Dijkstra(
-      const int n,
-      const std::vector<std::vector<EdgeInfo>>& adjacent_table,
-      const int source) {
+  static int Dijkstra(const int n,
+                      const std::vector<std::vector<EdgeInfo>>& adjacent_table,
+                      const int source,
+                      const int target) {
     std::vector<int> known_min_distance_from_source(n, INT_MAX);
     known_min_distance_from_source[source] = 0;
 
@@ -66,6 +65,10 @@ class Solution {
         continue;
       }
 
+      if (from_node_info.node == target) {
+        return from_node_info.known_min_distance_from_source;
+      }
+
       const std::vector<EdgeInfo>& edge_infos =
           adjacent_table[from_node_info.node];
       for (const auto& [to, weight] : edge_infos) {
@@ -78,7 +81,7 @@ class Solution {
       }
     }
 
-    return known_min_distance_from_source;
+    return -1;
   }
 };
 // @lc code=end
