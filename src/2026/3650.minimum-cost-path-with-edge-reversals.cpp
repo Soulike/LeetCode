@@ -56,6 +56,8 @@ class Solution {
         pq(dijkstra_pq_comp);
     pq.push({source, 0});
 
+    std::vector<bool> visited(n, false);
+
     while (!pq.empty()) {
       const DijkstraNodeInfo from_node_info = pq.top();
       pq.pop();
@@ -68,6 +70,11 @@ class Solution {
       if (from_node_info.node == target) {
         return from_node_info.known_min_distance_from_source;
       }
+
+      if (visited[from_node_info.node]) {
+        continue;
+      }
+      visited[from_node_info.node] = true;
 
       const std::vector<EdgeInfo>& edge_infos =
           adjacent_table[from_node_info.node];
