@@ -11,25 +11,21 @@
 class Solution {
  public:
   int minimumDeletions(const std::string& s) {
-    // Exclusive
-    std::vector<int> b_count_before(s.size(), 0);
-    std::vector<int> a_count_after(s.size(), 0);
+    // dp[i] - min deletions to make s[0,s) balanced.
+    std::vector<int> dp(2, 0);
+    int current_b_count = 0;
 
-    for (int i = 1; i < s.size(); i++) {
-      b_count_before[i] = b_count_before[i - 1] + (s[i - 1] == 'b');
-    }
-    for (int i = s.size() - 2; i >= 0; i--) {
-      a_count_after[i] = a_count_after[i + 1] + (s[i + 1] == 'a');
-    }
-
-    int min_deletion_count = s.size();
-
-    for (int i = 0; i < s.size(); i++) {
-      min_deletion_count =
-          std::min(min_deletion_count, b_count_before[i] + a_count_after[i]);
+    for (int i = 1; i <= s.size(); i++) {
+      if (s[i - 1] == 'a') {
+        // Remove the 'a', or remove all 'b's before.
+        dp[i % 2] = std::min(dp[(i - 1) % 2] + 1, current_b_count);
+      } else {
+        dp[i % 2] = dp[(i - 1) % 2];
+        current_b_count++;
+      }
     }
 
-    return min_deletion_count;
+    return dp[s.size() % 2];
   }
 };
 // @lc code=end
