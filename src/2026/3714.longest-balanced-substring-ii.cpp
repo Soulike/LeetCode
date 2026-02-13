@@ -4,23 +4,13 @@
  * [3714] Longest Balanced Substring II
  */
 
+#include <string>
 #include <unordered_map>
-#include <vector>
 
 // @lc code=start
 class Solution {
  public:
   int longestBalanced(const std::string& s) {
-    std::vector<int> a_prefix_count(s.size() + 1);
-    std::vector<int> b_prefix_count(s.size() + 1);
-    std::vector<int> c_prefix_count(s.size() + 1);
-
-    for (int i = 0; i < s.size(); i++) {
-      a_prefix_count[i + 1] = a_prefix_count[i] + (s[i] == 'a');
-      b_prefix_count[i + 1] = b_prefix_count[i] + (s[i] == 'b');
-      c_prefix_count[i + 1] = c_prefix_count[i] + (s[i] == 'c');
-    }
-
     // For s[i] ~ s[j] to be balanced,
     //    a[j+1] - a[i]
     // == b[j+1] - b[i]
@@ -33,17 +23,20 @@ class Solution {
     // have a balanced string.
 
     int longest_size = 1;
-    std::unordered_map<std::string, int> prefix_diff_to_index;
-    prefix_diff_to_index.insert({"0,0", -1});
+    int a_count = 0, b_count = 0, c_count = 0;
+    std::unordered_map<std::uint64_t, int> prefix_diff_hash_to_index;
+    prefix_diff_hash_to_index[0] = -1;
     for (int i = 0; i < s.size(); i++) {
-      const std::string prefix_diff =
-          std::to_string(a_prefix_count[i + 1] - b_prefix_count[i + 1]) + "," +
-          std::to_string(a_prefix_count[i + 1] - c_prefix_count[i + 1]);
-      if (prefix_diff_to_index.contains(prefix_diff)) {
-        longest_size =
-            std::max(longest_size, i - prefix_diff_to_index.at(prefix_diff));
+      a_count += (s[i] == 'a');
+      b_count += (s[i] == 'b');
+      c_count += (s[i] == 'c');
+      const std::uint64_t prefix_diff_hash =
+          GetPrefixDiffHash(a_count - b_count, a_count - c_count);
+      if (prefix_diff_hash_to_index.contains(prefix_diff_hash)) {
+        longest_size = std::max(
+            longest_size, i - prefix_diff_hash_to_index.at(prefix_diff_hash));
       } else {
-        prefix_diff_to_index[prefix_diff] = i;
+        prefix_diff_hash_to_index[prefix_diff_hash] = i;
       }
     }
 
@@ -51,6 +44,12 @@ class Solution {
   }
 
  private:
+  static std::uint64_t GetPrefixDiffHash(const int a_b_diff,
+                                         const int a_c_diff) {
+    return static_cast<std::uint64_t>(a_b_diff) << 32 |
+           static_cast<std::uint32_t>(a_c_diff);
+  }
+
   static int LongestOneLetter(const std::string& s) {
     char current_letter = s[0];
     int current_size = 0;
