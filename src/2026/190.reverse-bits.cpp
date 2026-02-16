@@ -9,14 +9,15 @@
 // @lc code=start
 class Solution {
  public:
-  int reverseBits(const int n) {
-    std::bitset<32> original(n);
-    std::bitset<32> reversed;
-
-    for (int i = 0; i < original.size(); i++) {
-      reversed[original.size() - i - 1] = original[i];
+  int reverseBits(int n) {
+    int result = 0;
+    for (int i = 0; i < 32; i++) {
+      result <<= 1;
+      const int bit = n & 0x1;
+      result += bit;
+      n >>= 1;
     }
-    return static_cast<int>(reversed.to_ulong());
+    return result;
   }
 };
 // @lc code=end
