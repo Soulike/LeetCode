@@ -12,10 +12,11 @@ class Solution {
  public:
   int concatenatedBinary(const int n) {
     static constexpr std::uint64_t kMod = 1e9 + 7;
+    std::uint64_t current_binary_length = 0;
     std::uint64_t result = 0;
     for (int i = 1; i <= n; i++) {
-      const std::size_t binary_length = GetBinaryLength(i);
-      result <<= binary_length;
+      current_binary_length += IsPowerOfTwo(i);
+      result <<= current_binary_length;
       result += i;
       result %= kMod;
     }
@@ -23,14 +24,7 @@ class Solution {
   }
 
  private:
-  static std::size_t GetBinaryLength(int num) {
-    std::size_t result = 0;
-    while (num > 0) {
-      num >>= 1;
-      result++;
-    }
-    return result;
-  }
+  static bool IsPowerOfTwo(const int num) { return (num & (num - 1)) == 0; }
 };
 // @lc code=end
 
