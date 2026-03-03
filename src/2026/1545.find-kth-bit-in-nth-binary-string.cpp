@@ -11,32 +11,23 @@
 // @lc code=start
 class Solution {
  public:
-  Solution() { S.emplace_back("0"); }
-
   char findKthBit(const int n, const int k) {
-    if (S.size() < n) {
-      for (int i = S.size(); i <= n; i++) {
-        S.push_back(std::format("{}1{}", S.back(), Reverse(Invert(S.back()))));
-      }
+    if (n == 1) {
+      return '0';
     }
 
-    return S[n - 1][k - 1];
-  }
+    const int string_size = (1 << n) - 1;
+    const int mid_index = string_size / 2;
 
- private:
-  std::vector<std::string> S;
-
-  static std::string Invert(const std::string_view binary_string) {
-    std::string result;
-    result.reserve(binary_string.size());
-    for (const char c : binary_string) {
-      result.push_back((c - '0' + 1) % 2 + '0');
+    if (k - 1 == mid_index) {
+      return '1';
     }
-    return result;
-  }
 
-  static std::string Reverse(const std::string_view binary_string) {
-    return {binary_string.crbegin(), binary_string.crend()};
+    if (k - 1 < mid_index) {
+      return findKthBit(n - 1, k);
+    }
+
+    return findKthBit(n - 1, string_size - k + 1) == '0' ? '1' : '0';
   }
 };
 // @lc code=end
