@@ -4,6 +4,7 @@
  * [3212] Count Submatrices With Equal Frequency of X and Y
  */
 
+#include <array>
 #include <vector>
 
 // @lc code=start
@@ -13,21 +14,15 @@ class Solution {
     const size_t row_count = grid.size();
     const size_t col_count = grid[0].size();
 
-    std::vector<std::vector<int>> prefix_sum(row_count,
-                                             std::vector<int>(col_count));
-    std::vector<std::vector<bool>> prefix_sum_has_x(
-        row_count, std::vector<bool>(col_count));
+    std::array<std::vector<int>, 2> prefix_sum = {std::vector<int>(col_count),
+                                                  std::vector<int>(col_count)};
+    std::array<std::vector<bool>, 2> prefix_sum_has_x = {
+        std::vector<bool>(col_count), std::vector<bool>(col_count)};
 
     int submatrices_count = 0;
 
     prefix_sum[0][0] = ConvertGirdValue(grid[0][0]);
     prefix_sum_has_x[0][0] = grid[0][0] == 'X';
-
-    for (int i = 1; i < row_count; i++) {
-      prefix_sum[i][0] = prefix_sum[i - 1][0] + ConvertGirdValue(grid[i][0]);
-      prefix_sum_has_x[i][0] = prefix_sum_has_x[i - 1][0] || grid[i][0] == 'X';
-      submatrices_count += prefix_sum[i][0] == 0 && prefix_sum_has_x[i][0];
-    }
 
     for (int j = 1; j < col_count; j++) {
       prefix_sum[0][j] = prefix_sum[0][j - 1] + ConvertGirdValue(grid[0][j]);
@@ -36,14 +31,22 @@ class Solution {
     }
 
     for (int i = 1; i < row_count; i++) {
+      prefix_sum[i % 2][0] =
+          prefix_sum[(i - 1) % 2][0] + ConvertGirdValue(grid[i][0]);
+      prefix_sum_has_x[i % 2][0] =
+          prefix_sum_has_x[(i - 1) % 2][0] || grid[i][0] == 'X';
+      submatrices_count +=
+          prefix_sum[i % 2][0] == 0 && prefix_sum_has_x[i % 2][0];
+
       for (int j = 1; j < col_count; j++) {
-        prefix_sum[i][j] = prefix_sum[i - 1][j] + prefix_sum[i][j - 1] -
-                           prefix_sum[i - 1][j - 1] +
-                           ConvertGirdValue(grid[i][j]);
-        prefix_sum_has_x[i][j] = prefix_sum_has_x[i - 1][j] ||
-                                 prefix_sum_has_x[i][j - 1] ||
-                                 grid[i][j] == 'X';
-        submatrices_count += prefix_sum[i][j] == 0 && prefix_sum_has_x[i][j];
+        prefix_sum[i % 2][j] =
+            prefix_sum[(i - 1) % 2][j] + prefix_sum[i % 2][j - 1] -
+            prefix_sum[(i - 1) % 2][j - 1] + ConvertGirdValue(grid[i][j]);
+        prefix_sum_has_x[i % 2][j] = prefix_sum_has_x[(i - 1) % 2][j] ||
+                                     prefix_sum_has_x[i % 2][j - 1] ||
+                                     grid[i][j] == 'X';
+        submatrices_count +=
+            prefix_sum[i % 2][j] == 0 && prefix_sum_has_x[i % 2][j];
       }
     }
 
