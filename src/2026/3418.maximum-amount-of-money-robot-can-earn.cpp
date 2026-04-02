@@ -14,11 +14,10 @@ class Solution {
     const int row_count = coins.size();
     const int col_count = coins[0].size();
 
-    // dp[i][j][k] - maximum profit when reaching coins[i][j] with k
+    // dp[i % 2][j][k] - maximum profit when reaching coins[i][j] with k
     // neutralizing left
     std::vector<std::vector<std::array<int, 3>>> dp(
-        std::vector<std::vector<std::array<int, 3>>>(
-            row_count, std::vector<std::array<int, 3>>(col_count)));
+        2, std::vector<std::array<int, 3>>(col_count));
 
     // Init start
     if (coins[0][0] >= 0) {
@@ -43,43 +42,46 @@ class Solution {
       }
     }
 
-    // Init the first col
     for (int i = 1; i < row_count; i++) {
-      const int coin_count = coins[i][0];
-      if (coin_count >= 0) {
+      const int cur = i % 2;
+      const int prev = 1 - cur;
+
+      // Init the first col of this row
+      const int first_coin = coins[i][0];
+      if (first_coin >= 0) {
         for (int k = 0; k <= 2; k++) {
-          dp[i][0][k] = dp[i - 1][0][k] + coin_count;
+          dp[cur][0][k] = dp[prev][0][k] + first_coin;
         }
       } else {
-        dp[i][0][0] = std::max(dp[i - 1][0][0] + coin_count, dp[i - 1][0][1]);
-        dp[i][0][1] = std::max(dp[i - 1][0][1] + coin_count, dp[i - 1][0][2]);
-        dp[i][0][2] = dp[i - 1][0][2] + coin_count;
+        dp[cur][0][0] = std::max(dp[prev][0][0] + first_coin, dp[prev][0][1]);
+        dp[cur][0][1] = std::max(dp[prev][0][1] + first_coin, dp[prev][0][2]);
+        dp[cur][0][2] = dp[prev][0][2] + first_coin;
       }
-    }
 
-    for (int i = 1; i < row_count; i++) {
       for (int j = 1; j < col_count; j++) {
         const int coin_count = coins[i][j];
         if (coin_count >= 0) {
           for (int k = 0; k <= 2; k++) {
-            dp[i][j][k] =
-                std::max(dp[i - 1][j][k], dp[i][j - 1][k]) + coin_count;
+            dp[cur][j][k] =
+                std::max(dp[prev][j][k], dp[cur][j - 1][k]) + coin_count;
           }
         } else {
           // Robber
-          dp[i][j][0] =
-              std::max(std::max(dp[i - 1][j][0], dp[i][j - 1][0]) + coin_count,
-                       std::max(dp[i - 1][j][1], dp[i][j - 1][1]));
-          dp[i][j][1] =
-              std::max(std::max(dp[i - 1][j][1], dp[i][j - 1][1]) + coin_count,
-                       std::max(dp[i - 1][j][2], dp[i][j - 1][2]));
-          dp[i][j][2] = std::max(dp[i - 1][j][2], dp[i][j - 1][2]) + coin_count;
+          dp[cur][j][0] =
+              std::max(std::max(dp[prev][j][0], dp[cur][j - 1][0]) + coin_count,
+                       std::max(dp[prev][j][1], dp[cur][j - 1][1]));
+          dp[cur][j][1] =
+              std::max(std::max(dp[prev][j][1], dp[cur][j - 1][1]) + coin_count,
+                       std::max(dp[prev][j][2], dp[cur][j - 1][2]));
+          dp[cur][j][2] =
+              std::max(dp[prev][j][2], dp[cur][j - 1][2]) + coin_count;
         }
       }
     }
 
-    return *std::max_element(dp[row_count - 1][col_count - 1].cbegin(),
-                             dp[row_count - 1][col_count - 1].cend());
+    const int last = (row_count - 1) % 2;
+    return *std::max_element(dp[last][col_count - 1].cbegin(),
+                             dp[last][col_count - 1].cend());
   }
 };
 // @lc code=end
