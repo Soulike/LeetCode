@@ -22,8 +22,8 @@ class Solution {
     }
 
     const int depth = GetTreeHeight(neighbors) - 1;
-    // When all weights are 2, depth is even.
-    // If we set odd weights to 1, the depth is odd.
+    // When all weights are 2, the sum is even.
+    // If we set odd weights to 1, the sum is odd.
     // i.e., C(depth, 1) + C(depth, 3) + C(depth, 5) + ... = 2^(depth - 1)
 
     return PowMod(2, depth - 1);
@@ -36,9 +36,9 @@ class Solution {
     int current_height = 0;
     std::queue<int> current_level_nodes;
     std::queue<int> next_level_nodes;
-    std::unordered_set<int> visited_nodes;
+    std::vector<bool> visited_nodes(neighbors.size(), false);
     current_level_nodes.push(0);  // always rooted at node 0
-    visited_nodes.insert(0);
+    visited_nodes[0] = true;
 
     while (!current_level_nodes.empty()) {
       current_height++;
@@ -47,11 +47,11 @@ class Solution {
         const int node = current_level_nodes.front();
         current_level_nodes.pop();
         for (const int neighbor : neighbors[node]) {
-          if (visited_nodes.contains(neighbor)) {
+          if (visited_nodes[neighbor]) {
             continue;
           }
           next_level_nodes.push(neighbor);
-          visited_nodes.insert(neighbor);
+          visited_nodes[neighbor] = true;
         }
       }
       current_level_nodes = std::move(next_level_nodes);
