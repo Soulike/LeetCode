@@ -4,88 +4,118 @@
  * [3559] Number of Ways to Assign Edge Weights II
  */
 
-#include <cstdint>
 #include <queue>
-#include <utility>
+#include <unordered_set>
 #include <vector>
 
 // @lc code=start
-class Lca {
+class LowestCommonAncestor {
  public:
-  explicit Lca(const std::vector<std::vector<int>>& neighbors)
-      : depth_(neighbors.size(), 0) {
-    const int node_count = neighbors.size();
-    int max_power = 1;
-    while ((1 << max_power) <= node_count) {
-      max_power++;
-    }
-    up_.assign(max_power, std::vector<int>(node_count, 0));
+  // Here we use unique positive integers [0,n-1] to identify n nodes of the
+  // tree. Root is always node 0. `neighbors[i]` - All neighboring nodes of node
+  // `i`.
+  explicit LowestCommonAncestor(
+      const std::vector<std::vector<int>>& neighbors) {
     Build(neighbors);
   }
 
-  int GetDistance(const int u, const int v) const {
-    const int lca = GetLca(u, v);
-    return depth_[u] + depth_[v] - 2 * depth_[lca];
+  [[nodiscard]] int Get(int node1, int node2) const {
+    // Make node1 always deeper.
+    if (depth_[node1] < depth_[node2]) {
+      std::swap(node1, node2);
+    }
+    // Move up node1 to the same depth of node2
+    while (depth_[node1] > depth_[node2]) {
+      const int diff = depth_[node1] - depth_[node2];
+      const size_t k = Log2Floor(diff);
+      node1 = ancestors_[node1][k];
+    }
+
+    // node2 is the ancestor of node1. We are done.
+    if (node1 == node2) {
+      return node1;
+    }
+
+    // Keep both moving up until find the same ancestor
+    for (int k = ancestors_[0].size() - 1; k >= 0; k--) {
+      if (ancestors_[node1][k] != ancestors_[node2][k]) {
+        node1 = ancestors_[node1][k];
+        node2 = ancestors_[node2][k];
+      }
+    }
+
+    return ancestors_[node1][0];
+  }
+
+  int GetDistance(const int node1, const int node2) const {
+    const int common_ancestor = Get(node1, node2);
+    return (depth_[node1] - depth_[common_ancestor]) +
+           (depth_[node2] - depth_[common_ancestor]);
   }
 
  private:
-  std::vector<int> depth_;
-  std::vector<std::vector<int>> up_;
-
   void Build(const std::vector<std::vector<int>>& neighbors) {
-    std::queue<int> nodes;
-    std::vector<bool> visited(neighbors.size(), false);
+    const size_t node_count = neighbors.size();
+    depth_.resize(node_count);
+    ancestors_.resize(node_count);
+    for (std::vector<int>& child : ancestors_) {
+      // At most n-1 ancestors
+      child.resize(Log2Floor(node_count - 1) + 1);
+    }
 
-    nodes.push(0);
-    visited[0] = true;
-    up_[0][0] = 0;
+    // From root, we gather all ancestors[n][0], i.e., the immediate ancestor
+    std::unordered_set<int> visited;
+    std::queue<int> current_level_nodes;
+    std::queue<int> next_level_nodes;
 
-    while (!nodes.empty()) {
-      const int node = nodes.front();
-      nodes.pop();
+    current_level_nodes.push(0);
+    visited.insert(0);
+    // The ancestor of root is always root itself.
+    ancestors_[0][0] = 0;
+    depth_[0] = 0;
 
-      for (int k = 1; k < static_cast<int>(up_.size()); k++) {
-        up_[k][node] = up_[k - 1][up_[k - 1][node]];
-      }
-
-      for (const int neighbor : neighbors[node]) {
-        if (visited[neighbor]) {
-          continue;
+    while (!current_level_nodes.empty()) {
+      while (!current_level_nodes.empty()) {
+        const int node = current_level_nodes.front();
+        current_level_nodes.pop();
+        for (const int neighbor : neighbors[node]) {
+          if (visited.contains(neighbor)) {
+            continue;
+          }
+          ancestors_[neighbor][0] = node;
+          next_level_nodes.push(neighbor);
+          // Also get depths of nodes.
+          depth_[neighbor] = depth_[node] + 1;
+          visited.insert(neighbor);
         }
-        visited[neighbor] = true;
-        depth_[neighbor] = depth_[node] + 1;
-        up_[0][neighbor] = node;
-        nodes.push(neighbor);
+      }
+      current_level_nodes = std::move(next_level_nodes);
+      next_level_nodes = {};
+    }
+
+    // Build ancestors.
+    for (int node = 0; node < node_count; node++) {
+      for (int k = 1; k < ancestors_[node].size(); k++) {
+        // Find the 2^(k-1) ancestor of 2^(k-1) ancestor, 2 * 2^(k-1) = 2^k.
+        ancestors_[node][k] = ancestors_[ancestors_[node][k - 1]][k - 1];
       }
     }
   }
 
-  int GetLca(int u, int v) const {
-    if (depth_[u] < depth_[v]) {
-      std::swap(u, v);
-    }
-
-    int depth_diff = depth_[u] - depth_[v];
-    for (int k = 0; depth_diff > 0; k++) {
-      if ((depth_diff & 1) == 1) {
-        u = up_[k][u];
+  static size_t Log2Floor(const size_t n) {
+    size_t base = 1;
+    for (size_t i = 0;; i++) {
+      if (base > n) {
+        return i - 1;
       }
-      depth_diff >>= 1;
+      base <<= 1;
     }
-
-    if (u == v) {
-      return u;
-    }
-
-    for (int k = static_cast<int>(up_.size()) - 1; k >= 0; k--) {
-      if (up_[k][u] != up_[k][v]) {
-        u = up_[k][u];
-        v = up_[k][v];
-      }
-    }
-
-    return up_[0][u];
   }
+
+ private:
+  // ancestors[n][k] - For node n, the 2^k distance ancestor.
+  std::vector<std::vector<int>> ancestors_;
+  std::vector<int> depth_;
 };
 
 class Solution {
@@ -102,13 +132,13 @@ class Solution {
       neighbors[v].push_back(u);
     }
 
-    const Lca lca(neighbors);
+    const LowestCommonAncestor lca(neighbors);
 
     std::vector<int> result(queries.size(), 0);
     for (int i = 0; i < static_cast<int>(queries.size()); i++) {
       const int u = queries[i][0] - 1;
       const int v = queries[i][1] - 1;
-      const int path_size = GetPathSize(u, v, lca);
+      const int path_size = lca.GetDistance(u, v);
       result[i] = path_size > 0 ? GetAssignWeightMethodsCount(path_size) : 0;
     }
     return result;
@@ -116,10 +146,6 @@ class Solution {
 
  private:
   static constexpr int kMod = 1e9 + 7;
-
-  static int GetPathSize(const int u, const int v, const Lca& lca) {
-    return lca.GetDistance(u, v);
-  }
 
   static int GetAssignWeightMethodsCount(const int path_size) {
     return PowMod(2, path_size - 1);
@@ -144,5 +170,6 @@ class Solution {
 
 int main() {
   Solution sol;
-  sol.assignEdgeWeights({{1, 2}}, {{1, 1}, {1, 2}});
+  sol.assignEdgeWeights({{1, 2}, {1, 3}, {3, 4}, {3, 5}},
+                        {{1, 4}, {3, 4}, {2, 5}});
 }
