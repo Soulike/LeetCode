@@ -37,7 +37,7 @@ class LowestCommonAncestor {
     }
 
     // Keep both moving up until find the same ancestor
-    for (int k = ancestors_[0].size() - 1; k >= 0; k--) {
+    for (int k = max_k_; k >= 0; k--) {
       if (ancestors_[node1][k] != ancestors_[node2][k]) {
         node1 = ancestors_[node1][k];
         node2 = ancestors_[node2][k];
@@ -58,18 +58,19 @@ class LowestCommonAncestor {
     const size_t node_count = neighbors.size();
     depth_.resize(node_count);
     ancestors_.resize(node_count);
+    // At most n-1 ancestors
+    max_k_ = Log2Floor(node_count - 1);
     for (std::vector<int>& child : ancestors_) {
-      // At most n-1 ancestors
-      child.resize(Log2Floor(node_count - 1) + 1);
+      child.resize(max_k_ + 1);
     }
 
     // From root, we gather all ancestors[n][0], i.e., the immediate ancestor
-    std::unordered_set<int> visited;
+    std::vector<bool> visited(node_count, false);
     std::queue<int> current_level_nodes;
     std::queue<int> next_level_nodes;
 
     current_level_nodes.push(0);
-    visited.insert(0);
+    visited[0] = true;
     // The ancestor of root is always root itself.
     ancestors_[0][0] = 0;
     depth_[0] = 0;
@@ -79,14 +80,14 @@ class LowestCommonAncestor {
         const int node = current_level_nodes.front();
         current_level_nodes.pop();
         for (const int neighbor : neighbors[node]) {
-          if (visited.contains(neighbor)) {
+          if (visited[neighbor]) {
             continue;
           }
           ancestors_[neighbor][0] = node;
           next_level_nodes.push(neighbor);
           // Also get depths of nodes.
           depth_[neighbor] = depth_[node] + 1;
-          visited.insert(neighbor);
+          visited[neighbor] = true;
         }
       }
       current_level_nodes = std::move(next_level_nodes);
@@ -94,8 +95,8 @@ class LowestCommonAncestor {
     }
 
     // Build ancestors.
-    for (int node = 0; node < node_count; node++) {
-      for (int k = 1; k < ancestors_[node].size(); k++) {
+    for (int k = 1; k <= max_k_; k++) {
+      for (int node = 0; node < node_count; node++) {
         // Find the 2^(k-1) ancestor of 2^(k-1) ancestor, 2 * 2^(k-1) = 2^k.
         ancestors_[node][k] = ancestors_[ancestors_[node][k - 1]][k - 1];
       }
@@ -115,6 +116,7 @@ class LowestCommonAncestor {
  private:
   // ancestors[n][k] - For node n, the 2^k distance ancestor.
   std::vector<std::vector<int>> ancestors_;
+  size_t max_k_;
   std::vector<int> depth_;
 };
 
