@@ -26,8 +26,8 @@ class Solution {
       visited[node] = true;
       const ComponentVisitResult visit_result =
           VisitComponent(node, neighbors, visited);
-      complete_component_count += IsCompleteComponent(
-          visit_result.node_count, visit_result.directional_edge_count);
+      complete_component_count +=
+          IsCompleteComponent(visit_result.node_count, visit_result.edge_count);
     }
     return complete_component_count;
   }
@@ -35,7 +35,7 @@ class Solution {
  private:
   struct ComponentVisitResult {
     int node_count;
-    int directional_edge_count;
+    int edge_count;
   };
 
   static ComponentVisitResult VisitComponent(
@@ -45,7 +45,7 @@ class Solution {
     ComponentVisitResult result = {1, 0};
 
     for (const int neighbor : neighbors[begin_node]) {
-      result.directional_edge_count++;
+      result.edge_count += (neighbor > begin_node);
       if (visited[neighbor]) {
         continue;
       }
@@ -54,15 +54,14 @@ class Solution {
       const ComponentVisitResult visit_result =
           VisitComponent(neighbor, neighbors, visited);
       result.node_count += visit_result.node_count;
-      result.directional_edge_count += visit_result.directional_edge_count;
+      result.edge_count += visit_result.edge_count;
     }
 
     return result;
   }
 
-  static bool IsCompleteComponent(const int node_count,
-                                  const int directional_edge_count) {
-    return node_count * (node_count - 1) == directional_edge_count;
+  static bool IsCompleteComponent(const int node_count, const int edge_count) {
+    return node_count * (node_count - 1) == edge_count * 2;
   }
 };
 // @lc code=end
