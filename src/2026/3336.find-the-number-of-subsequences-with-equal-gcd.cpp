@@ -15,39 +15,42 @@ class Solution {
     const int max_num = *std::max_element(nums.cbegin(), nums.cend());
     // It is impossible for gcd to > max_num
     std::vector<std::vector<std::vector<int>>> dp(
-        nums.size() + 1, std::vector<std::vector<int>>(
-                             max_num + 1, std::vector<int>(max_num + 1, 0)));
+        2, std::vector<std::vector<int>>(max_num + 1,
+                                         std::vector<int>(max_num + 1, 0)));
 
     // Base case
     dp[0][0][0] = 1;
 
     for (int i = 1; i <= nums.size(); i++) {
+      dp[i % 2] = std::vector<std::vector<int>>(
+          max_num + 1, std::vector<int>(max_num + 1, 0));
+
       const int num = nums[i - 1];
       for (int j = 0; j <= max_num; j++) {
         const int new_gcd1 = CalculateGCD(j, num);
         for (int k = 0; k <= max_num; k++) {
           const int new_gcd2 = CalculateGCD(k, num);
 
-          const int prev_value = dp[i - 1][j][k];
+          const int prev_value = dp[(i - 1) % 2][j][k];
 
           // Don't put into any seq
-          dp[i][j][k] += prev_value;
-          dp[i][j][k] %= kMod;
+          dp[i % 2][j][k] += prev_value;
+          dp[i % 2][j][k] %= kMod;
 
           // Put into seq1
-          dp[i][new_gcd1][k] += prev_value;
-          dp[i][new_gcd1][k] %= kMod;
+          dp[i % 2][new_gcd1][k] += prev_value;
+          dp[i % 2][new_gcd1][k] %= kMod;
 
           // Put into seq2
-          dp[i][j][new_gcd2] += prev_value;
-          dp[i][j][new_gcd2] %= kMod;
+          dp[i % 2][j][new_gcd2] += prev_value;
+          dp[i % 2][j][new_gcd2] %= kMod;
         }
       }
     }
 
     int total_pair_count = 0;
     for (int j = 1; j <= max_num; j++) {
-      total_pair_count += dp[nums.size()][j][j];
+      total_pair_count += dp[nums.size() % 2][j][j];
       total_pair_count %= kMod;
     }
 
