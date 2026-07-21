@@ -4,6 +4,7 @@
  * [3499] Maximize Active Section with Trade I
  */
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -16,10 +17,9 @@ class Solution {
       one_count += c == '1';
     }
 
-    std::vector<Segment> segments;
+    std::optional<Segment> prev_segment;
+    std::optional<Segment> current_segment;
 
-    // Here we ensure the segments will be arranged as
-    // 0 segment, 1 segment, 0 segment, ..., 0 segment, 1 segment, 0 segment.
     std::size_t first_zero_segment_begin_index = -1;
     for (int i = 0; i < s.size(); i++) {
       if (s[i] == '0') {
@@ -44,35 +44,40 @@ class Solution {
     std::size_t current_segment_begin_index = first_zero_segment_begin_index;
     char current_content = '0';
 
+    std::size_t max_one_count = one_count;
+
     for (std::size_t i = first_zero_segment_begin_index;
          i <= last_zero_segment_end_index; i++) {
       if (s[i] != current_content) {
-        segments.push_back({.begin_index = current_segment_begin_index,
-                            .end_index = i - 1,
-                            .content = current_content});
+        if (current_content == '0') {
+          prev_segment = current_segment;
+          current_segment = {.begin_index = current_segment_begin_index,
+                             .end_index = i - 1};
+          if (prev_segment) {
+            const std::size_t additional_one_count =
+                (prev_segment.value().end_index -
+                 prev_segment.value().begin_index + 1) +
+                (current_segment.value().end_index -
+                 current_segment.value().begin_index + 1);
+            max_one_count =
+                std::max(max_one_count, one_count + additional_one_count);
+          }
+        }
         current_segment_begin_index = i;
         current_content = s[i];
       }
     }
 
     // Last 0 segment
-    segments.push_back({.begin_index = current_segment_begin_index,
-                        .end_index = last_zero_segment_end_index,
-                        .content = '0'});
-
-    std::size_t max_one_count = one_count;
-    for (int i = 0; i < segments.size(); i++) {
-      const Segment& segment = segments[i];
-      if (segment.content == '0') {
-        continue;
-      }
-
-      // For 1 segment, segments[i + 1] and segments[i - 1] always present as 0
-      // segments.
+    prev_segment = current_segment;
+    current_segment = {.begin_index = current_segment_begin_index,
+                       .end_index = last_zero_segment_end_index};
+    if (prev_segment) {
       const std::size_t additional_one_count =
-          (segments[i - 1].end_index - segments[i - 1].begin_index + 1) +
-          (segments[i + 1].end_index - segments[i + 1].begin_index + 1);
-
+          (prev_segment.value().end_index - prev_segment.value().begin_index +
+           1) +
+          (current_segment.value().end_index -
+           current_segment.value().begin_index + 1);
       max_one_count = std::max(max_one_count, one_count + additional_one_count);
     }
 
@@ -83,7 +88,6 @@ class Solution {
   struct Segment {
     std::size_t begin_index;
     std::size_t end_index;
-    char content;  // '0' or '1'
   };
 };
 // @lc code=end
