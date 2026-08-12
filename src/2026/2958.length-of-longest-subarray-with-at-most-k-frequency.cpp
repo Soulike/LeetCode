@@ -12,29 +12,25 @@ class Solution {
  public:
   int maxSubarrayLength(const std::vector<int>& nums, const int k) {
     int left = 0;
-    int right = 0;
+    int right = 0;  // excluded
     std::unordered_map<int, int> num_to_freq_in_window;
     int max_window_length = 0;
 
-    while (left <= right && right < nums.size()) {
-      while (right < nums.size()) {
-        num_to_freq_in_window[nums[right]]++;
-        if (num_to_freq_in_window[nums[right]] > k) {
-          max_window_length = std::max(max_window_length, right - left);
-          break;
+    while (right < nums.size()) {
+      if (num_to_freq_in_window[nums[right]] == k) {
+        max_window_length = std::max(max_window_length, right - left);
+
+        while (left < right) {
+          left++;
+          num_to_freq_in_window[nums[left - 1]]--;
+          if (nums[left - 1] == nums[right]) {
+            break;
+          }
         }
-        right++;
       }
 
-      while (right < nums.size() && num_to_freq_in_window[nums[right]] > k &&
-             left <= right) {
-        num_to_freq_in_window[nums[left]]--;
-        left++;
-        if (num_to_freq_in_window[nums[right]] <= k) {
-          right++;
-          break;
-        }
-      }
+      num_to_freq_in_window[nums[right]]++;
+      right++;
     }
 
     max_window_length = std::max(max_window_length, right - left);
@@ -46,5 +42,5 @@ class Solution {
 
 int main() {
   Solution sol;
-  sol.maxSubarrayLength({2, 2, 3}, 1);
+  sol.maxSubarrayLength({1, 2, 2, 2}, 1);
 }
