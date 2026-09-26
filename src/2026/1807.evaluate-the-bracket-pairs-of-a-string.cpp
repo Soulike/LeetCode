@@ -4,6 +4,7 @@
  * [1807] Evaluate the Bracket Pairs of a String
  */
 
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -20,25 +21,29 @@ class Solution {
       key_to_knowledge[key] = value;
     }
 
-    std::vector<Range> placeholder_ranges;
+    std::string result;
+    result.reserve(s.size());
+
+    int last_end = -1;
+    std::optional<Range> current_range;
+
     for (int i = 0; i < s.size(); i++) {
       const char c = s[i];
       if (c == '(') {
-        placeholder_ranges.push_back({i, -1});
+        current_range = {i, -1};
       } else if (c == ')') {
-        placeholder_ranges.back().end = i;
-      }
-    }
+        result += Slice(s, last_end + 1, current_range->begin - 1);
+        current_range->end = i;
 
-    std::string result;
-    int last_end = -1;
-    for (const auto& [begin, end] : placeholder_ranges) {
-      result += Slice(s, last_end + 1, begin - 1);
-      const std::string key = Slice(s, begin + 1, end - 1);
-      const std::string value =
-          key_to_knowledge.contains(key) ? key_to_knowledge.at(key) : "?";
-      result += value;
-      last_end = end;
+        const std::string key =
+            Slice(s, current_range->begin + 1, current_range->end - 1);
+        const std::string value =
+            key_to_knowledge.contains(key) ? key_to_knowledge.at(key) : "?";
+        result += value;
+
+        last_end = current_range->end;
+        current_range = std::nullopt;
+      }
     }
 
     result += Slice(s, last_end + 1, s.size() - 1);
