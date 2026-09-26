@@ -1,0 +1,65 @@
+/*
+ * @lc app=leetcode id=1807 lang=cpp
+ *
+ * [1807] Evaluate the Bracket Pairs of a String
+ */
+
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+// @lc code=start
+class Solution {
+ public:
+  std::string evaluate(std::string s,
+                       const std::vector<std::vector<std::string>>& knowledge) {
+    std::unordered_map<std::string, std::string> key_to_knowledge;
+    for (const std::vector<std::string>& key_knowledge : knowledge) {
+      const std::string key = key_knowledge[0];
+      const std::string value = key_knowledge[1];
+      key_to_knowledge[key] = value;
+    }
+
+    std::vector<Range> placeholder_ranges;
+    for (int i = 0; i < s.size(); i++) {
+      const char c = s[i];
+      if (c == '(') {
+        placeholder_ranges.push_back({i, -1});
+      } else if (c == ')') {
+        placeholder_ranges.back().end = i;
+      }
+    }
+
+    std::string result;
+    int last_end = -1;
+    for (const auto& [begin, end] : placeholder_ranges) {
+      result += Slice(s, last_end + 1, begin - 1);
+      const std::string key = Slice(s, begin + 1, end - 1);
+      const std::string value =
+          key_to_knowledge.contains(key) ? key_to_knowledge.at(key) : "?";
+      result += value;
+      last_end = end;
+    }
+
+    result += Slice(s, last_end + 1, s.size() - 1);
+
+    return result;
+  }
+
+ private:
+  struct Range {
+    int begin;
+    int end;
+  };
+
+  // `end` included
+  std::string Slice(const std::string& s, const int begin, const int end) {
+    return s.substr(begin, end - begin + 1);
+  }
+};
+// @lc code=end
+
+int main() {
+  Solution sol;
+  sol.evaluate("(name)is(age)yearsold", {{"name", "bob"}, {"age", "two"}});
+}
